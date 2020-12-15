@@ -9,41 +9,40 @@ const options = {
     lon: 17.52,
     zoom: 5,
 
-    timestamp: Date.now() + 3 * 24 * 60 * 60 * 1000,
-    hourFormat: '12h',
-
-    // ...etc
 };
 
 windyInit(options, windyAPI => {
-    const { store } = windyAPI;
-    // All the params are stored in windyAPI.store
+    const { picker, utils, broadcast } = windyAPI;
 
-    const levels = store.getAllowed('availLevels');
-    // levels = ['surface', '850h', ... ]
-    // Getting all available values for given key
+    picker.on('pickerOpened', latLon => {
+        // picker has been opened at latLon coords
+        console.log(latLon);
 
-    let i = 0;
-    setInterval(() => {
-        i = i === levels.length - 1 ? 0 : i + 1;
+        const { lat, lon, values, overlay } = picker.getParams();
+        // -> 48.4, 14.3, [ U,V, ], 'wind'
+        console.log(lat, lon, values, overlay);
 
-        // Changing Windy params at runtime
-        store.set('level', levels[i]);
-    }, 500);
+        const windObject = utils.wind2obj(values);
+        console.log(windObject);
+    });
 
-    // Observing change of .store value
-    store.on('level', level => {
-        console.log(`Level was changed: ${level}`);
+    picker.on('pickerMoved', latLon => {
+        // picker was dragged by user to latLon coords
+        console.log(latLon);
+    });
+
+    picker.on('pickerClosed', () => {
+        // picker was closed
+    });
+
+    // Wait since wather is rendered
+    broadcast.once('redrawFinished', () => {
+        picker.open({ lat: 62.45, lon: 17.52 });
+        // Opening of a picker (async)
     });
 });
-// Initialize Windy API
-windyInit(options, windyAPI => {
-    // windyAPI is ready, and contain 'map', 'store',
-    // 'picker' and other usefull stuff
 
-    const { map } = windyAPI;
-    // .map is instance of Leaflet map
-});
+
 
 var map = L.map('map').setView([62.45, 17.53], 5);
 
