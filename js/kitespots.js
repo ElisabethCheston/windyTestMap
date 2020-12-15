@@ -107,17 +107,24 @@ var markers = [
             ["spot", 57.7988784,18.8109458, "id91", "name", "FALUDDEN N","windDirection","E/NE"]
             ["spot", 57.1241931,18.43118507, "id92", "name", "GANSVIK","windDirection","E/NE"],
         // Gotland WESTCOST //
-            ["spot", 57.7966607,18.7912915, "id93", "name", "ÖRUDDEN","windDirection","S/SW"],
-            ["spot", 57.7988784,18.8109458, "id94", "name", "ÖRUDDEN","windDirection","S/S"]
-            ["spot", 57.8043955,18.7977476, "id95", "name", "ÖRUDDEN","windDirection","W/NW"],
-            ["spot", 57.7966607,18.7912915, "id96", "name", "ÖRUDDEN","windDirection","S/SW"],
-            ["spot", 57.7988784,18.8109458, "id97", "name", "ÖRUDDEN","windDirection","S/S"]
-            ["spot", 57.7966607,18.7912915, "id98", "name", "ÖRUDDEN","windDirection","S/SW"],
-            ["spot", 57.7988784,18.8109458, "id99", "name", "ÖRUDDEN","windDirection","S/S"]
-            ["spot", 57.8043955,18.7977476, "id100", "name", "ÖRUDDEN","windDirection","W/NW"],
-            ["spot", 57.7966607,18.7912915, "id101", "name", "ÖRUDDEN","windDirection","S/SW"],
-            ["spot", 57.7988784,18.8109458, "id102", "name", "ÖRUDDEN","windDirection","S/S"]
-            ["spot", 57.8043955,18.7977476, "id103", "name", "ÖRUDDEN","windDirection","W/NW"],
+            ["spot", 57.2839580,18.6672809, "id93", "name", "LAUSVIKEN","windDirection","N/NE"],
+            ["spot", 57.3331318,18.7144050, "id94", "name", "LJUGARN","windDirection","E"]
+            ["spot", 57.3712321,18.7797047, "id95", "name", "ARDREVIKEN","windDirection","E/SE"],
+            ["spot", 57.3740297,18.7966770, "id96", "name", "SJAUSTRU","windDirection","S/SE"],
+            ["spot", 57.3964000,18.8540002, "id97", "name", "JRP","windDirection","S/SE"]
+            ["spot", 57.3988506,18.8673187, "id98", "name", "VÄSTVIKEN","windDirection","S/SE"],
+            ["spot", 57.3956900,18.8796854, "id99", "name", "SANDVIKEN","windDirection","S/SW"]
+            ["spot", 57.4030865,18.9181516, "id100", "name", "NATVIKSUDDEN","windDirection","E/NE/SE"],
+            ["spot", 57.4379699,18.8993677, "id101", "name", "GROGARN","windDirection","N/NE"],
+            ["spot", 57.4349801,18.8549507, "id102", "name", "KATTVIK","windDirection","N/NW/NE"]
+            ["spot", 57.6143897,18.7676287, "id103", "name", "ÅMINNE","windDirection","N/NE"],
+            // Gotland NORTH //
             ["spot", 57.7966607,18.7912915, "id104", "name", "ÖRUDDEN","windDirection","S/SW"],
-            ["spot", 57.7988784,18.8109458, "id105", "name", "ÖRUDDEN","windDirection","S/S"]
+            ["spot", 57.7988784,18.8109458, "id105", "name", "ÖRUDDEN","windDirection","S/S"],
+            ["spot", 57.7966607,18.7912915, "id106", "name", "ÖRUDDEN","windDirection","S/SW"],
+            ["spot", 57.7988784,18.8109458, "id107", "name", "ÖRUDDEN","windDirection","S/S"],
+            ["spot", 57.7966607,18.7912915, "id108", "name", "ÖRUDDEN","windDirection","S/SW"],
+            ["spot", 57.7988784,18.8109458, "id109", "name", "ÖRUDDEN","windDirection","S/S"],
+            ["spot", 57.7966607,18.7912915, "id110", "name", "ÖRUDDEN","windDirection","S/SW"],
+            ["spot", 57.7988784,18.8109458, "id111", "name", "ÖRUDDEN","windDirection","S/S"]
     ];
