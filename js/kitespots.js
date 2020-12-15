@@ -89,23 +89,24 @@ var markers = [
             ["spot", 58.7988784,17.8109458, "id75", "name", "ÖRUDDEN S","windDirection","S/S"]
             ["spot", 58.7226834,17.1059486, "id76", "name", "VACCUM","windDirection","S/SW"],
         // Gotland EASTCOST //
-            ["spot", 57.6731890,18.3313751, "id77", "name", "SNÄCK","windDirection","S/SE"],
-            ["spot", 57.6537283,18.3039127, "id78", "name", "NORDERSTRAND","windDirection","S/SE"],
-            ["spot", 57.6000832,18.2128064, "id79", "name", "FRIDHEM","windDirection","S/SE"],
-            ["spot", 57.5010071,18.1130306, "id80", "name", "GNISVÄRD","windDirection","S/SE"]
-            ["spot", 57.4912072,18.1260356, "id81", "name", "TOFTA","windDirection","S/SE"],
-            ["spot", 57.4836655,18.1258006, "id82", "name", "TOFTA S","windDirection","S/SE"],
-            ["spot", 57.4366947,18.1419227, "id83", "name", "VÄSTERGARN N","windDirection","S/E"]
+            ["spot", 57.6731890,18.3313751, "id77", "name", "SNÄCK","windDirection","S/SW"],
+            ["spot", 57.6537283,18.3039127, "id78", "name", "NORDERSTRAND","windDirection","S/SW"],
+            ["spot", 57.6000832,18.2128064, "id79", "name", "FRIDHEM","windDirection","S/SW"],
+            ["spot", 57.5010071,18.1130306, "id80", "name", "GNISVÄRD","windDirection","S/SW"]
+            ["spot", 57.4912072,18.1260356, "id81", "name", "TOFTA","windDirection","S/SW"],
+            ["spot", 57.4836655,18.1258006, "id82", "name", "TOFTA S","windDirection","S/SW"],
+            ["spot", 57.4366947,18.1419227, "id83", "name", "VÄSTERGARN N","windDirection","S/SW"]
             ["spot", 57.8043955,18.7977476, "id84", "name", "VÄSTERGARN S","windDirection","S/SE"],
-            ["spot", 57.4056765,18.1546933, "id85", "name", "KOVIK","windDirection","S/SE"],
-            ["spot", 57.3967423,18.1640881, "id86", "name", "TJURUDDEN","windDirection","S/S"]
+            ["spot", 57.4056765,18.1546933, "id85", "name", "KOVIK","windDirection","S/SW"],
+            ["spot", 57.3967423,18.1640881, "id86", "name", "TJURUDDEN","windDirection","S/W"]
         // Gotland SOUTH //
-            ["spot", 57.8043955,18.7977476, "id87", "name", "ÖRUDDEN","windDirection","W/NW"],
-            ["spot", 57.7966607,18.7912915, "id88", "name", "ÖRUDDEN","windDirection","S/SW"],
-            ["spot", 57.7988784,18.8109458, "id89", "name", "ÖRUDDEN","windDirection","S/S"]
-            ["spot", 57.7966607,18.7912915, "id90", "name", "ÖRUDDEN","windDirection","S/SW"],
-            ["spot", 57.7988784,18.8109458, "id91", "name", "ÖRUDDEN","windDirection","S/S"]
-            ["spot", 57.8043955,18.7977476, "id92", "name", "ÖRUDDEN","windDirection","W/NW"],
+            ["spot", 57.1316122,18.2168770, "id87", "name", "NISSEVIKEN","windDirection","S/SW"],
+            ["spot", 56.9286604,18.2373114, "id88", "name", "VALAR","windDirection","S/SW"],
+            ["spot", 57.7988784,18.2784944, "id89", "name", "HOLMHÄLLAR","windDirection","S/SW"]
+            ["spot", 56.0151331,18.3442752, "id90", "name", "FALUDDEN S","windDirection","S/SE"],
+            ["spot", 57.7988784,18.8109458, "id91", "name", "FALUDDEN N","windDirection","E/NE"]
+            ["spot", 57.1241931,18.43118507, "id92", "name", "GANSVIK","windDirection","E/NE"],
+        // Gotland WESTCOST //
             ["spot", 57.7966607,18.7912915, "id93", "name", "ÖRUDDEN","windDirection","S/SW"],
             ["spot", 57.7988784,18.8109458, "id94", "name", "ÖRUDDEN","windDirection","S/S"]
             ["spot", 57.8043955,18.7977476, "id95", "name", "ÖRUDDEN","windDirection","W/NW"],
