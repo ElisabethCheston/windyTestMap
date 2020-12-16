@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
+    <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A==" crossorigin=""/>
@@ -8,21 +8,766 @@
         <script src="https://api.windy.com/assets/map-forecast/libBoot.js"></script>
         <link rel="stylesheet" href="css/map.css">
 
-        <title>windy</title>
+            <title>windy</title>
+        <base href="/">
+        <link rel="canonical" href="https://www.windy.com/sv/-Regn-åska-rain">
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+        <link href="v/27.3.1.ind.310f/index.css" rel="stylesheet" type="text/css">
+        
+    <script>
+        window.W={version:"27.3.1",assets:"27.3.1.ind.310f",target:"index",build:"2020-12-07, 12:25",startTs:Date.now()};try{1204<window.screen.width&&(document.documentElement.id="device-desktop")}catch(e){}</script><meta name="minifest-ecmwf-hres" content="{&quot;v&quot;:&quot;2.1&quot;,&quot;ref&quot;:&quot;2020-12-16T00:00:00Z&quot;,&quot;update&quot;:&quot;2020-12-16T05:46:03Z&quot;,&quot;dst&quot;:[[3,3,90],[3,93,144],[6,150,240]],&quot;info&quot;:&quot;2020120712&quot;}"><meta name="minifest-ecmwf-hres1h" content="{&quot;v&quot;:&quot;2.1&quot;,&quot;ref&quot;:&quot;2020-12-16T06:00:00Z&quot;,&quot;update&quot;:&quot;2020-12-16T11:50:21Z&quot;,&quot;dst&quot;:[[1,1,90],[3,93,138],[6,144,234]],&quot;info&quot;:&quot;2020120712&quot;}"><meta name="model" content="ecmwf"><meta name="geoip" content="83.250.212.50,62.4489,17.4047,SE,Aln�"><meta name="token" content="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE2MDgxMzA3NTAsImluZiI6eyJpcCI6IjgzLjI1MC4yMTIuNTAiLCJ1YSI6Ik1vemlsbGFcLzUuMCAoTWFjaW50b3NoOyBJbnRlbCBNYWMgT1MgWCAxMF8xNV83KSBBcHBsZVdlYktpdFwvNTM3LjM2IChLSFRNTCwgbGlrZSBHZWNrbykgQ2hyb21lXC84Ny4wLjQyODAuODggU2FmYXJpXC81MzcuMzYifSwiZXhwIjoxNjA4MzAzNTUwfQ.jm1POMDW_FrC25ZvIEgEmGMdenjAXI9Lc1r8CmdAGc0"><script src="js/leaflet140_patched_tileLayer.v16.js"></script><script>Array.prototype.includes&&Object.assign&&window.Promise||document.write('<script src="js/polyfills.v13.js"><\/script>')</script><script src="v/27.3.1.ind.310f/index.js" async=""></script><link rel="dns-prefetch" href="https://node.windy.com"><link rel="dns-prefetch" href="https://tiles.windy.com"><link rel="dns-prefetch" href="https://ims.windy.com"><meta name="description" content="Weather radar, wind and waves forecast for kiters, surfers, paragliders, pilots, sailors and anyone else. Worldwide animated weather map, with easy to use layers and precise spot forecast. METAR, TAF and NOTAMs for any airport in the World. SYNOP codes from weather stations and buoys. Forecast models ECMWF, GFS, NAM and NEMS"><meta name="keywords" content="Windyty, Windytv, windy app, wind map, windfinder, windguru, wind forecast, weather forecast, GFS, ECMWF, NEMS, METAR, TAF"><meta name="author" content="Windyty, SE"><meta name="application-name" content="Windy.com"><meta property="fb:app_id" content="426030704216458"><meta property="og:title" content="Windy as forecasted"><meta property="og:type" content="article"><meta property="og:image" content="https://www.windy.com/img/socialshare3.jpg"><meta property="og:image:width" content="800"><meta property="og:image:height" content="373"><meta property="og:url" content="https://www.windy.com/"><meta property="og:description" content="Wind map and weather forecast"><meta property="og:site_name" content="Windy.com/"><meta property="article:published_time" content=""><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="Windy as forecasted"><meta name="twitter:site" content="@windyforecast"><meta name="twitter:creator" content="@windyforecast"><meta name="twitter:url" content="https://www.windy.com/"><meta name="twitter:description" content="Wind map and weather forecast"><meta name="twitter:image" content="https://www.windy.com/img/socialshare3.jpg"><link rel="shortcut icon" href="/favicon.ico"><link rel="apple-touch-icon" sizes="57x57" href="img/favicons/apple-touch-icon-57x57.png"><link rel="apple-touch-icon" sizes="114x114" href="img/favicons/apple-touch-icon-114x114.png"><link rel="apple-touch-icon" sizes="72x72" href="img/favicons/apple-touch-icon-72x72.png"><link rel="apple-touch-icon" sizes="144x144" href="img/favicons/apple-touch-icon-144x144.png"><link rel="apple-touch-icon" sizes="60x60" href="img/favicons/apple-touch-icon-60x60.png"><link rel="apple-touch-icon" sizes="120x120" href="img/favicons/apple-touch-icon-120x120.png"><link rel="apple-touch-icon" sizes="76x76" href="img/favicons/apple-touch-icon-76x76.png"><link rel="apple-touch-icon" sizes="152x152" href="img/favicons/apple-touch-icon-152x152.png"><link rel="apple-touch-icon" sizes="180x180" href="img/favicons/apple-touch-icon-180x180.png"><meta name="msapplication-TileColor" content="#666666"><meta name="msapplication-TileImage" content="img/favicons/mstile-144x144.png"><meta name="msapplication-config" content="img/favicons/browserconfig.xml"><link rel="chrome-webstore-item" href="https://chrome.google.com/webstore/detail/kfboghlfmbkcjhddfklnbpobkajncacl"><meta name="apple-itunes-app" content="app-id=1161387262"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="theme-color" content="#9D0300"><script type="text/javascript" async="" src="v/27.3.1.ind.310f/plugins/hp-weather.js"></script><script type="text/javascript" async="" src="v/27.3.1.ind.310f/plugins/rhpane.js"></script><script type="text/javascript" async="" src="https://www.windy.com/patch/index/latest/patch.js?refTime=2020-12-16T14:59">
+        </script>
+        <style>
+            .weather-box {
+                width:392px;
+                position:relative;
+                margin-top:5px
+            }
+            #device-mobile, .weather-box {
+                width:100%
+            }
+            #warnings {
+                width:100%;
+                z-index:10;
+                margin-top:2px;
+                flex-direction:row
+            }
+            #warnings, .cap-line {
+                font-size:14px;
+                background-color:rgba(68,65,65,0.84);
+                white-space:nowrap;
+                line-height:1.6;
+                margin-right:.3em;
+                padding-right:1em;
+                overflow:hidden;
+                flex-grow:4;
+                flex-basis:0;
+                position:relative
+            }
+            #warnings, .cap-line:last-child {
+                margin-right:0;
+            }
+            #warnings, .cap-line::before {
+                font-size:16px;
+                display:block;
+                float:left;
+                font-weight:normal;
+                text-align:center;
+                position:relative;
+                padding:.2em .3em;margin-right:.3em;
+                line-height:normal;
+                height:100%;
+            }
+            #warnings, .cap-line small {
+                display:block;
+                opacity:.6;
+            }
+            #warnings, .cap-line:not(.multiline) small {
+                position:absolute;
+                top:2px;right:6px
+            }
+            #warnings, .cap-line.multiline {
+                font-size:12px;
+                line-height:1.4;
+            }
+            #warnings, .cap-line.multiline small {
+                font-size:8px;
+                padding-bottom:.3em;
+            }
+            #warnings, .cap-line.multiline::before {
+                padding-top:.4em;
+            }
+            #warnings, .cap-line[data-severity='M']::before {
+                background-color:#b3b300;
+            }
+            #warnings, .cap-line[data-severity='S']::before {
+                background-color:#c17d00;
+            }
+            #warnings, .cap-line[data-severity='E']::before {
+                background-color:#a50000;
+            }
+            #plugin-hp-weather {
+                cursor:pointer;
+                transition:all .5s;
+                opacity:0;
+                margin-top:10px;
+                width:372px;
+                white-space:nowrap;
+            }
+            #plugin-hp-weather.open {
+                opacity:1;
+            }
+            .onsearch, #plugin-hp-weather {
+                display:none !important;
+            }
+            #device-mobile, #plugin-hp-weather {
+                width:calc(100vw - 20px);
+            }
+            #plugin-hp-weather, .slider-wrapper {
+                width:calc( 100% - 100px );
+            }
+            #plugin-hp-weather, .w-now, #plugin-hp-weather, .slider-wrapper {
+                display:inline-block;
+                vertical-align:top;
+            }
+            #plugin-hp-weather, .w-now {
+                width:100px;
+                text-align:center;
+                line-height:1;
+                margin-top:-5px;
+            }
+            #plugin-hp-weather, .w-now, big {
+                font-size:67px;
+                font-family:bariolnumbers,Arial,Helvetica,sans-serif;
+                font-weight:normal;
+            }
+            #plugin-hp-weather, .w-now, big, sup {
+                font-size:30px;
+            }
+            #plugin-hp-weather, .w-now, .ws-wind {
+                font-size:.8em;
+                margin-left:.2em;
+                color:#c1c1c1;
+                margin-top:4px;
+                display:block;
+                font-size:12px;
+                margin-left:-1em;
+            }
+            #plugin-hp-weather, .w-now, .ws-wind, div {
+                display:inline-block;
+                position:relative;
+                top:1px;
+            }
+            #plugin-hp-weather, .w-now, .ws-wind, img {
+                width:13.5px;
+                display:inline-block;
+                position:relative;
+                margin-right:.3em;
+                top:.2em;
+            }
+            #articles, .article-announce-small {
+                padding:5px 10px 5px 110px;
+                font-size:18px;
+                line-height:1.4;
+                letter-spacing:.02em;
+                margin-bottom:5px;
+                position:relative;
+            }
+            #articles, .article-announce-small, span {
+                width:100px;
+                height:100%;
+                display:block;
+                position:absolute;
+                left:0;
+                top:0;
+                background-size:cover;
+                background-repeat:no-repeat;
+                background-position-x:center;
+                background-position-y:center;
+            }
+            #articles, .article-announce-small, a {
+                display:block;
+            }
+            #articles, .article-announce-small, .article-warning {
+                font-size:11px;
+                border-radius:3px;
+                padding:.1em .7em;
+                position:relative;
+                display:inline-block;
+                top:-3px;
+                letter-spacing:.05em;
+                text-transform:uppercase 
+            }
+            #articles, .article-announce-small, .article-warning.warning-extreme {
+                background:#a50000;
+            }
+            #articles, .article-announce-small, .article-warning.warning-severe {
+                background:#c17d00;
+            }
+            #articles, .article-announce-small, .article-warning.warning-moderate {
+                background:#b3b300;
+            }
+        </style>
+        <style>
+            .loading-overlay, #rhpane, #overlay, a.selected, .menu-text::before {
+                -webkit-animation:rotate .75s infinite linear;
+                animation:rotate .75s infinite linear;
+                border:.1em solid #946051;
+                border-radius:50%;
+                border-right-color:transparent;
+                border-top-color:transparent;
+                content:'';
+                height:.8em;
+                width:.8em;
+            }
+            #rh-bottom {
+                display:flex;
+                flex-direction:column;
+                width:300px;
+                margin:0 8px 8px auto;
+                position:relative;
+                white-space:nowrap;
+                pointer-events:auto;
+            }
+            #rh-bottom, .rh-text {
+                font-size:11px;
+                text-transform:lowercase;
+                display:inline-block;
+                white-space:nowrap;
+                margin:0 7.5px;
+            }
+            #rh-bottom, .rh-inlined {
+                display:inline-block;
+                vertical-align:middle;
+            }
+            #rh-bottom, .rh-absoluted {
+                position:absolute;
+                bottom:100%;
+                padding:15px 0;
+            }
+            #rh-bottom, .rh-transparent {
+                opacity:.7;
+            }
+            #rh-bottom, #radar-blitz-sound, #rh-bottom, #radar-blitz, #rh-bottom, #sat-flow {
+                display:none;
+            }
+            .overlay-snowAccu, #rh-bottom, #particles, .overlay-rainAccu, #rh-bottom, #particles, .overlay-ozone, #rh-bottom, #particles, .overlay-satellite, #rh-bottom, #particles, .overlay-radar, #rh-bottom, #particles, .overlay-fog, #rh-bottom, #particles, .overlay-capAlerts, #rh-bottom, #particles {
+                opacity:.6;
+                pointer-events:none;
+            }
+            #rh-bottom, #fullscreen {
+                font-size:16px;
+            }
+            #rh-bottom, #info-icon {
+                font-size:19px;
+                position:relative;
+                top:2px;
+            }
+            #rh-bottom, #legend {
+                cursor:pointer;
+                transition:.3s opacity;
+                margin-bottom:5px;
+                border-radius:20px;
+            }
+            #rh-bottom, #legend.one-metric {
+                pointer-events:none;
+            }
+            #rh-bottom, #legend.animate {
+                opacity:0;
+            }
+            #rh-bottom, #legend, span:first-child {
+                border-top-left-radius:20px;
+                border-bottom-left-radius:20px;
+            }
+            #rh-bottom, #legend, span:last-child {
+                border-top-right-radius:20px;
+                border-bottom-right-radius:20px;
+            }
+            #rh-bottom, #legend[data-overlay='ptype'], span:first-child {
+                padding-left:8px;
+            }
+            #rh-bottom, #legend[data-overlay='ptype'], span:last-child {
+                padding-right:8px;
+            }
+            #rh-bottom, .ui-switch {
+                width:100%;
+                position:relative;
+                margin-bottom:10px;
+            }
+            #rh-bottom, #pois-switch, div {
+                padding:.25em 0;
+            }
+            #rh-bottom, #pois-switch, div[data-tooltip]:hover::after {
+                bottom:100%;
+                top:inherit;
+                margin-bottom:5px;
+                left:inherit;
+                right:-10px;
+                display:inline-table;
+                padding:3px 15px;
+            }
+            #rh-bottom, #pois-switch, div[data-tooltip]:hover::before {
+                bottom:100%;
+                top:inherit;
+                left:50%;
+                margin-left:-5px;
+                margin-bottom:-5px;
+                border-top-color:#4d4d4d;border-left-color:transparent;
+            }
+            #rh-bottom, #pois-switch, span {
+                font-size:12px;
+                display:table-cell;
+                text-align:right;
+                vertical-align:middle;
+                padding-right:.8em;
+                width:33%;
+                overflow:hidden;
+            }
+            #rh-bottom, #product-switch, div {
+                padding:.2em 0;
+            }
+            #rh-bottom, #product-switch, div, small {
+                font-size:8px;
+            }
+            #rh-bottom, #rh-bottom-add-webcam {
+                text-shadow:0 0 4px black;
+                margin:10px 0;
+                display:flex;
+                align-items:center;
+            }
+            #rh-bottom, #rh-bottom-add-webcam, .add-webcam__icon {
+                font-size:24px;
+            }
+            #rh-bottom, #rh-bottom-add-webcam, .add-webcam__icon:before {
+                display:block;
+            }
+            #rh-bottom, #rh-bottom-add-webcam, .add-webcam__text {
+                margin-left:1rem;
+            }
+            body.overlay-radar, #rh-bottom, #rh-bottom-add-webcam, body.overlay-satellite, #rh-bottom, #rh-bottom-add-webcam {
+                display:none;
+            }
+            @media (max-height:720px)
+            {
+            #rh-bottom, #rh-bottom-add-webcam {
+                display:none;
+            }
+        }
+        #rh-bottom; .rh-bottom__controls {
+            display:flex;
+            flex-wrap:wrap-reverse;
+        }
+        .overlay-map, #rh-bottom, .rh-bottom__controls {
+            order:-1;
+        }
+        #rh-bottom, .rh-bottom__switches {
+            margin:0 -7.5px 10px
+        }
+        #rh-bottom, .rh-bottom__icons {
+            display:flex;
+            align-items:center;
+            margin:0 -7.5px 10px auto }
+            #rh-bottom, .rh-bottom__icons>* {
+                line-height:1;
+            }
+            #detail-rhpane-wrapper {
+                position:fixed;
+                bottom:0;
+                left:0;
+                pointer-events:none;
+                justify-content:flex-end;
+            }
+            #rhpane {
+                justify-content:flex-start;
+                align-self:flex-end;
+                position:relative;
+                pointer-events:none;
+                flex-grow:1;
+                margin-left:auto;
+                margin-top:10px;
+                margin-bottom:20px;
+                margin-right:8px;
+            }
+            #rhpane, .zoom-ctrl {
+                width:25px;
+                height:25px;
+                border-radius:25px;
+                background-color:rgba(68,65,65,0.84);
+                margin-bottom:4px;
+                text-align:center;
+                align-self:flex-end;
+                pointer-events:auto;
+                font-size:16px;
+                line-height:1.65;
+            }
+            #rhpane, .zoom-ctrl:hover {
+                background-color:rgba(183,183,183,0.39);
+            }
+            #rhpane, #overlay {
+                width:25px;
+                margin-bottom:25px;
+                margin-top:8px;
+                font-size:16px;
+                align-self:flex-end;
+                pointer-events:auto;
+            }
+            #rhpane, #overlay, a {
+                padding:0;
+                margin:.15em 0;
+                color:#fff3e1;
+            }
+            #rhpane, #overlay, a, .iconfont, #rhpane, #overlay, a, .menu-text {
+                display:table-cell; vertical-align:middle;
+            }
+            #rhpane, #overlay, a, .iconfont {
+                height:25px;
+                width:25px;
+                border-radius:25px;
+                text-align:center;
+            }
+            #rhpane, #overlay, a, .menu-text {
+                height:22px;
+                transition:background-color .3s;
+                position:absolute;
+                text-shadow:0 0 4px black;
+                right:25px;
+                line-height:1.4;
+                padding-left:11px;
+                padding-right:11px;
+                margin-top:1.5px;
+                right:22px;
+                top:0;
+                border-radius:1.2em;
+            }
+            #rhpane, #overlay, a, .menu-text, span {
+                display:none;
+            }
+            #rhpane, #overlay, a.selected {
+                background:none;
+            }
+            #rhpane, #overlay, a.selected, .menu-text {
+                text-decoration:underline;
+            }
+            #rhpane, #overlay, a.selected, .menu-text, span {
+                display:inline;
+            }
+            #rhpane, #overlay, a.selected, .iconfont {
+                background-color:#d49500;
+                box-shadow:0 0 4px 0 black;
+                color:white}.loading-overlay;
+             }
+            #rhpane, #overlay, a.selected, .menu-text::before {
+                -webkit-touch-callout:none;
+                -webkit-user-select:none;
+                -moz-user-select:none;
+                -ms-user-select:none;
+                user-select:none;
+                pointer-events:none;
+                border-left-color:#f8f8f8;
+                border-bottom-color:#f8f8f8;
+                display:block;
+                position:absolute;
+                left:-15px;
+                top:5px;
+                font-size:14px;
+            }
+            #rhpane, #overlay, a.sub-menu {
+                transition-property:visibility,height,max-height,padding,margin;
+                transition-duration:150ms,150ms,150ms,150ms,150ms;
+                transition-delay:150ms,0ms,0ms,0ms,0ms;
+                visibility:visible;max-height:25px;
+            }
+            #rhpane, #overlay, a.sub-menu, .iconfont {
+                font-size:.875em;
+                max-height:22px;
+            }
+            #rhpane #overlay a.sub-menu .menu-text{font-size:.7em;line-height:1.8;max-height:25px}#rhpane #overlay a.sub-menu:not(.menu-unfold){max-height:0;margin:0;pointer-events:none;visibility:hidden;transition-delay:0ms,0ms,0ms,0ms,0ms}#rhpane #overlay a.sub-menu:not(.menu-unfold) .iconfont{max-height:0}#rhpane #overlay a.sub-menu:not(.menu-unfold) .menu-text{max-height:0}#rhpane #overlay a:hover .menu-text{background-color:rgba(68,65,65,0.84)}#rhpane #overlay #ovr-menu .iconfont{transition:all .3s}#rhpane, #overlay::after, #rhpane, #overlay::before {position:absolute;top:-3px;bottom:-3px;right:0;content:' '}
+            #rhpane, #overlay::before {
+                left:0;
+                width:25px;
+                background-color:rgba(68,65,65,0.84);
+                border-radius:25px;
+            }
+            #rhpane, #overlay::after {
+                width:100px;
+                z-index:-10;
+            }
+            #rhpane, #overlay.iconsize-6, a {
+                margin:0;
+            }
+            #rhpane, #overlay.iconsize-5, a {
+                margin:0;
+                font-size:14px;
+            }
+            #rhpane, #overlay.iconsize-5, a, .iconfont {
+                height:21px;
+            }
+            #rhpane, #overlay.iconsize-5, a, .menu-text {
+                height:19px;
+            }
+            #rhpane, #overlay.iconsize-5, a.menu-unfold {
+                max-height:21px;
+            }
+            #rhpane, #overlay.iconsize-5, a.menu-unfold, .menu-text {
+                height:19px;
+            }
+            #rhpane, #overlay.iconsize-5, a.menu-unfold, .iconfont {
+                max-height:21px;
+            }
+            #rhpane, #overlay.iconsize-4, a {
+                margin:0;
+                font-size:12px;
+            }
+            #rhpane, #overlay.iconsize-4, a, .iconfont, #rhpane, #overlay.iconsize-4, a, .menu-text {
+                height:17px;
+            }
+            #rhpane, #overlay.iconsize-4, a.menu-unfold {
+                max-height:17px;
+            }
+            #rhpane, #overlay.iconsize-4, a.menu-unfold, .iconfont {
+                max-height:17px;
+                }
+                #rhpane, #overlay.iconsize-4, a.menu-unfold, .menu-text {
+                        max-height:17px;
+                    }
+            #rhpane, #overlay.iconsize-3, #rhpane, #overlay.iconsize-2, #rhpane, #overlay.iconsize-1, #rhpane, #overlay.iconsize-0 {
+                width:inherit;
+                margin-bottom:35px;
+            }
+            #rhpane, #overlay.iconsize-3::before, #rhpane, #overlay.iconsize-2::before, #rhpane, #overlay.iconsize-1::before, #rhpane, #overlay.iconsize-0::before {
+                top:0;
+                bottom:0;
+                right:-3px;
+                left:-3px;
+                height:100%;
+                width:inherit
+            }
+            #rhpane, #overlay.iconsize-3, a, #rhpane, #overlay.iconsize-2, a, #rhpane, #overlay.iconsize-1, a, #rhpane, #overlay.iconsize-0, a {
+                float:left;
+            }
+            #rhpane, #overlay.iconsize-3, a, .iconfont, #rhpane, #overlay.iconsize-2, a, .iconfont, #rhpane, #overlay.iconsize-1, a, .iconfont, #rhpane, #overlay.iconsize-0, a, .iconfont {
+                font-size:14px;
+                width:20px;
+                height:20px;
+            }
+            #rhpane, #overlay.iconsize-3, a.sub-menu, #rhpane, #overlay.iconsize-2, a.sub-menu, #rhpane, #overlay.iconsize-1, a.sub-menu, #rhpane, #overlay.iconsize-0, a.sub-menu {
+                margin:.15em 0;
+            }
+            #rhpane, #overlay.iconsize-3, a.sub-menu:not(.menu-unfold), #rhpane, #overlay.iconsize-2, a.sub-menu:not(.menu-unfold), #rhpane, #overlay.iconsize-1, a.sub-menu:not(.menu-unfold), #rhpane, #overlay.iconsize-0, a.sub-menu:not(.menu-unfold), #rhpane, #overlay.iconsize-3, a, .menu-text, #rhpane, #overlay.iconsize-2, a, .menu-text, #rhpane, #overlay.iconsize-1, a, .menu-text, #rhpane, #overlay.iconsize-0, a, .menu-text {
+                display:none;
+            }
+            #rhpane, #overlay.iconsize-3, a:hover, .menu-text, #rhpane, #overlay.iconsize-2, a:hover, .menu-text, #rhpane, #overlay.iconsize-1, a:hover, .menu-text, #rhpane, #overlay.iconsize-0, a:hover, .menu-text {
+                display:block;
+                font-size:12px;
+                text-decoration:none;
+                padding:3px 11px;
+                right:0;
+                top:25px;
+            }
+            #rhpane, #level {
+                flex-grow:4;
+                margin-bottom:20px;
+                width:25px;
+                max-height:200px;
+                position:relative;
+                cursor:pointer;
+                transition:opacity .3s;
+                align-self:flex-end;
+                opacity:0;
+                pointer-events:none;
+            }
+            .has-more-levels, #rhpane, #level {
+                opacity:1;
+                pointer-events:auto;
+            }
+            #rhpane, #level::before {
+                position:absolute;
+                top:-5px;
+                bottom:-10px;
+                right:0;
+                width:9px;
+                background-color:rgba(68,65,65,0.84);
+                border-radius:9px;
+                content:' '; 
+            }
+            #rhpane, #level, .timecode {
+                margin-left:0;
+                top:0;
+                margin-top:-10px;
+                display:table;
+                right:15px;
+                height:2em
+            }
+            #rhpane, #level, .timecode, .box {
+                min-height:2em;
+                padding:.3em .8em;
+                height:inherit;
+            }
+            #rhpane, #level, .timecode, .box::before {
+                left:inherit;
+                top:.45em;
+                right:-1.2em;
+                margin:0;
+                border-left-color:#d49500;border-top-color:transparent;
+                border-width:.6em
+            }
+            #rhpane, #level, .timecode.ghost-timecode {
+                pointer-events:none;
+            }
+            #rhpane, #level, .timecode.ghost-timecode, .box::before {
+                border-left-color:rgba(68,65,65,0.84);
+            }
+            #rhpane, #level, .timecode.anim-allowed {
+                transition:all ease-in-out .25s;
+            }
+        </style>
+        <style>
+            #plugin-patch {
+                display:none !important;
+            }
+            #promo-obsolete-app {
+                text-shadow:0px 0px 4px black;
+                color:white;
+                display:block;
+                line-height:1.6;
+                text-align:center;
+                overflow:hidden;
+                letter-spacing:.1em;
+                padding:.5em 1em 
+            }
+            .onmenu, #window-promo-1h-forecast,.ontools, #window-promo-1h-forecast, .onairq, #window-promo-1h-forecast, .onairport, #window-promo-1h-forecast, .onfavs, #window-promo-1h-forecast {
+                display:none !important;
+            }
+            #window-promo-1h-forecast 
+            {
+                bottom:80px;
+                width:180px;
+                border-bottom-left-radius:0;
+                border-top-left-radius:0;
+                padding-top:1.2em;
+                padding-right:1.2em;
+                line-height:1.7
+            }
+            #window-promo-1h-forecast, .closing-x {
+                font-size:20px;
+                color:#fff3e1;
+                background:none;
+                display:block;
+                right:-7px;
+                top:-7px;
+            }
+            #window-promo-1h-forecast, span {
+                display:block;
+            }
+            #window-promo-1h-forecast, .checkbox {
+                margin-top:6px;
+                display:inline-block;
+            }
+            #window-promo-1h-forecast, .checkbox, .premium-flag {
+                font-size:8px;
+                top:2px;
+                right:-7px;
+            }
+            #subs-mobile {
+                padding:0px;
+                position:relative;
+                overflow:hidden;
+            }
+            #subs-mobile, img {
+                width:100px; 
+                margin:15px 0 0 15px;
+            }
+            #subs-mobile, ul {
+                list-style:none;
+                padding:5px 15px;
+            }
+            #subs-mobile, ul, li {
+                margin-bottom:8px;
+                line-height:1.4;
+            }
+            #subs-mobile, ul, li, div {
+                font-size:10px;
+            }
+            #subs-mobile, ul, li, div::before {top:.15em}#subs-mobile ul li span{font-size:12px}#subs-mobile .sub-price{transform-origin:center;position:absolute;background:#ffc336;color:black;width:350px;padding:5px;right:-100px;top:45px;transform:rotate(45deg);font-size:18px;text-align:center;font-weight:bold}#subs-mobile .sub-price div{font-size:.6em}.on-black-friday-desktop-promo #plugin-subscription .plugin-content .sub-header{position:relative}#device-tablet .on-black-friday-desktop-promo #plugin-subscription .plugin-content .sub-header,#device-desktop .on-black-friday-desktop-promo #plugin-subscription .plugin-content .sub-header{overflow:hidden;background-image:url(https://img.windy.com/albums/a/jorge-dominguez-pnUxDlObqRQ-unsplash.jpg?w=800);background-size:200%;background-position:30% 100%;padding:20px}#device-mobile .on-black-friday-desktop-promo #plugin-subscription .plugin-content .sub-header{background-image:url(https://img.windy.com/albums/a/jorge-dominguez-pnUxDlObqRQ-unsplash_1607615638.jpg?w=500)}.on-black-friday-desktop-promo #plugin-subscription .plugin-content .sub-header .sub-bf{transform-origin:center;position:absolute;background:#f5b41c;color:black;text-align:center;font-weight:bold;text-shadow:none}#device-tablet .on-black-friday-desktop-promo #plugin-subscription .plugin-content .sub-header .sub-bf,#device-desktop .on-black-friday-desktop-promo #plugin-subscription .plugin-content .sub-header .sub-bf{width:450px;padding:5px;top:30%;left:-100px;transform:rotate(-25deg);font-size:30px}#device-mobile .on-black-friday-desktop-promo #plugin-subscription .plugin-content .sub-header .sub-bf{padding:3px 15px;border-radius:4px;font-size:20px;line-height:1.2;right:15px;top:5px;transform:rotate(-25deg);transform-origin:right}#device-mobile .on-black-friday-desktop-promo #plugin-subscription .plugin-content .sub-right{background-image:url(https://img.windy.com/albums/a/PinClipart.com_box-images-clip-art_160021.png?w=200);background-repeat:no-repeat;background-size:100px;background-position:-10px calc( 100% - 30px )}.on-black-friday-desktop-promo #plugin-subscription .snowflake{color:rgba(142,218,253,0.4);font-size:2.5em;font-family:Arial,sans-serif}@-webkit-keyframes snowflakes-fall{0%{top:-10%}100%{top:100%}}@-webkit-keyframes snowflakes-shake{0%,100%{-webkit-transform:translateX(0);transform:translateX(0)}50%{-webkit-transform:translateX(80px);transform:translateX(80px)}}@keyframes snowflakes-fall{0%{top:-10%}100%{top:100%}}@keyframes snowflakes-shake{0%,100%{transform:translateX(0)}50%{transform:translateX(80px)}}.on-black-friday-desktop-promo #plugin-subscription .snowflake{position:fixed;top:-10%;z-index:9999;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;cursor:default;-webkit-animation-name:snowflakes-fall,snowflakes-shake;-webkit-animation-duration:10s, 3s;-webkit-animation-timing-function:linear,ease-in-out;-webkit-animation-iteration-count:infinite, infinite;-webkit-animation-play-state:running, running;animation-name:snowflakes-fall,snowflakes-shake;animation-duration:10s, 3s;animation-timing-function:linear,ease-in-out;animation-iteration-count:infinite, infinite;animation-play-state:running, running}.on-black-friday-desktop-promo #plugin-subscription .snowflake:nth-of-type(0){left:1%;-webkit-animation-delay:0s, 0s;animation-delay:0s, 0s}.on-black-friday-desktop-promo #plugin-subscription .snowflake:nth-of-type(1){left:10%;-webkit-animation-delay:1s, 1s;animation-delay:1s, 1s}.on-black-friday-desktop-promo #plugin-subscription .snowflake:nth-of-type(2){left:20%;-webkit-animation-delay:6s,.5s;animation-delay:6s,.5s}.on-black-friday-desktop-promo #plugin-subscription .snowflake:nth-of-type(3){left:30%;-webkit-animation-delay:4s, 2s;animation-delay:4s, 2s}.on-black-friday-desktop-promo #plugin-subscription .snowflake:nth-of-type(4){left:40%;-webkit-animation-delay:2s, 2s;animation-delay:2s, 2s}.on-black-friday-desktop-promo #plugin-subscription .snowflake:nth-of-type(5){left:50%;-webkit-animation-delay:8s, 3s;animation-delay:8s, 3s}</style><script type="text/javascript" async="" src="v/27.3.1.ind.310f/plugins/user.js"></script><script type="text/javascript" async="" src="v/27.3.1.ind.310f/plugins/isolines.js"></script><script type="text/javascript" async="" src="v/27.3.1.ind.310f/plugins/gl-particles.js"></script><style>.alerts-num{position:absolute;text-align:center;font-size:11px;right:-3px;top:-3px;color:white;background-color:#da1717;min-width:1.4em;padding:.1em .3em;border-radius:1em}#user{transition:all ease-in-out .4s;position:relative;top:5px;display:inline-block !important}#user a{font-size:14px}#user .avatar-wrapper{position:relative;transform:translateZ(0);-webkit-backface-visibility:hidden;backface-visibility:hidden}#user .avatar{-webkit-filter:drop-shadow(0 0 1px rgba(0,0,0,0.6));filter:drop-shadow(0 0 1px rgba(0,0,0,0.6));display:block}#user .tooltip-down::after{left:inherit;right:-10px}#device-mobile #user{display:none}#mobile-menu .premium-logo,#plugin-favs .premium-logo,#plugin-settings .premium-logo,#logo .premium-logo{background-color:#d49500;pointer-events:none;position:absolute;background-image:url('https://www.windy.com/img/premium2.svg');background-repeat:no-repeat;background-position:center}#logo .premium-logo{width:55px;height:15px;border-radius:4px;background-size:40px;right:-12px;bottom:-10px;z-index:-1}#mobile-menu .premium-logo,#plugin-settings .premium-logo,#plugin-favs .premium-logo{width:40px;height:11px;border-radius:3px;background-size:32px;right:0;bottom:-8px;z-index:1}</style><script type="text/javascript" async="" src="v/27.3.1.ind.310f/plugins/notifications.js"></script><script type="text/javascript" async="" src="v/27.3.1.ind.310f/plugins/favs-extended.js"></script><script type="text/javascript" async="" src="v/27.3.1.ind.310f/plugins/notification-service.js"></script><style>.labels-high-lows,.labels-isoline{position:relative;pointer-events:none}.labels-high-lows div,.labels-isoline div{position:absolute;white-space:nowrap;letter-spacing:.08em}.labels-high-lows{z-index:11;pointer-events:auto}.labels-high-lows div{font-size:10px;line-height:1;margin:0;padding:0;text-shadow:0 0 4px black;width:40px;margin-top:-12.5px;margin-left:-20px;text-align:center}.labels-high-lows div span{font-size:15px;display:block}.labels-isoline{z-index:10}.labels-isoline div{font-size:7px;background-color:#aaffff;color:#6b6b6b;padding:.15em .3em;border-radius:1.2em;margin-top:-0.7em;line-height:1;transform-origin:left}</style><script type="text/javascript" async="" src="v/27.3.1.ind.310f/plugins/picker.js"></script><style>.picker .picker-drag-me:before{font-family:iconfont;font-variant:normal;text-transform:none;line-height:1}.picker{transition:.3s opacity 0s;-webkit-transition:.3s opacity 0s;font-size:11px;letter-spacing:1px;animation:fadein-full 1s;-webkit-animation:fadein-full 1s;opacity:0}.picker:focus{outline:none}#device-mobile .picker{transition:none;position:fixed;left:50%;top:180px;margin-top:-70px}#device-mobile .has-statusbar .picker{top:200px}#device-mobile .onsearch .picker,#device-mobile .onweather .picker,#device-mobile .onfavs .picker,#device-mobile .onmenu .picker{visibility:hidden}.picker.open{opacity:1}.onsearch .picker{opacity:0}.picker .closing-x{display:none}.picker .picker-lines{position:relative;border-left:2px solid rgba(68,65,65,0.84);height:125px;cursor:move}.picker .picker-lines::after{display:block;position:absolute;left:-5px;top:120.5px;background-color:white;width:8px;height:8px;border-radius:4px;content:' '}.picker .picker-lines::before{display:block;position:absolute;content:' ';left:-10px;right:0;width:20px;height:140px}#device-mobile .picker .picker-lines{height:70px}#device-mobile .picker .picker-lines::after{top:calc(65.5px)}#device-mobile .picker .picker-lines::before{display:none}.picker .picker-content{position:absolute;left:2px;top:0;cursor:move;white-space:nowrap;color:white;background-color:rgba(68,65,65,0.84);border-top-right-radius:20px;border-bottom-right-radius:20px}.picker .picker-content .p-title{position:absolute;top:-18px;left:0;color:#fff3e1;text-shadow:0 0 4px black}.picker .picker-content a{color:white}.picker .picker-content span{display:inline-block;padding:0 30px 0 10px}.picker .picker-content span big{display:block;font-size:18px}.picker .picker-content i{font-style:inherit;color:#e4d5bd;font-size:.8em}.picker .picker-content i .iconfont{font-size:10px;margin-left:-0.5em;width:1em;height:1em;display:inline-block;text-align:center;margin-right:.5em;text-shadow:none}.picker .picker-content .picker-link,.picker .picker-content .picker-close-button{transition:.3s opacity 0s;-webkit-transition:.3s opacity 0s;cursor:pointer;display:block;position:absolute}.picker .picker-content .picker-close-button{border:10px solid transparent;background-clip:padding-box;left:calc(100% + 8px);top:-15px}.picker .picker-content .picker-close-button::before{display:block;font-size:18px;width:1em;height:1em;border-radius:1em;border:0;background-color:rgba(68,65,65,0.84)}.picker .picker-content .picker-link{font-size:25px;left:100%;width:1em;height:1em;border-radius:1em;margin-left:-0.7em;bottom:0;background-color:#d49500;box-shadow:0 0 4px 0 black}.picker .picker-content .picker-latlon,.picker .picker-content .picker-share{position:absolute;left:10px;margin-top:10px;top:100%;color:#fff3e1;text-shadow:0 0 4px black;cursor:pointer}.picker .picker-content .picker-share{opacity:0}.picker .picker-content .picker-share::before{position:relative;font-size:1.6em;top:.2em}.picker .picker-content .picker-link:hover+.picker-share,.picker .picker-content .picker-share:hover{opacity:1}.picker .picker-content.p-empty{background:none;width:30px;min-width:30px;height:50px}.picker .picker-content.p-empty .picker-close-button{position:absolute;left:0}.picker .picker-content.p-empty .picker-link{display:none}#device-mobile .picker .picker-content{transition:none;top:initial;min-height:27px;bottom:100%;border-radius:27px;transform:translateX(-50%);-webkit-transform:translateX(-50%)}#device-mobile .picker .picker-content span,#device-mobile .picker .picker-content .picker-close-button,#device-mobile .picker .picker-content .picker-link{transition:none}#device-mobile .picker .picker-content span{padding:2px 30px 2px 15px}#device-mobile .picker .picker-content span .p-title{display:none}#device-mobile .picker .picker-content .picker-close-button{top:-10px}#device-mobile .picker .picker-content .picker-close-button::before{font-size:27px}#device-mobile .picker .picker-content.p-empty .picker-close-button{left:-10px;bottom:-10px;top:initial}#device-mobile .picker .picker-content .picker-share{display:none}.picker .picker-drag-me{visibility:visible;transition:visibility 0s linear .5s,opacity .5s linear;position:absolute;bottom:5px;font-size:10px;color:#dedede;left:-5px;white-space:nowrap;transform-origin:left bottom;transform:rotate(-90deg);-webkit-transform-origin:left bottom;-webkit-transform:rotate(-90deg)}.picker .picker-drag-me:before{position:relative;font-size:16px;left:-3px;top:-3px;content:"'"}</style><script type="text/javascript" async="" src="v/27.3.1.ind.310f/plugins/poi-libs.js"></script><style>.pois-metars [data-id]::before{content:' ';display:block;border-radius:1em;width:calc(1em - 2px);height:calc(1em - 2px);border:1px solid}.overlay-satellite .pois-metars [data-id]::before,.overlay-radar .pois-metars [data-id]::before{border-width:1.5px}.pois-metars [data-id].rulesU{color:#c1c1c1}.pois-metars [data-id].rulesU:hover::before{background-color:#c1c1c1}.pois-metars [data-id].rulesV{color:#27dd27}.pois-metars [data-id].rulesV:hover::before{background-color:#27dd27}.pois-metars [data-id].rulesI{color:#b23b3b}.pois-metars [data-id].rulesI:hover::before{background-color:#b23b3b}.pois-metars [data-id].rulesM{color:#4040fa}.pois-metars [data-id].rulesM:hover::before{background-color:#4040fa}.pois-metars [data-id].rulesL{color:#ff9eae}.pois-metars [data-id].rulesL:hover::before{background-color:#ff9eae}.zoom4 .pois-metars [data-id]{font-size:4px}.zoom5 .pois-metars [data-id]{font-size:6px}.zoom6 .pois-metars [data-id]{font-size:9px}.zoom7 .pois-metars [data-id]{font-size:11px}.zoom8 .pois-metars [data-id]{font-size:13px}.pois-airq [data-id],.airq-popup .aqi-detail[data-value],.pois-cities [data-id],.pois-stations [data-id],.labels-layer [data-id] .label-wx{white-space:nowrap;width:inherit;height:calc( 2em + 2px );border-radius:1em}.pois-airq [data-id] .iconfont,.airq-popup .aqi-detail[data-value] .iconfont,.pois-cities [data-id] .iconfont,.pois-stations [data-id] .iconfont,.labels-layer [data-id] .label-wx .iconfont{pointer-events:none;display:inline-block;border-radius:1em;width:1em;height:1em;margin-right:1.5px;text-align:center}.pois-airq [data-id]::after,.airq-popup .aqi-detail[data-value]::after,.pois-cities [data-id]::after,.pois-stations [data-id]::after,.labels-layer [data-id] .label-wx::after{pointer-events:none;font-size:11px;content:attr(data-value);display:inline-block;padding-right:4px;padding-left:4px;position:relative}.pois-airq [data-id].poi-has-wind::after,.airq-popup .aqi-detail[data-value].poi-has-wind::after,.pois-cities [data-id].poi-has-wind::after,.pois-stations [data-id].poi-has-wind::after,.labels-layer [data-id] .label-wx.poi-has-wind::after{top:-2px}.labels-layer [data-id] .label-wx{position:absolute;display:block;left:50%;top:100%;transform:translate(-50%, 0);line-height:1;font-size:11px;padding:.1em .3em;border-radius:1em;margin-top:-3px;width:auto;height:auto}.pois-cities [data-id]:hover::before,.zoom11 .pois-cities [data-id]::before,.zoom12 .pois-cities [data-id]::before,.zoom13 .pois-cities [data-id]::before,.zoom14 .pois-cities [data-id]::before,.zoom15 .pois-cities [data-id]::before{position:absolute;background:none;color:#ffe29c;font-size:10px;white-space:nowrap;content:attr(data-text);top:3px;left:calc( 100% + 3px )}.pois-tide [data-id]{-webkit-animation:none;animation:none;font-size:18px}.pois-tide [data-id] div{border-radius:1.4em;color:white;pointer-events:none;text-align:center;width:1.4em;height:1.4em;padding-top:.15em;border:.5px solid white;line-height:1;margin-top:-0.2em;margin-left:-0.2em}.zoom4 .pois-tide [data-id]{font-size:8px}.zoom5 .pois-tide [data-id]{font-size:8px}.zoom6 .pois-tide [data-id]{font-size:8px}.zoom7 .pois-tide [data-id]{font-size:9px}.zoom8 .pois-tide [data-id]{font-size:10px}.zoom9 .pois-tide [data-id]{font-size:12px}.zoom10 .pois-tide [data-id]{font-size:14px}.zoom11 .pois-tide [data-id]{font-size:16px}.pois-surfspots [data-id],.pois-kitespots [data-id],.pois-firespots [data-id],.pois-pgspots [data-id]{color:#ffe29c;content:' ';border-radius:1em}.zoom4 .pois-surfspots [data-id],.zoom4 .pois-kitespots [data-id],.zoom4 .pois-firespots [data-id],.zoom4 .pois-pgspots [data-id],.zoom5 .pois-surfspots [data-id],.zoom5 .pois-kitespots [data-id],.zoom5 .pois-firespots [data-id],.zoom5 .pois-pgspots [data-id],.zoom6 .pois-surfspots [data-id],.zoom6 .pois-kitespots [data-id],.zoom6 .pois-firespots [data-id],.zoom6 .pois-pgspots [data-id],.zoom7 .pois-surfspots [data-id],.zoom7 .pois-kitespots [data-id],.zoom7 .pois-firespots [data-id],.zoom7 .pois-pgspots [data-id],.zoom8 .pois-surfspots [data-id],.zoom8 .pois-kitespots [data-id],.zoom8 .pois-firespots [data-id],.zoom8 .pois-pgspots [data-id],.zoom9 .pois-surfspots [data-id],.zoom9 .pois-kitespots [data-id],.zoom9 .pois-firespots [data-id],.zoom9 .pois-pgspots [data-id],.zoom10 .pois-surfspots [data-id],.zoom10 .pois-kitespots [data-id],.zoom10 .pois-firespots [data-id],.zoom10 .pois-pgspots [data-id],.zoom11 .pois-surfspots [data-id],.zoom11 .pois-kitespots [data-id],.zoom11 .pois-firespots [data-id],.zoom11 .pois-pgspots [data-id],.zoom12 .pois-surfspots [data-id],.zoom12 .pois-kitespots [data-id],.zoom12 .pois-firespots [data-id],.zoom12 .pois-pgspots [data-id],.zoom13 .pois-surfspots [data-id],.zoom13 .pois-kitespots [data-id],.zoom13 .pois-firespots [data-id],.zoom13 .pois-pgspots [data-id],.zoom14 .pois-surfspots [data-id],.zoom14 .pois-kitespots [data-id],.zoom14 .pois-firespots [data-id],.zoom14 .pois-pgspots [data-id],.zoom15 .pois-surfspots [data-id],.zoom15 .pois-kitespots [data-id],.zoom15 .pois-firespots [data-id],.zoom15 .pois-pgspots [data-id],.zoom16 .pois-surfspots [data-id],.zoom16 .pois-kitespots [data-id],.zoom16 .pois-firespots [data-id],.zoom16 .pois-pgspots [data-id],.zoom17 .pois-surfspots [data-id],.zoom17 .pois-kitespots [data-id],.zoom17 .pois-firespots [data-id],.zoom17 .pois-pgspots [data-id],.zoom18 .pois-surfspots [data-id],.zoom18 .pois-kitespots [data-id],.zoom18 .pois-firespots [data-id],.zoom18 .pois-pgspots [data-id]{text-shadow:0 0 4px black}.pois-firespots [data-id].spot-rank-0,.pois-pgspots [data-id].spot-rank-0,.pois-surfspots [data-id].spot-rank-0,.pois-kitespots [data-id].spot-rank-0,.pois-firespots [data-id].spot-rank-1,.pois-pgspots [data-id].spot-rank-1,.pois-surfspots [data-id].spot-rank-1,.pois-kitespots [data-id].spot-rank-1{color:#d8cbac}.zoom4 .pois-firespots [data-id].spot-rank-0,.zoom4 .pois-pgspots [data-id].spot-rank-0,.zoom4 .pois-surfspots [data-id].spot-rank-0,.zoom4 .pois-kitespots [data-id].spot-rank-0,.zoom4 .pois-firespots [data-id].spot-rank-1,.zoom4 .pois-pgspots [data-id].spot-rank-1,.zoom4 .pois-surfspots [data-id].spot-rank-1,.zoom4 .pois-kitespots [data-id].spot-rank-1,.zoom5 .pois-firespots [data-id].spot-rank-0,.zoom5 .pois-pgspots [data-id].spot-rank-0,.zoom5 .pois-surfspots [data-id].spot-rank-0,.zoom5 .pois-kitespots [data-id].spot-rank-0,.zoom5 .pois-firespots [data-id].spot-rank-1,.zoom5 .pois-pgspots [data-id].spot-rank-1,.zoom5 .pois-surfspots [data-id].spot-rank-1,.zoom5 .pois-kitespots [data-id].spot-rank-1,.zoom6 .pois-firespots [data-id].spot-rank-0,.zoom6 .pois-pgspots [data-id].spot-rank-0,.zoom6 .pois-surfspots [data-id].spot-rank-0,.zoom6 .pois-kitespots [data-id].spot-rank-0,.zoom6 .pois-firespots [data-id].spot-rank-1,.zoom6 .pois-pgspots [data-id].spot-rank-1,.zoom6 .pois-surfspots [data-id].spot-rank-1,.zoom6 .pois-kitespots [data-id].spot-rank-1,.zoom7 .pois-firespots [data-id].spot-rank-0,.zoom7 .pois-pgspots [data-id].spot-rank-0,.zoom7 .pois-surfspots [data-id].spot-rank-0,.zoom7 .pois-kitespots [data-id].spot-rank-0,.zoom7 .pois-firespots [data-id].spot-rank-1,.zoom7 .pois-pgspots [data-id].spot-rank-1,.zoom7 .pois-surfspots [data-id].spot-rank-1,.zoom7 .pois-kitespots [data-id].spot-rank-1{font-size:.6em;text-shadow:none}.zoom8 .pois-firespots [data-id].spot-rank-0,.zoom8 .pois-pgspots [data-id].spot-rank-0,.zoom8 .pois-surfspots [data-id].spot-rank-0,.zoom8 .pois-kitespots [data-id].spot-rank-0,.zoom8 .pois-firespots [data-id].spot-rank-1,.zoom8 .pois-pgspots [data-id].spot-rank-1,.zoom8 .pois-surfspots [data-id].spot-rank-1,.zoom8 .pois-kitespots [data-id].spot-rank-1{font-size:.8em;text-shadow:none}.zoom9 .pois-firespots [data-id].spot-rank-0,.zoom9 .pois-pgspots [data-id].spot-rank-0,.zoom9 .pois-surfspots [data-id].spot-rank-0,.zoom9 .pois-kitespots [data-id].spot-rank-0,.zoom9 .pois-firespots [data-id].spot-rank-1,.zoom9 .pois-pgspots [data-id].spot-rank-1,.zoom9 .pois-surfspots [data-id].spot-rank-1,.zoom9 .pois-kitespots [data-id].spot-rank-1{text-shadow:none}.zoom10 .pois-firespots [data-id].spot-rank-0,.zoom10 .pois-pgspots [data-id].spot-rank-0,.zoom10 .pois-surfspots [data-id].spot-rank-0,.zoom10 .pois-kitespots [data-id].spot-rank-0,.zoom10 .pois-firespots [data-id].spot-rank-1,.zoom10 .pois-pgspots [data-id].spot-rank-1,.zoom10 .pois-surfspots [data-id].spot-rank-1,.zoom10 .pois-kitespots [data-id].spot-rank-1,.zoom11 .pois-firespots [data-id].spot-rank-0,.zoom11 .pois-pgspots [data-id].spot-rank-0,.zoom11 .pois-surfspots [data-id].spot-rank-0,.zoom11 .pois-kitespots [data-id].spot-rank-0,.zoom11 .pois-firespots [data-id].spot-rank-1,.zoom11 .pois-pgspots [data-id].spot-rank-1,.zoom11 .pois-surfspots [data-id].spot-rank-1,.zoom11 .pois-kitespots [data-id].spot-rank-1,.zoom12 .pois-firespots [data-id].spot-rank-0,.zoom12 .pois-pgspots [data-id].spot-rank-0,.zoom12 .pois-surfspots [data-id].spot-rank-0,.zoom12 .pois-kitespots [data-id].spot-rank-0,.zoom12 .pois-firespots [data-id].spot-rank-1,.zoom12 .pois-pgspots [data-id].spot-rank-1,.zoom12 .pois-surfspots [data-id].spot-rank-1,.zoom12 .pois-kitespots [data-id].spot-rank-1,.zoom13 .pois-firespots [data-id].spot-rank-0,.zoom13 .pois-pgspots [data-id].spot-rank-0,.zoom13 .pois-surfspots [data-id].spot-rank-0,.zoom13 .pois-kitespots [data-id].spot-rank-0,.zoom13 .pois-firespots [data-id].spot-rank-1,.zoom13 .pois-pgspots [data-id].spot-rank-1,.zoom13 .pois-surfspots [data-id].spot-rank-1,.zoom13 .pois-kitespots [data-id].spot-rank-1,.zoom14 .pois-firespots [data-id].spot-rank-0,.zoom14 .pois-pgspots [data-id].spot-rank-0,.zoom14 .pois-surfspots [data-id].spot-rank-0,.zoom14 .pois-kitespots [data-id].spot-rank-0,.zoom14 .pois-firespots [data-id].spot-rank-1,.zoom14 .pois-pgspots [data-id].spot-rank-1,.zoom14 .pois-surfspots [data-id].spot-rank-1,.zoom14 .pois-kitespots [data-id].spot-rank-1,.zoom15 .pois-firespots [data-id].spot-rank-0,.zoom15 .pois-pgspots [data-id].spot-rank-0,.zoom15 .pois-surfspots [data-id].spot-rank-0,.zoom15 .pois-kitespots [data-id].spot-rank-0,.zoom15 .pois-firespots [data-id].spot-rank-1,.zoom15 .pois-pgspots [data-id].spot-rank-1,.zoom15 .pois-surfspots [data-id].spot-rank-1,.zoom15 .pois-kitespots [data-id].spot-rank-1,.zoom16 .pois-firespots [data-id].spot-rank-0,.zoom16 .pois-pgspots [data-id].spot-rank-0,.zoom16 .pois-surfspots [data-id].spot-rank-0,.zoom16 .pois-kitespots [data-id].spot-rank-0,.zoom16 .pois-firespots [data-id].spot-rank-1,.zoom16 .pois-pgspots [data-id].spot-rank-1,.zoom16 .pois-surfspots [data-id].spot-rank-1,.zoom16 .pois-kitespots [data-id].spot-rank-1,.zoom17 .pois-firespots [data-id].spot-rank-0,.zoom17 .pois-pgspots [data-id].spot-rank-0,.zoom17 .pois-surfspots [data-id].spot-rank-0,.zoom17 .pois-kitespots [data-id].spot-rank-0,.zoom17 .pois-firespots [data-id].spot-rank-1,.zoom17 .pois-pgspots [data-id].spot-rank-1,.zoom17 .pois-surfspots [data-id].spot-rank-1,.zoom17 .pois-kitespots [data-id].spot-rank-1,.zoom18 .pois-firespots [data-id].spot-rank-0,.zoom18 .pois-pgspots [data-id].spot-rank-0,.zoom18 .pois-surfspots [data-id].spot-rank-0,.zoom18 .pois-kitespots [data-id].spot-rank-0,.zoom18 .pois-firespots [data-id].spot-rank-1,.zoom18 .pois-pgspots [data-id].spot-rank-1,.zoom18 .pois-surfspots [data-id].spot-rank-1,.zoom18 .pois-kitespots [data-id].spot-rank-1{font-size:1.2em}.pois-firespots [data-id].spot-rank-2,.pois-pgspots [data-id].spot-rank-2,.pois-surfspots [data-id].spot-rank-2,.pois-kitespots [data-id].spot-rank-2,.pois-firespots [data-id].spot-rank-3,.pois-pgspots [data-id].spot-rank-3,.pois-surfspots [data-id].spot-rank-3,.pois-kitespots [data-id].spot-rank-3{z-index:5}.zoom4 .pois-firespots [data-id].spot-rank-2,.zoom4 .pois-pgspots [data-id].spot-rank-2,.zoom4 .pois-surfspots [data-id].spot-rank-2,.zoom4 .pois-kitespots [data-id].spot-rank-2,.zoom4 .pois-firespots [data-id].spot-rank-3,.zoom4 .pois-pgspots [data-id].spot-rank-3,.zoom4 .pois-surfspots [data-id].spot-rank-3,.zoom4 .pois-kitespots [data-id].spot-rank-3,.zoom5 .pois-firespots [data-id].spot-rank-2,.zoom5 .pois-pgspots [data-id].spot-rank-2,.zoom5 .pois-surfspots [data-id].spot-rank-2,.zoom5 .pois-kitespots [data-id].spot-rank-2,.zoom5 .pois-firespots [data-id].spot-rank-3,.zoom5 .pois-pgspots [data-id].spot-rank-3,.zoom5 .pois-surfspots [data-id].spot-rank-3,.zoom5 .pois-kitespots [data-id].spot-rank-3,.zoom6 .pois-firespots [data-id].spot-rank-2,.zoom6 .pois-pgspots [data-id].spot-rank-2,.zoom6 .pois-surfspots [data-id].spot-rank-2,.zoom6 .pois-kitespots [data-id].spot-rank-2,.zoom6 .pois-firespots [data-id].spot-rank-3,.zoom6 .pois-pgspots [data-id].spot-rank-3,.zoom6 .pois-surfspots [data-id].spot-rank-3,.zoom6 .pois-kitespots [data-id].spot-rank-3,.zoom7 .pois-firespots [data-id].spot-rank-2,.zoom7 .pois-pgspots [data-id].spot-rank-2,.zoom7 .pois-surfspots [data-id].spot-rank-2,.zoom7 .pois-kitespots [data-id].spot-rank-2,.zoom7 .pois-firespots [data-id].spot-rank-3,.zoom7 .pois-pgspots [data-id].spot-rank-3,.zoom7 .pois-surfspots [data-id].spot-rank-3,.zoom7 .pois-kitespots [data-id].spot-rank-3{font-size:1em}.zoom8 .pois-firespots [data-id].spot-rank-2,.zoom8 .pois-pgspots [data-id].spot-rank-2,.zoom8 .pois-surfspots [data-id].spot-rank-2,.zoom8 .pois-kitespots [data-id].spot-rank-2,.zoom8 .pois-firespots [data-id].spot-rank-3,.zoom8 .pois-pgspots [data-id].spot-rank-3,.zoom8 .pois-surfspots [data-id].spot-rank-3,.zoom8 .pois-kitespots [data-id].spot-rank-3,.zoom9 .pois-firespots [data-id].spot-rank-2,.zoom9 .pois-pgspots [data-id].spot-rank-2,.zoom9 .pois-surfspots [data-id].spot-rank-2,.zoom9 .pois-kitespots [data-id].spot-rank-2,.zoom9 .pois-firespots [data-id].spot-rank-3,.zoom9 .pois-pgspots [data-id].spot-rank-3,.zoom9 .pois-surfspots [data-id].spot-rank-3,.zoom9 .pois-kitespots [data-id].spot-rank-3{font-size:1.2em}.zoom10 .pois-firespots [data-id].spot-rank-2,.zoom10 .pois-pgspots [data-id].spot-rank-2,.zoom10 .pois-surfspots [data-id].spot-rank-2,.zoom10 .pois-kitespots [data-id].spot-rank-2,.zoom10 .pois-firespots [data-id].spot-rank-3,.zoom10 .pois-pgspots [data-id].spot-rank-3,.zoom10 .pois-surfspots [data-id].spot-rank-3,.zoom10 .pois-kitespots [data-id].spot-rank-3,.zoom11 .pois-firespots [data-id].spot-rank-2,.zoom11 .pois-pgspots [data-id].spot-rank-2,.zoom11 .pois-surfspots [data-id].spot-rank-2,.zoom11 .pois-kitespots [data-id].spot-rank-2,.zoom11 .pois-firespots [data-id].spot-rank-3,.zoom11 .pois-pgspots [data-id].spot-rank-3,.zoom11 .pois-surfspots [data-id].spot-rank-3,.zoom11 .pois-kitespots [data-id].spot-rank-3,.zoom12 .pois-firespots [data-id].spot-rank-2,.zoom12 .pois-pgspots [data-id].spot-rank-2,.zoom12 .pois-surfspots [data-id].spot-rank-2,.zoom12 .pois-kitespots [data-id].spot-rank-2,.zoom12 .pois-firespots [data-id].spot-rank-3,.zoom12 .pois-pgspots [data-id].spot-rank-3,.zoom12 .pois-surfspots [data-id].spot-rank-3,.zoom12 .pois-kitespots [data-id].spot-rank-3,.zoom13 .pois-firespots [data-id].spot-rank-2,.zoom13 .pois-pgspots [data-id].spot-rank-2,.zoom13 .pois-surfspots [data-id].spot-rank-2,.zoom13 .pois-kitespots [data-id].spot-rank-2,.zoom13 .pois-firespots [data-id].spot-rank-3,.zoom13 .pois-pgspots [data-id].spot-rank-3,.zoom13 .pois-surfspots [data-id].spot-rank-3,.zoom13 .pois-kitespots [data-id].spot-rank-3,.zoom14 .pois-firespots [data-id].spot-rank-2,.zoom14 .pois-pgspots [data-id].spot-rank-2,.zoom14 .pois-surfspots [data-id].spot-rank-2,.zoom14 .pois-kitespots [data-id].spot-rank-2,.zoom14 .pois-firespots [data-id].spot-rank-3,.zoom14 .pois-pgspots [data-id].spot-rank-3,.zoom14 .pois-surfspots [data-id].spot-rank-3,.zoom14 .pois-kitespots [data-id].spot-rank-3,.zoom15 .pois-firespots [data-id].spot-rank-2,.zoom15 .pois-pgspots [data-id].spot-rank-2,.zoom15 .pois-surfspots [data-id].spot-rank-2,.zoom15 .pois-kitespots [data-id].spot-rank-2,.zoom15 .pois-firespots [data-id].spot-rank-3,.zoom15 .pois-pgspots [data-id].spot-rank-3,.zoom15 .pois-surfspots [data-id].spot-rank-3,.zoom15 .pois-kitespots [data-id].spot-rank-3,.zoom16 .pois-firespots [data-id].spot-rank-2,.zoom16 .pois-pgspots [data-id].spot-rank-2,.zoom16 .pois-surfspots [data-id].spot-rank-2,.zoom16 .pois-kitespots [data-id].spot-rank-2,.zoom16 .pois-firespots [data-id].spot-rank-3,.zoom16 .pois-pgspots [data-id].spot-rank-3,.zoom16 .pois-surfspots [data-id].spot-rank-3,.zoom16 .pois-kitespots [data-id].spot-rank-3,.zoom17 .pois-firespots [data-id].spot-rank-2,.zoom17 .pois-pgspots [data-id].spot-rank-2,.zoom17 .pois-surfspots [data-id].spot-rank-2,.zoom17 .pois-kitespots [data-id].spot-rank-2,.zoom17 .pois-firespots [data-id].spot-rank-3,.zoom17 .pois-pgspots [data-id].spot-rank-3,.zoom17 .pois-surfspots [data-id].spot-rank-3,.zoom17 .pois-kitespots [data-id].spot-rank-3,.zoom18 .pois-firespots [data-id].spot-rank-2,.zoom18 .pois-pgspots [data-id].spot-rank-2,.zoom18 .pois-surfspots [data-id].spot-rank-2,.zoom18 .pois-kitespots [data-id].spot-rank-2,.zoom18 .pois-firespots [data-id].spot-rank-3,.zoom18 .pois-pgspots [data-id].spot-rank-3,.zoom18 .pois-surfspots [data-id].spot-rank-3,.zoom18 .pois-kitespots [data-id].spot-rank-3{font-size:1.6em}.pois-firespots [data-id].spot-rank-4,.pois-pgspots [data-id].spot-rank-4,.pois-surfspots [data-id].spot-rank-4,.pois-kitespots [data-id].spot-rank-4,.pois-firespots [data-id].spot-rank-5,.pois-pgspots [data-id].spot-rank-5,.pois-surfspots [data-id].spot-rank-5,.pois-kitespots [data-id].spot-rank-5{z-index:10}.zoom4 .pois-firespots [data-id].spot-rank-4,.zoom4 .pois-pgspots [data-id].spot-rank-4,.zoom4 .pois-surfspots [data-id].spot-rank-4,.zoom4 .pois-kitespots [data-id].spot-rank-4,.zoom4 .pois-firespots [data-id].spot-rank-5,.zoom4 .pois-pgspots [data-id].spot-rank-5,.zoom4 .pois-surfspots [data-id].spot-rank-5,.zoom4 .pois-kitespots [data-id].spot-rank-5,.zoom5 .pois-firespots [data-id].spot-rank-4,.zoom5 .pois-pgspots [data-id].spot-rank-4,.zoom5 .pois-surfspots [data-id].spot-rank-4,.zoom5 .pois-kitespots [data-id].spot-rank-4,.zoom5 .pois-firespots [data-id].spot-rank-5,.zoom5 .pois-pgspots [data-id].spot-rank-5,.zoom5 .pois-surfspots [data-id].spot-rank-5,.zoom5 .pois-kitespots [data-id].spot-rank-5,.zoom6 .pois-firespots [data-id].spot-rank-4,.zoom6 .pois-pgspots [data-id].spot-rank-4,.zoom6 .pois-surfspots [data-id].spot-rank-4,.zoom6 .pois-kitespots [data-id].spot-rank-4,.zoom6 .pois-firespots [data-id].spot-rank-5,.zoom6 .pois-pgspots [data-id].spot-rank-5,.zoom6 .pois-surfspots [data-id].spot-rank-5,.zoom6 .pois-kitespots [data-id].spot-rank-5,.zoom7 .pois-firespots [data-id].spot-rank-4,.zoom7 .pois-pgspots [data-id].spot-rank-4,.zoom7 .pois-surfspots [data-id].spot-rank-4,.zoom7 .pois-kitespots [data-id].spot-rank-4,.zoom7 .pois-firespots [data-id].spot-rank-5,.zoom7 .pois-pgspots [data-id].spot-rank-5,.zoom7 .pois-surfspots [data-id].spot-rank-5,.zoom7 .pois-kitespots [data-id].spot-rank-5{font-size:1.4em}.zoom8 .pois-firespots [data-id].spot-rank-4,.zoom8 .pois-pgspots [data-id].spot-rank-4,.zoom8 .pois-surfspots [data-id].spot-rank-4,.zoom8 .pois-kitespots [data-id].spot-rank-4,.zoom8 .pois-firespots [data-id].spot-rank-5,.zoom8 .pois-pgspots [data-id].spot-rank-5,.zoom8 .pois-surfspots [data-id].spot-rank-5,.zoom8 .pois-kitespots [data-id].spot-rank-5,.zoom9 .pois-firespots [data-id].spot-rank-4,.zoom9 .pois-pgspots [data-id].spot-rank-4,.zoom9 .pois-surfspots [data-id].spot-rank-4,.zoom9 .pois-kitespots [data-id].spot-rank-4,.zoom9 .pois-firespots [data-id].spot-rank-5,.zoom9 .pois-pgspots [data-id].spot-rank-5,.zoom9 .pois-surfspots [data-id].spot-rank-5,.zoom9 .pois-kitespots [data-id].spot-rank-5{font-size:1.6em}.zoom10 .pois-firespots [data-id].spot-rank-4,.zoom10 .pois-pgspots [data-id].spot-rank-4,.zoom10 .pois-surfspots [data-id].spot-rank-4,.zoom10 .pois-kitespots [data-id].spot-rank-4,.zoom10 .pois-firespots [data-id].spot-rank-5,.zoom10 .pois-pgspots [data-id].spot-rank-5,.zoom10 .pois-surfspots [data-id].spot-rank-5,.zoom10 .pois-kitespots [data-id].spot-rank-5,.zoom11 .pois-firespots [data-id].spot-rank-4,.zoom11 .pois-pgspots [data-id].spot-rank-4,.zoom11 .pois-surfspots [data-id].spot-rank-4,.zoom11 .pois-kitespots [data-id].spot-rank-4,.zoom11 .pois-firespots [data-id].spot-rank-5,.zoom11 .pois-pgspots [data-id].spot-rank-5,.zoom11 .pois-surfspots [data-id].spot-rank-5,.zoom11 .pois-kitespots [data-id].spot-rank-5,.zoom12 .pois-firespots [data-id].spot-rank-4,.zoom12 .pois-pgspots [data-id].spot-rank-4,.zoom12 .pois-surfspots [data-id].spot-rank-4,.zoom12 .pois-kitespots [data-id].spot-rank-4,.zoom12 .pois-firespots [data-id].spot-rank-5,.zoom12 .pois-pgspots [data-id].spot-rank-5,.zoom12 .pois-surfspots [data-id].spot-rank-5,.zoom12 .pois-kitespots [data-id].spot-rank-5,.zoom13 .pois-firespots [data-id].spot-rank-4,.zoom13 .pois-pgspots [data-id].spot-rank-4,.zoom13 .pois-surfspots [data-id].spot-rank-4,.zoom13 .pois-kitespots [data-id].spot-rank-4,.zoom13 .pois-firespots [data-id].spot-rank-5,.zoom13 .pois-pgspots [data-id].spot-rank-5,.zoom13 .pois-surfspots [data-id].spot-rank-5,.zoom13 .pois-kitespots [data-id].spot-rank-5,.zoom14 .pois-firespots [data-id].spot-rank-4,.zoom14 .pois-pgspots [data-id].spot-rank-4,.zoom14 .pois-surfspots [data-id].spot-rank-4,.zoom14 .pois-kitespots [data-id].spot-rank-4,.zoom14 .pois-firespots [data-id].spot-rank-5,.zoom14 .pois-pgspots [data-id].spot-rank-5,.zoom14 .pois-surfspots [data-id].spot-rank-5,.zoom14 .pois-kitespots [data-id].spot-rank-5,.zoom15 .pois-firespots [data-id].spot-rank-4,.zoom15 .pois-pgspots [data-id].spot-rank-4,.zoom15 .pois-surfspots [data-id].spot-rank-4,.zoom15 .pois-kitespots [data-id].spot-rank-4,.zoom15 .pois-firespots [data-id].spot-rank-5,.zoom15 .pois-pgspots [data-id].spot-rank-5,.zoom15 .pois-surfspots [data-id].spot-rank-5,.zoom15 .pois-kitespots [data-id].spot-rank-5,.zoom16 .pois-firespots [data-id].spot-rank-4,.zoom16 .pois-pgspots [data-id].spot-rank-4,.zoom16 .pois-surfspots [data-id].spot-rank-4,.zoom16 .pois-kitespots [data-id].spot-rank-4,.zoom16 .pois-firespots [data-id].spot-rank-5,.zoom16 .pois-pgspots [data-id].spot-rank-5,.zoom16 .pois-surfspots [data-id].spot-rank-5,.zoom16 .pois-kitespots [data-id].spot-rank-5,.zoom17 .pois-firespots [data-id].spot-rank-4,.zoom17 .pois-pgspots [data-id].spot-rank-4,.zoom17 .pois-surfspots [data-id].spot-rank-4,.zoom17 .pois-kitespots [data-id].spot-rank-4,.zoom17 .pois-firespots [data-id].spot-rank-5,.zoom17 .pois-pgspots [data-id].spot-rank-5,.zoom17 .pois-surfspots [data-id].spot-rank-5,.zoom17 .pois-kitespots [data-id].spot-rank-5,.zoom18 .pois-firespots [data-id].spot-rank-4,.zoom18 .pois-pgspots [data-id].spot-rank-4,.zoom18 .pois-surfspots [data-id].spot-rank-4,.zoom18 .pois-kitespots [data-id].spot-rank-4,.zoom18 .pois-firespots [data-id].spot-rank-5,.zoom18 .pois-pgspots [data-id].spot-rank-5,.zoom18 .pois-surfspots [data-id].spot-rank-5,.zoom18 .pois-kitespots [data-id].spot-rank-5{font-size:2em}.pois-cams{z-index:100}.pois-cams [data-id]{font-size:11px;color:#ffe29c;text-shadow:0 0 4px black}.pois-cams [data-id].cam-is-fresh{color:lightgreen}.pois-cams [data-id].cam-is-obsolete{color:lightgray}.metars-popup{max-width:220px}.metars-popup p{margin:0 0 .35em 0}.metars-popup .adtypeV::after,.metars-popup .adtypeL::after,.metars-popup .adtypeM::after,.metars-popup .adtypeI::after,.metars-popup .adtypeU::after{font-size:9px;padding:0 2px}.tide-line{padding:5px 10px;text-align:center}.tide-line b{display:block;width:100%;text-align:center;font-weight:normal;font-size:1.8em}.tide-line.tide-type-LT{background:#6b572a}.tide-line.tide-type-HT{background:#3e6cbf}.tide-line.tide-type-SE,.tide-line.tide-type-SF{background:#006400}.tide-line.tide-type-MF,.tide-line.tide-type-ME{background:#af8212}.tide-popup{width:227px !important;max-width:227px !important;background-color:#4d4d4d;pointer-events:none;font-size:12px;border-radius:5px;padding-left:0;padding-right:0}.tide-popup .leaflet-popup-content{width:100% !important}.tide-popup header{font-size:1.2em;margin-bottom:5px;padding:0 .6em}.tide-popup small{margin-top:5px;display:block;padding:0 1em}.kitespots-popup,.surfspots-popup,.pgspots-popup{max-width:inherit}.kitespots-popup p,.surfspots-popup p,.pgspots-popup p{margin:3px 0}.kitespots-popup p .popularity,.surfspots-popup p .popularity,.pgspots-popup p .popularity{position:relative;display:inline-block;top:.15em;letter-spacing:.3em}.kitespots-popup small,.surfspots-popup small,.pgspots-popup small{font-size:9px;opacity:.8}.surfspots-popup .leaflet-popup-content{max-width:200px}.surfspots-popup img{filter:invert(100%);-webkit-filter:invert(100%)}.surfspots-popup .pois-surfguide{text-align:right}.surfspots-popup .pois-surfguide img{width:80%;opacity:.8}.surfspots-popup .surficons{margin:.8em 0;position:relative}.surfspots-popup .surficons .surfspot-max{position:absolute;left:0;top:0}.surfspots-popup .surficons img{width:25px;margin-right:.5em;display:inline-block}.kitespots-popup{width:200px}.cams-popup{width:200px;max-width:200px;padding:0}.cams-popup img{width:200px}.cams-popup img+div{line-height:1;position:relative;padding:0 .7em .3em .7em}.cams-popup img+div::before{top:.1em;left:-0.1em;margin-right:0}.leaflet-empty-popup .leaflet-popup-content-wrapper{color:#f8f8f8}.airq-popup .aqi-detail[data-value],.pois-airq{z-index:100}.airq-popup{max-width:227px}.airq-popup .data-ts{font-size:10px;position:absolute;top:0;right:1em}.airq-popup .head{font-size:14px;padding:8px 0}.airq-popup .head .aqi-detail[data-value]{padding:1px;font-size:20px}.airq-popup .head .aqi-detail[data-value]::after{font-size:20px}.airq-popup .head .range-name{padding-top:4px;display:inline-block;margin:0}.airq-popup .head::after{font-size:16px}.airq-popup .aqidetail{padding-bottom:2px;display:flex;flex-wrap:wrap}.airq-popup .aqidetail .rounded-box{padding:.25em .7em;white-space:nowrap;margin:0 4px 4px 0}</style><script type="text/javascript" async="" src="v/27.3.1.ind.310f/plugins/contextmenu.js"></script><style>#plugin-contextmenu{font-size:12px;padding:.5em .7em;line-height:2;z-index:100}#plugin-contextmenu .closing-x{display:none}#plugin-contextmenu .context-coords{color:#9d0300;margin-bottom:.3em}#device-mobile #plugin-contextmenu{font-size:18px;position:fixed;left:20px;top:20px;right:20px}#device-mobile #plugin-contextmenu::before,#device-mobile #plugin-contextmenu::after{display:none}#device-mobile .has-statusbar #plugin-contextmenu{top:40px}#device-mobile .has-statusbar.iphonex #plugin-contextmenu{top:52px}</style><script type="text/javascript" async="" src="v/27.3.1.ind.310f/plugins/radar-sat.js"></script><script type="text/javascript" async="" src="v/27.3.1.ind.310f/plugins/patternator.js"></script></head>
     </head>
-    <body>
-        <div id="windy"></div>
-<div id="embed-zoom">
-    <div data-do="zoomIn" class="clickable iconfont noselect zoom-ctrl zoom-plus" title="Zoom in">+</div>
-    <div data-do="zoomOut" class="clickable iconfont noselect zoom-ctrl zoom-minus" title="Zoom out">-</div>
-</div>
+    <!-- <body>
+        <div id="windy"></div> -->
+<body class="mm-hide zoom8 onrhpane platform-desktop subs-premium product-gfs overlay-rain onuser user-logged-in selectedpois-cities" data-map="sznmap"><div id="map-container" style="position: fixed; top: 0; bottom: 0; left: 0; right: 0; width: 100vw; height: 100vh;" class="noselect leaflet-container leaflet-touch leaflet-retina leaflet-grab leaflet-touch-drag leaflet-touch-zoom"><div class="leaflet-pane leaflet-map-pane" style="transform: translate3d(-200px, 0px, 0px);"><div class="leaflet-pane leaflet-tile-pane"><div class="leaflet-layer basemap-layer"><div class="leaflet-tile-container leaflet-zoom-animated" style="z-index: 18; transform: translate3d(0px, 0px, 0px) scale(1);"><img alt="" role="presentation" src="https://tiles.windy.com/tiles/v10.0/darkmap-retina/8/101/98.png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(251px, 218px, 0px);"><img alt="" role="presentation" src="https://tiles.windy.com/tiles/v10.0/darkmap-retina/8/101/97.png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(251px, -38px, 0px);"><img alt="" role="presentation" src="https://tiles.windy.com/tiles/v10.0/darkmap-retina/8/100/98.png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(-5px, 218px, 0px);"><img alt="" role="presentation" src="https://tiles.windy.com/tiles/v10.0/darkmap-retina/8/102/98.png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(507px, 218px, 0px);"><img alt="" role="presentation" src="https://tiles.windy.com/tiles/v10.0/darkmap-retina/8/101/99.png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(251px, 474px, 0px);"><img alt="" role="presentation" src="https://tiles.windy.com/tiles/v10.0/darkmap-retina/8/100/97.png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(-5px, -38px, 0px);"><img alt="" role="presentation" src="https://tiles.windy.com/tiles/v10.0/darkmap-retina/8/102/97.png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(507px, -38px, 0px);"><img alt="" role="presentation" src="https://tiles.windy.com/tiles/v10.0/darkmap-retina/8/100/99.png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(-5px, 474px, 0px);"><img alt="" role="presentation" src="https://tiles.windy.com/tiles/v10.0/darkmap-retina/8/102/99.png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(507px, 474px, 0px);"></div></div><canvas class="leaflet-canvas leaflet-layer leaflet-zoom-animated particles-layer" width="598" height="1372" style="width: 299px; height: 686px; transform: translate3d(200px, 0px, 0px); display: block; opacity: 1;"></canvas></div><div class="leaflet-pane leaflet-shadow-pane"></div><div class="leaflet-pane leaflet-overlay-pane"><canvas class="leaflet-canvas leaflet-layer leaflet-zoom-animated isolines-layer" width="598" height="1372" style="width: 299px; height: 686px; transform: translate3d(200px, 0px, 0px);"></canvas></div><div class="leaflet-pane leaflet-marker-pane"><div class="leaflet-layer labels-layer"><div class="leaflet-tile-container leaflet-zoom-animated" style="z-index: 11; transform: translate3d(0px, 0px, 0px) scale(1);"><div class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(251px, 218px, 0px);"></div><div class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(251px, -38px, 0px);"></div><div class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(-5px, 218px, 0px);"></div><div class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(507px, 218px, 0px);"></div><div class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(251px, 474px, 0px);"></div><div class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(-5px, -38px, 0px);"></div><div class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(507px, -38px, 0px);"></div><div class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(-5px, 474px, 0px);"></div><div class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(507px, 474px, 0px);"></div></div></div><div class="leaflet-layer windy-pois pois-favs"></div><div class="leaflet-layer windy-pois pois-cities"></div></div><div class="leaflet-pane leaflet-tooltip-pane"></div><div class="leaflet-pane leaflet-popup-pane"></div><div class="leaflet-proxy leaflet-zoom-animated" style="transform: translate3d(25955px, 25213px, 0px) scale(128);"></div></div><div class="leaflet-control-container"><div class="leaflet-top leaflet-left"></div><div class="leaflet-top leaflet-right"></div><div class="leaflet-bottom leaflet-left"></div><div class="leaflet-bottom leaflet-right"><div class="leaflet-control-attribution leaflet-control"><a href="http://leafletjs.com" title="A JS library for interactive maps">Leaflet</a></div></div></div></div><a id="contrib" class="mobilehide" href="http://www.openstreetmap.org/copyright" target="_blank">© OpenStreetMap contributors</a><div id="bottom" class="shy left-border right-border bottom-border"><div id="progress-bar" class="progress-bar"><div class="progress-line" style="width: 0px;"><div class="played" style="width: 0px;"></div><div class="avbl"></div><i style="left: -3.18098px;"></i></div><div class="timecode ghost-timecode" style="opacity: 0; left: 197px; margin-top: -25px;"><div class="box">16:00</div></div><div data-title="D_LT2" class="timecode main-timecode" title="Lokaltid" style="left: 45px;"><div class="box">Onsdag 16 - 0:00</div><div class="loading ld-lgray size-l loader-path"></div></div><div id="playpause" class="play-pause iconfont clickable off"></div><div id="calendar"></div></div><div id="accumulations" class="size-s fg-yellow"><span id="acc-title-rain" data-t="RAINACCU" class="capitalize">TOTAL REGNMÄNGD</span> <span id="acc-title-snow" data-t="SNOWACCU" class="capitalize">VISA TOTAL MÄNGD</span> <span id="acc-title-gust" data-t="GUSTACCU" class="capitalize">Total vind</span><div class="ui-switch noselect notap"><div data-do="set,next12h">Senaste 12 timmarna</div><div data-do="set,next24h">Senaste 24 timmarna</div><div data-do="set,next3d" class="selected">Senaste 3 dagarna</div><div data-do="set,next5d">Senaste 5 dagarna</div><div data-do="set,next10d">Senaste 10 dagarna</div></div></div><div id="mobile-calendar"><div id="timecode-mobile" data-title="D_LT2" class="timecode" title="Lokaltid"><div id="mobile_box" class="box"></div><div class="loading ld-lgray size-l loader-path"></div></div><div id="days"></div><div id="playpause-mobile" class="play-pause iconfont bottom-border"></div></div><div id="legend-mobile" class="metric-legend bottom-border"></div></div><div id="bottom-credits" class="mobilehide inlined" data-icon-after="k" data-t="DEVELOPED">Utvecklad med</div><div id="detail-rhpane-wrapper" class="right-border top-border flex-container open"><section id="rhpane" class="shy flex-container mobiletablethide"><div data-do="zoomIn" class="clickable iconfont fg-yellow noselect zoom-ctrl zoom-plus" title="Zoom in">+</div><div data-do="zoomOut" class="clickable iconfont fg-yellow noselect zoom-ctrl zoom-minus" title="Zoom out">-</div><nav id="overlay" data-ref="overlay" class="menu iconsize-8"><a data-do="unfold,radarSat" data-parent="isParent">
+                        <div class="iconfont noselect notap">O</div>
+                        <div class="menu-text noselect notap">Radar och satellit</div>
+                    </a><a data-do="set,radar" data-parent="radarSat" class="sub-menu">
+                        <div class="iconfont noselect notap"></div>
+                        <div class="menu-text noselect notap">Väderradar</div>
+                    </a><a data-do="set,satellite" data-parent="radarSat" class="sub-menu">
+                        <div class="iconfont noselect notap"></div>
+                        <div class="menu-text noselect notap">Satellit</div>
+                    </a><a data-do="set,wind" data-parent="isParent" class="">
+                        <div class="iconfont noselect notap">|</div>
+                        <div class="menu-text noselect notap">Vind</div>
+                    </a><a data-do="set,gust" data-parent="wind" class="sub-menu">
+                        <div class="iconfont noselect notap"></div>
+                        <div class="menu-text noselect notap">Vindbyar</div>
+                    </a><a data-do="set,rain" data-parent="isParent" class="selected">
+                        <div class="iconfont noselect notap"></div>
+                        <div class="menu-text noselect notap">Regn, åska</div>
+                    </a><a data-do="set,rainAccu" data-parent="rain" class="sub-menu menu-unfold">
+                        <div class="iconfont noselect notap">9</div>
+                        <div class="menu-text noselect notap">Total regnmängd</div>
+                    </a><a data-do="set,snowAccu" data-parent="rain" class="sub-menu menu-unfold">
+                        <div class="iconfont noselect notap"></div>
+                        <div class="menu-text noselect notap">Nysnö</div>
+                    </a><a data-do="set,thunder" data-parent="rain" class="sub-menu menu-unfold">
+                        <div class="iconfont noselect notap"></div>
+                        <div class="menu-text noselect notap">Åskväder</div>
+                    </a><a data-do="set,temp" data-parent="isParent">
+                        <div class="iconfont noselect notap"></div>
+                        <div class="menu-text noselect notap">Temperatur</div>
+                    </a><a data-do="set,rh" data-parent="temp" class="sub-menu">
+                        <div class="iconfont noselect notap">/</div>
+                        <div class="menu-text noselect notap">Luftfukt.</div>
+                    </a><a data-do="set,clouds" data-parent="isParent" class="">
+                        <div class="iconfont noselect notap">7</div>
+                        <div class="menu-text noselect notap">Moln</div>
+                    </a><a data-do="set,lclouds" data-parent="clouds" class="sub-menu">
+                        <div class="iconfont noselect notap"></div>
+                        <div class="menu-text noselect notap">Låga moln</div>
+                    </a><a data-do="set,cbase" data-parent="clouds" class="sub-menu">
+                        <div class="iconfont noselect notap">:</div>
+                        <div class="menu-text noselect notap">Molnbas</div>
+                    </a><a data-do="set,visibility" data-parent="clouds" class="sub-menu">
+                        <div class="iconfont noselect notap">c</div>
+                        <div class="menu-text noselect notap">Sikt</div>
+                    </a><a data-do="set,waves" data-parent="isParent" class="">
+                        <div class="iconfont noselect notap"></div>
+                        <div class="menu-text noselect notap">Vågor</div>
+                    </a><a data-do="set,swell1" data-parent="waves" class="sub-menu">
+                        <div class="iconfont noselect notap">{</div>
+                        <div class="menu-text noselect notap">Dyning</div>
+                    </a><a data-do="set,swell2" data-parent="waves" class="sub-menu">
+                        <div class="iconfont noselect notap"></div>
+                        <div class="menu-text noselect notap">Dyning 2</div>
+                    </a><a data-do="set,sst" data-parent="waves" class="sub-menu">
+                        <div class="iconfont noselect notap"></div>
+                        <div class="menu-text noselect notap">Havstemperatur</div>
+                    </a><a data-do="unfold,airQ" data-parent="isParent">
+                        <div class="iconfont noselect notap"></div>
+                        <div class="menu-text noselect notap">Luftkvalitet</div>
+                    </a><a data-do="set,no2" data-parent="airQ" class="sub-menu">
+                        <div class="iconfont noselect notap"></div>
+                        <div class="menu-text noselect notap">NO₂</div>
+                    </a><a data-do="set,pm2p5" data-parent="airQ" class="sub-menu">
+                        <div class="iconfont noselect notap"></div>
+                        <div class="menu-text noselect notap">PM2.5</div>
+                    </a><a data-do="set,aod550" data-parent="airQ" class="sub-menu">
+                        <div class="iconfont noselect notap"></div>
+                        <div class="menu-text noselect notap">Aerosol</div>
+                    </a><a data-do="set,gtco3" data-parent="airQ" class="sub-menu">
+                        <div class="iconfont noselect notap"></div>
+                        <div class="menu-text noselect notap">Ozonlager</div>
+                    </a><a data-do="toggle,overlays" id="ovr-menu" class="menu-unfold">
+                        <div class="iconfont noselect notap">&lt;</div>
+                        <div class="menu-text noselect notap">Fler lager...</div>
+                    </a></nav><div id="level" class="noselect"><div class="timecode ghost-timecode noselect" style="opacity: 0"><div class="box"></div></div><div class="timecode main-timecode noselect" style="top: 96.875%; bottom: inherit;"><div class="box">Marken</div><div class="loading ld-lgray size-l loader-level"></div></div></div></section><section id="rh-bottom" class="shy mobiletablethide"><div id="rh-bottom-messages"></div><div class="rh-bottom__controls"><div class="rh-bottom__switches"><div id="particles" data-ref="particles" class="checkbox rh-text clickable-size uiyellow" data-t="PART_ANIMATION">Partikelanimationer</div><div id="isolines" data-ref="isolines" class="checkbox rh-text clickable-size uiyellow" data-t="PRESS">Tryck</div><div id="radar-blitz" class="checkbox rh-text clickable-size uiyellow" data-t="BLITZ_ON">Visa blixtar</div><div id="radar-blitz-sound" class="checkbox rh-text clickable-size uiyellow" data-t="SOUND_ON">Ljud</div></div><div class="rh-bottom__icons"><div id="info-icon" class="rh-text" data-tooltipsrc="ABOUT_DATA" data-tooltip="Om dessa data"><div class="clickable-size uiyellow noselect" data-do="rqstOpen,info" data-icon="L"></div></div><div id="fullscreen" data-ref="fullscreenEl" class="rh-text clickable-size iconfont uiyellow noselect" data-do="fullscreen" data-tooltipsrc="MENU_FULLSCREEN" data-tooltip="Helskärmsläge"></div></div></div><div id="pois-switch" data-ref="poisSwitch" class="ui-switch size-m noselect notap"><div data-do="set,favs" data-tooltip="Mina favoriter" class="iconfont">k</div><div data-do="set,cities" data-tooltip="Förutspått väder" class="iconfont selected">&amp;</div><div data-do="set,wind" data-tooltip="Observerad vind" class="iconfont "></div><div data-do="set,temp" data-tooltip="Observerad temp." class="iconfont"></div><div data-do="set,metars" data-tooltip="Flygplatser" class="iconfont">Q</div><div data-do="set,cams" data-tooltip="Webbkameror" class="iconfont ">l</div><div data-do="set,pgspots" data-tooltip="Paraglidingplatser" class="iconfont"></div><span data-do="rqstOpen,pois" class="clickable-size">Fler lager...</span></div><div id="product-switch" data-ref="productSwitch" class="ui-switch size-s noselect notap" data-tooltipsrc="MODEL" data-tooltip="Prognosmodell"><div data-do="set,ecmwf">ECMWF</div><div data-do="set,gfs" class="selected">GFS</div></div><div id="legend" data-ref="legend" class="metric-legend noselect" data-tooltipsrc="CLICK_ON_LEGEND" data-tooltip="Klicka för att ändra enheter" data-overlay="rain" style="background: linear-gradient(to right, rgb(59, 124, 162), rgb(59, 124, 162), rgb(59, 124, 162), rgb(59, 124, 162), rgb(59, 126, 162), rgb(59, 128, 162), rgb(58, 133, 162), rgb(58, 137, 162), rgb(58, 153, 162), rgb(50, 166, 111), rgb(74, 164, 57), rgb(129, 162, 59), rgb(162, 162, 59), rgb(162, 60, 59), rgb(171, 54, 107), rgb(164, 58, 154), rgb(164, 58, 154));"><span style="width:12.5%">mm</span><span style="width: 12.5%">1.5</span><span style="width: 12.5%">2</span><span style="width: 12.5%">3</span><span style="width: 12.5%">7</span><span style="width: 12.5%">10</span><span style="width: 12.5%">20</span><span style="width: 12.5%">30</span></div></section><span data-plugin="detail"></span><div data-plugin="rplanner"></div><div class="closing-x"></div></div><ul id="mobile-menu" class="bottom-border"><li data-do="title" data-icon="]" id="mm-home"><span data-t="HOME">Hem</span></li><li data-icon="" id="mm-radar" data-do="openRadarSat"><span data-t="RADAR_SAT">Radar och satellit</span><nav class="ui-switch size-m notap" style="display: none;"><div data-t="RADAR" data-do="set,radar">Väderradar</div><div data-t="SATELLITE" data-do="set,satellite">Satellit</div></nav></li><li data-do="rqstOpen,menu" class="mm-menu" data-icon="d"><span data-t="MENU">Meny</span></li><li data-do="search" data-icon=""><span data-t="JUST_SEARCH">Sök</span></li><li id="mobile-avatar" class="mm-favs" data-do="rqstOpen,favs" data-icon="m"><span data-t="MENU_FAVS">Favoriter</span></li></ul><div id="logo-wrapper" class="top-border left-border right-border"><a id="logo" target="_top" class="clickable noselect notap" data-do="title"><div class="w-sprite"></div><img class="text" alt="Windy.com" src="img/logo201802/logo-text-windycom-white.svg"><div class="premium-logo"></div></a></div><a id="open-in-app" data-do="openapp" class="top-border noselect" data-t="MENU_MOBILE">Ladda ner app</a><div id="top-messages"></div><div id="plugins" class="shy"><div id="plugin-patch" style="display: none;" class=""><div class="closing-x"></div></div><div id="plugin-isolines" style="display: none;" class=""><div class="closing-x"></div></div><div id="plugin-picker" class="picker" style="display: none;"></div><div id="plugin-poi-libs" style="display: none;" class=""><div class="closing-x"></div></div><div id="plugin-contextmenu" class="drop-down-window" style="display: none; left: 451px; top: 331px;"><div class="context-coords" data-do="copy" data-tooltipsrc="COPY_TO_C" data-tooltip="Kopiera till klippbordet">N38°22'49", W36°43'58"</div><nav class="menu-items" data-ref="menu"><a data-do="picker" class="clickable-size" data-t="SHOW_PICKER" data-icon="">Visa väderprognos</a> <a data-do="detail" class="clickable-size" data-t="D_FCST" data-icon="&amp;">Prognos för denna plats</a> <a data-do="rplanner" class="clickable-size" data-t="MENU_DISTANCE" data-icon=",">Avståndsplanering</a> <a data-do="sounding" class="clickable-size" data-t="SOUNDING" data-icon="">Prognossondering</a></nav><div class="closing-x"></div></div></div><div id="search" class="shy left-border top-border"><div id="search-weather-bg"><div id="search-top-wrapper"><div id="menu-burger2" class="mobiletablethide tooltip-down" data-tooltipsrc="MENU" data-do="hamburgerMenu" data-tooltip="Meny"><div class="iconfont clickable-size">d</div></div><input type="text" id="q" data-placeholder="SEARCH" autocomplete="off" spellcheck="false" autocorrect="off" autocapitalize="off" placeholder="Sök efter plats…" class=""><div id="share" class="mobilehide tooltip-down iconfont" data-tooltipsrc="SHARE" data-do="share" data-tooltip="Dela">F</div><div id="fav" class="noselect shy"><div class="fav-line fav-off iconfont clickable-size tooltip-down" data-do="rqstOpen,fav-alert-menu" data-tooltipsrc="D_FAVORITES" data-tooltip="Lägg till i favoriter">m</div><div class="fav-line fav-on iconfont clickable-size tooltip-down" data-do="rqstOpen,fav-alert-menu" data-tooltipsrc="D_FAVORITES2" data-tooltip="Ta bort från favoriter">k</div><span data-plugin="fav-alert-menu"></span></div><div id="search-my-loc" class="noselect shy iconfont">j</div><div class="delete iconfont">[</div><div class="cancel-search iconfont"></div></div><div id="plugin-hp-weather" class="weather-box clickable-size" style="display: none;"><div class="w-now">
+                    <big>0<sup>°</sup></big>
+                    <span class="ws-wind"><img src="img/icons6/png_27px/8.png">
+                    <div class="iconfont" style="transform: rotate(284deg); -webkit-transform:rotate(284deg);">"</div> 5 kt</span></div><div class="slider-wrapper"><canvas width="527" height="120" style="width: 262px; height: 60px;"></canvas><table><tbody><tr> <td width="22.580645161290324%" data-afterbegin="WED2">Ons<img src="img/icons6/png_27px/3.png" srcset="img/icons6/png_27@2x/3.png 2x"><big>
+                2°</big></td><td width="25.806451612903224%" data-afterbegin="THU2">Tors<img src="img/icons6/png_27px/7.png" srcset="img/icons6/png_27@2x/7.png 2x"><big>
+                2°</big></td><td width="25.806451612903224%" data-afterbegin="FRI2">Fre<img src="img/icons6/png_27px/7.png" srcset="img/icons6/png_27@2x/7.png 2x"><big>
+                3°</big></td><td width="25.806451612903224%" data-afterbegin="SAT2">Lör<img src="img/icons6/png_27px/3.png" srcset="img/icons6/png_27@2x/3.png 2x"><big>
+                3°</big></td></tr></tbody></table><div class="slider" style="background: linear-gradient(to right, rgb(244, 244, 244), rgb(244, 244, 244), rgb(244, 244, 244), rgb(244, 244, 244), rgb(244, 244, 244), rgb(118, 222, 250), rgb(244, 244, 244), rgb(244, 244, 244), rgb(244, 244, 244), rgb(244, 244, 244), rgb(244, 244, 244), rgb(118, 222, 250), rgb(0, 211, 224), rgb(0, 233, 113), rgb(0, 211, 224), rgb(0, 211, 224), rgb(244, 244, 244), rgb(244, 244, 244), rgb(244, 244, 244), rgb(244, 244, 244), rgb(244, 244, 244), rgb(244, 244, 244), rgb(244, 244, 244), rgb(244, 244, 244), rgb(244, 244, 244), rgb(244, 244, 244), rgb(244, 244, 244), rgb(244, 244, 244), rgb(244, 244, 244), rgb(244, 244, 244), rgb(244, 244, 244));"></div><div class="slider-rain" style="display: block;"><i style="left: 41.935483870967744%"></i><i style="left: 45.16129032258064%"></i><i style="left: 48.38709677419355%"></i><i style="left: 51.61290322580645%"></i><i style="left: 54.83870967741935%"></i></div></div><div class="closing-x"></div></div></div><div id="warnings" class="weather-box animation flex-container" style="display: none;"><div class="cap-line clickable-size " data-icon="|" data-severity="M">Average wind speed at se...
+                    <small>Tis 3:00 - Sön 3:00</small></div></div><div id="articles" class="weather-box animation" style="display: none;"><div class="article-announce-small bg-transparent clickable type-undefined" data-do="rqstOpen,articles,14751">
+        <span style="background-image: url('https://gallery.windy.com/albums/a/zazu-cyclone-fiji-tonga-2020.png?w=200');"></span>
+        <div class="article-warning warning-extreme">extreme warning</div>
+        
+        <a href="https://www.windy.com/articles/cyclone-zazu-moving-away-from-tonga-14751" class="nomouse">Cyclone Zazu moving away from Tonga</a>
+    </div></div><div class="results waiting" style="display: none;"><div class="results-data"></div><div class="results-img"><img data-do="hit" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw=="></div></div></div><div id="mobile-ovr-info" class="top-border right-border uiyellow inlined noselect"></div><div id="rh-icons" class="shy top-border right-border mobiletablethide"><span data-plugin="user"><div id="user" style="display: block;" class="open"><div class="closing-x"></div><div class="avatar-wrapper">
+            <div class="tooltip-down" data-do="rqstOpen,user-menu" data-tooltip="Mitt konto: liahcheston">
+                <img class="avatar" src="https://www.windy.com/img/avatar.jpg" alt="liahcheston">
+            </div>
+            
+        </div></div></span><div id="login" data-do="login" data-icon="p" data-t="JUST_LOGIN" class="clickable-size mobilehide">Logga in</div></div><div id="not-supported" style="display:none;">Your browser is not supported. Please use the latest verion of Chrome, Firefox or Safari</div><div id="unlegal-embed" class="fullscreen bg-red" style="display: none;"><a href="https://www.windy.com" class="size-xxxl" target="_top">www.windy.com</a></div></body>
 
-<div id="legend-mobile" class="metric-legend bottom-border" data-overlay="wind" style="background: linear-gradient(to right, rgb(98, 113, 183), rgb(98, 113, 183), rgb(98, 113, 183), rgb(98, 113, 183), rgb(60, 109, 163), rgb(74, 148, 169), rgb(74, 145, 148), rgb(77, 141, 124), rgb(76, 164, 76), rgb(102, 163, 53), rgb(161, 135, 63), rgb(161, 108, 91), rgb(140, 63, 91), rgb(151, 75, 144), rgb(95, 99, 159), rgb(90, 135, 160), rgb(90, 135, 160));">
-<span style="width:12.5%">kt</span><span style="width: 12.5%">0</span>
-<span style="width: 12.5%">5</span><span style="width: 12.5%">10</span>
-<span style="width: 12.5%">20</span><span style="width: 12.5%">30</span>
-<span style="width: 12.5%">40</span><span style="width: 12.5%">60</span>
-</div>
 
         <script src="js/script.js"></script>
     </body>

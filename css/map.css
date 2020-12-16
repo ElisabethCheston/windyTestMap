@@ -24,10 +24,3 @@ html, body, #map, #windy {
 #windy #logo-wrapper #logo {
     left: 80px;
 }
-.height-control {
-    width: 100px;
-}
-.height-control, ui-slider-handler {
-    font-size: 12px;
-    width: 50px;;
-}

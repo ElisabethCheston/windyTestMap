@@ -8,11 +8,10 @@ const options = {
     lat: 63.45,
     lon: 17.52,
     zoom: 5,
-
-        timestamp: Date.now() + 3 * 24 * 60 * 60 * 1000,
-
+    timestamp: Date.now() + 3 * 24 * 60 * 60 * 1000,
     hourFormat: '24',
 };
+
 windyInit(options, windyAPI => {
     const { store } = windyAPI;
     // All the params are stored in windyAPI.store
@@ -34,6 +33,8 @@ windyInit(options, windyAPI => {
         console.log(`Level was changed: ${level}`);
     });
 });
+
+
 
 
 //  Array of markers //
