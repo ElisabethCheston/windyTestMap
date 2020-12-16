@@ -2,49 +2,39 @@ const options = {
     // Required: API key
     key: 'Ij2CVHcL4d5ByrXOrtQg71Abhm2gFLGO',
 
-// Put additional console output
+    // Put additional console output
     verbose: true,
     // Optional: Initial state of the map
     lat: 63.45,
     lon: 17.52,
     zoom: 5,
 
+        timestamp: Date.now() + 3 * 24 * 60 * 60 * 1000,
+
+    hourFormat: '24',
 };
-
 windyInit(options, windyAPI => {
-    const { picker, utils, broadcast } = windyAPI;
+    const { store } = windyAPI;
+    // All the params are stored in windyAPI.store
 
-    picker.on('pickerOpened', latLon => {
-        // picker has been opened at latLon coords
-        console.log(latLon);
+    const levels = store.getAllowed('availLevels');
+    // levels = ['surface', '850h', ... ]
+    // Getting all available values for given key
 
-        const { lat, lon, values, overlay } = picker.getParams();
-        // -> 48.4, 14.3, [ U,V, ], 'wind'
-        console.log(lat, lon, values, overlay);
+    let i = 0;
+    setInterval(() => {
+        i = i === levels.length - 1 ? 0 : i + 1;
 
-        const windObject = utils.wind2obj(values);
-        console.log(windObject);
-    });
+        // Changing Windy params at runtime
+        store.set('level', levels[i]);
+    }, 500);
 
-    picker.on('pickerMoved', latLon => {
-        // picker was dragged by user to latLon coords
-        console.log(latLon);
-    });
-
-    picker.on('pickerClosed', () => {
-        // picker was closed
-    });
-
-    // Wait since wather is rendered
-    broadcast.once('redrawFinished', () => {
-        picker.open({ lat: 62.45, lon: 17.52 });
-        // Opening of a picker (async)
+    // Observing change of .store value
+    store.on('level', level => {
+        console.log(`Level was changed: ${level}`);
     });
 });
 
-
-
-var map = L.map('map').setView([62.45, 17.53], 5);
 
 //  Array of markers //
     var markers = [
@@ -138,18 +128,24 @@ var map = L.map('map').setView([62.45, 17.53], 5);
             ["spot", 58.7988784,17.8109458, "id75", "name", "ÖRUDDEN S","windDirection","S/S"]
     ];
 
-// Map from https://cloud.maptiler.com/maps/hybrid/ //
-L.tileLayer('https://api.maptiler.com/maps/hybrid/{z}/{x}/{y}.jpg?key=Eq1wRludzR4Xg059gxvk', {
-    attribution: '<a href="https://www.maptiler.com/copyright/" target="_blank">&copy; MapTiler</a> <a href="https://www.openstreetmap.org/copyright" target="_blank">&copy; OpenStreetMap contributors</a>'
-}).addTo(map);
-
-     // Add Markers to map in Leaflet//
-   
-    for (var i = 0; i < markers.length; i++) {
+for (var i = 0; i < markers.length; i++) {
         spots = new L.marker([markers[i][1],markers[i][2]])
             .bindPopup(markers[i][5])
             .addTo(map);
     }
+
+
+var map =L.map('map').setView([62.45, 17.52], 5);
+mapLink = '<a href="http://windy.com">WindyMap</a>';
+     // Add Markers to map in Leaflet//
+   
+
+    // Map from https://cloud.maptiler.com/maps/hybrid/ //
+L.tileLayer('https://api.maptiler.com/maps/hybrid/{z}/{x}/{y}.jpg?key=Eq1wRludzR4Xg059gxvk', {
+    attribution: '<a href="https://www.maptiler.com/copyright/" target="_blank">&copy; MapTiler</a> <a href="https://www.openstreetmap.org/copyright" target="_blank">&copy; OpenStreetMap contributors</a>'
+}).addTo(map);
+
+    
     /*
       L.popup()
         .setLatLng([50.4, 14.3])

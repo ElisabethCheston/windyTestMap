@@ -119,9 +119,9 @@ var markers = [
             ["spot", 57.4349801,18.8549507, "id102", "name", "KATTVIK","windDirection","N/NW/NE"]
             ["spot", 57.6143897,18.7676287, "id103", "name", "ÅMINNE","windDirection","N/NE"],
             // Gotland NORTH //
-            ["spot", 57.7966607,18.7912915, "id104", "name", "ÖRUDDEN","windDirection","S/SW"],
-            ["spot", 57.7988784,18.8109458, "id105", "name", "ÖRUDDEN","windDirection","S/S"],
-            ["spot", 57.7966607,18.7912915, "id106", "name", "ÖRUDDEN","windDirection","S/SW"],
+            ["spot", 57.7177726,18.8093575, "id104", "name", "SLITE","windDirection","E/SE/NE"],
+            ["spot", 57.7344558,18.8781290, "id105", "name", "HIDEVIKEB","windDirection","S/SE"],
+            ["spot", 57.7204868,18.9115332, "id106", "name", "ST OLOFHOLM","windDirection","E/SE/NE"],
             ["spot", 57.7988784,18.8109458, "id107", "name", "ÖRUDDEN","windDirection","S/S"],
             ["spot", 57.7966607,18.7912915, "id108", "name", "ÖRUDDEN","windDirection","S/SW"],
             ["spot", 57.7988784,18.8109458, "id109", "name", "ÖRUDDEN","windDirection","S/S"],
