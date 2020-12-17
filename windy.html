@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>dskjf</title>
+</head>
+<body>
+    <div></div>
+</body>
+</html>
+<!--
+            <div class="leaflet-pane leaflet-tile-pane">
+                <div class="leaflet-layer basemap-layer">
+                    <div class="leaflet-tile-container leaflet-zoom-animated" style="z-index: 18; transform: translate3d(0px, 0px, 0px) scale(1);">
+                        <img alt="" role="presentation" src="https://tiles.windy.com/tiles/v10.0/darkmap-retina/8/101/98.png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(251px, 218px, 0px);">
+                        <img alt="" role="presentation" src="https://tiles.windy.com/tiles/v10.0/darkmap-retina/8/101/97.png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(251px, -38px, 0px);">
+                        <img alt="" role="presentation" src="https://tiles.windy.com/tiles/v10.0/darkmap-retina/8/100/98.png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(-5px, 218px, 0px);">
+                        <img alt="" role="presentation" src="https://tiles.windy.com/tiles/v10.0/darkmap-retina/8/102/98.png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(507px, 218px, 0px);">
+                        <img alt="" role="presentation" src="https://tiles.windy.com/tiles/v10.0/darkmap-retina/8/101/99.png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(251px, 474px, 0px);">
+                        <img alt="" role="presentation" src="https://tiles.windy.com/tiles/v10.0/darkmap-retina/8/100/97.png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(-5px, -38px, 0px);">
+                        <img alt="" role="presentation" src="https://tiles.windy.com/tiles/v10.0/darkmap-retina/8/102/97.png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(507px, -38px, 0px);">
+                        <img alt="" role="presentation" src="https://tiles.windy.com/tiles/v10.0/darkmap-retina/8/100/99.png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(-5px, 474px, 0px);">
+                        <img alt="" role="presentation" src="https://tiles.windy.com/tiles/v10.0/darkmap-retina/8/102/99.png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(507px, 474px, 0px);">
+                    </div>
+                </div>
+                <canvas class="leaflet-canvas leaflet-layer leaflet-zoom-animated particles-layer" width="598" height="1372" style="width: 299px; height: 686px; transform: translate3d(200px, 0px, 0px); display: block; opacity: 1;">
+                </canvas>
+                </div>
+                <div class="leaflet-pane leaflet-shadow-pane">
+                </div>
+                <div class="leaflet-pane leaflet-overlay-pane">
+                    <canvas class="leaflet-canvas leaflet-layer leaflet-zoom-animated isolines-layer" width="598" height="1372" style="width: 299px; height: 686px; transform: translate3d(200px, 0px, 0px);">
+                    </canvas>
+                </div>
+                <div class="leaflet-pane leaflet-marker-pane">
+                    <div class="leaflet-layer labels-layer">
+                        <div class="leaflet-tile-container leaflet-zoom-animated" style="z-index: 11; transform: translate3d(0px, 0px, 0px) scale(1);"></div>
+                        <div class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(251px, 218px, 0px);"></div>
+                        <div class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(251px, -38px, 0px);"></div>
+                        <div class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(-5px, 218px, 0px);"></div>
+                        <div class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(507px, 218px, 0px);"></div>
+                        <div class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(251px, 474px, 0px);"></div>
+                        <div class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(-5px, -38px, 0px);"></div>
+                        <div class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(507px, -38px, 0px);"></div>
+                        <div class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(-5px, 474px, 0px);"></div>
+                        <div class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(507px, 474px, 0px);"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="leaflet-pane leaflet-tooltip-pane"></div>
+            <div class="leaflet-pane leaflet-popup-pane"></div>
+            <div class="leaflet-proxy leaflet-zoom-animated" style="transform: translate3d(25955px, 25213px, 0px) scale(128);"></div>
+        
+        <div class="leaflet-control-container">
+            <div class="leaflet-top leaflet-left"></div>
+            <div class="leaflet-top leaflet-right"></div>
+            <div class="leaflet-bottom leaflet-left"></div>
+            <div class="leaflet-bottom leaflet-right">
+                <div class="leaflet-control-attribution leaflet-control">
+                    <a href="http://leafletjs.com" title="A JS library for interactive maps">Leaflet</a>
+                </div>
+            </div>
+            </div>
+            
+            <a id="contrib" class="mobilehide" href="http://www.openstreetmap.org/copyright" target="_blank">© OpenStreetMap contributors</a>
+            <div id="bottom" class="shy left-border right-border bottom-border">
+
+                <div id="progress-bar" class="progress-bar">
+                    <div class="progress-line" style="width: 0px;">
+                        <div class="played" style="width: 0px;"></div>
+                        <div class="avbl">
+
+                        </div>
+                        <i style="left: -3.18098px;"></i>
+                    </div>
+
+                    <div class="timecode ghost-timecode" style="opacity: 0; left: 197px; margin-top: -25px;">
+                        <div class="box">16:00</div>
+                    </div>
+
+                    <div data-title="D_LT2" class="timecode main-timecode" title="Lokaltid" style="left: 45px;">
+                        <div class="box">Onsdag 16 - 0:00</div>
+                        <div class="loading ld-lgray size-l loader-path"></div>
+                    </div>
+                    <div id="playpause" class="play-pause iconfont clickable off"></div>
+                    <div id="calendar"></div>
+                </div>
+
+                <div id="accumulations" class="size-s fg-yellow">
+                    <span id="acc-title-rain" data-t="RAINACCU" class="capitalize">TOTAL REGNMÄNGD</span>
+                    <span id="acc-title-snow" data-t="SNOWACCU" class="capitalize">VISA TOTAL MÄNGD</span>
+                    <span id="acc-title-gust" data-t="GUSTACCU" class="capitalize">Total vind</span>
+                    <div class="ui-switch noselect notap">
+                        <div data-do="set,next12h">Senaste 12 timmarna</div>
+                        <div data-do="set,next24h">Senaste 24 timmarna</div>
+                        <div data-do="set,next3d" class="selected">Senaste 3 dagarna</div>
+                        <div data-do="set,next5d">Senaste 5 dagarna</div>
+                        <div data-do="set,next10d">Senaste 10 dagarna</div>
+                    </div>
+                </div>
+
+                <div id="mobile-calendar">
+                    <div id="timecode-mobile" data-title="D_LT2" class="timecode" title="Lokaltid">
+                        <div id="mobile_box" class="box"></div>
+                        <div class="loading ld-lgray size-l loader-path"></div>
+                    </div>
+                    <div id="days"></div>
+                    <div id="playpause-mobile" class="play-pause iconfont bottom-border"></div>
+                </div>
+                <div id="legend-mobile" class="metric-legend bottom-border"></div>
+            </div>
+            <div id="bottom-credits" class="mobilehide inlined" data-icon-after="k" data-t="DEVELOPED">Utvecklad med</div>
+            <div id="detail-rhpane-wrapper" class="right-border top-border flex-container open">
+
+                <section id="rhpane" class="shy flex-container mobiletablethide">
+                    <div data-do="zoomIn" class="clickable iconfont fg-yellow noselect zoom-ctrl zoom-plus" title="Zoom in">+</div>
+                    <div data-do="zoomOut" class="clickable iconfont fg-yellow noselect zoom-ctrl zoom-minus" title="Zoom out">-</div>
+
+                    <nav id="overlay" data-ref="overlay" class="menu iconsize-8">
+                        <a data-do="unfold,radarSat" data-parent="isParent">
+                        <div class="iconfont noselect notap">O</div>
+                        <div class="menu-text noselect notap">Radar och satellit</div>
+                        <a data-do="set,radar" data-parent="radarSat" class="sub-menu"></a>
+                        <div class="iconfont noselect notap"></div>
+                        <div class="menu-text noselect notap">Väderradar</div>
+                        <a data-do="set,satellite" data-parent="radarSat" class="sub-menu"></a>
+                        <div class="iconfont noselect notap"></div>
+                        <div class="menu-text noselect notap">Satellit</div>
+                        <a data-do="set,wind" data-parent="isParent" class=""></a>
+                        <div class="iconfont noselect notap">|</div>
+                        <div class="menu-text noselect notap">Vind</div>
+                        <a data-do="set,gust" data-parent="wind" class="sub-menu"></a>
+                        <div class="iconfont noselect notap"></div>
+                        <div class="menu-text noselect notap">Vindbyar</div>
+                        <a data-do="set,rain" data-parent="isParent" class="selected"></a>
+                        <div class="iconfont noselect notap"></div>
+                        <div class="menu-text noselect notap">Regn, åska</div>
+                        <a data-do="set,rainAccu" data-parent="rain" class="sub-menu menu-unfold"></a>
+                        <div class="iconfont noselect notap">9</div>
+                        <div class="menu-text noselect notap">Total regnmängd</div>
+                        <a data-do="set,snowAccu" data-parent="rain" class="sub-menu menu-unfold"></a>
+                        <div class="iconfont noselect notap"></div>
+                        <div class="menu-text noselect notap">Nysnö</div>
+                        <a data-do="set,thunder" data-parent="rain" class="sub-menu menu-unfold"></a>
+                        <div class="iconfont noselect notap"></div>
+                        <div class="menu-text noselect notap">Åskväder</div>
+                        <a data-do="set,temp" data-parent="isParent"></a>
+                        <div class="iconfont noselect notap"></div>
+                        <div class="menu-text noselect notap">Temperatur</div>
+                        <a data-do="set,rh" data-parent="temp" class="sub-menu"></a>
+                        <div class="iconfont noselect notap">/</div>
+                        <div class="menu-text noselect notap">Luftfukt.</div>
+                        <a data-do="set,clouds" data-parent="isParent" class=""></a>
+                        <div class="iconfont noselect notap">7</div>
+                        <div class="menu-text noselect notap">Moln</div>
+                        <a data-do="set,lclouds" data-parent="clouds" class="sub-menu"></a>
+                        <div class="iconfont noselect notap"></div>
+                        <div class="menu-text noselect notap">Låga moln</div>
+                        <a data-do="set,cbase" data-parent="clouds" class="sub-menu"></a>
+                        <div class="iconfont noselect notap">:</div>
+                        <div class="menu-text noselect notap">Molnbas</div>
+                        <a data-do="set,visibility" data-parent="clouds" class="sub-menu"></a>
+                        <div class="iconfont noselect notap">c</div>
+                        <div class="menu-text noselect notap">Sikt</div>
+                        <a data-do="set,waves" data-parent="isParent" class=""></a>
+                        <div class="iconfont noselect notap"></div>
+                        <div class="menu-text noselect notap">Vågor</div>
+                        <a data-do="set,swell1" data-parent="waves" class="sub-menu"></a>
+                        <div class="iconfont noselect notap">{</div>
+                        <div class="menu-text noselect notap">Dyning</div>
+                        <a data-do="set,swell2" data-parent="waves" class="sub-menu"></a>
+                        <div class="iconfont noselect notap"></div>
+                        <div class="menu-text noselect notap">Dyning 2</div>
+                        <a data-do="set,sst" data-parent="waves" class="sub-menu"></a>
+                        <div class="iconfont noselect notap"></div>
+                        <div class="menu-text noselect notap">Havstemperatur</div>
+                        <a data-do="unfold,airQ" data-parent="isParent"></a>
+                        <div class="iconfont noselect notap"></div>
+                        <div class="menu-text noselect notap">Luftkvalitet</div>
+                        <a data-do="set,no2" data-parent="airQ" class="sub-menu"></a>
+                        <div class="iconfont noselect notap"></div>
+                        <div class="menu-text noselect notap">NO₂</div>
+                        <a data-do="set,pm2p5" data-parent="airQ" class="sub-menu"></a>
+                        <div class="iconfont noselect notap"></div>
+                        <div class="menu-text noselect notap">PM2.5</div>
+                        <a data-do="set,aod550" data-parent="airQ" class="sub-menu"></a>
+                        <div class="iconfont noselect notap"></div>
+                        <div class="menu-text noselect notap">Aerosol</div>
+                        <a data-do="set,gtco3" data-parent="airQ" class="sub-menu"></a>
+                        <div class="iconfont noselect notap"></div>
+                        <div class="menu-text noselect notap">Ozonlager</div>
+                        <a data-do="toggle,overlays" id="ovr-menu" class="menu-unfold"></a>
+                        <div class="iconfont noselect notap">&lt;</div>
+                        <div class="menu-text noselect notap">Fler lager...</div>
+                    </a>
+                </nav>
+                <div id="level" class="noselect">
+                    <div class="timecode ghost-timecode noselect" style="opacity: 0">
+                        <div class="box"></div>
+                    </div>
+                    <div class="timecode main-timecode noselect" style="top: 96.875%; bottom: inherit;">
+                        <div class="box">Marken</div><div class="loading ld-lgray size-l loader-level"></div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="rh-bottom" class="shy mobiletablethide">
+                <div id="rh-bottom-messages"></div><div class="rh-bottom__controls">
+                    <div class="rh-bottom__switches">
+                        <div id="particles" data-ref="particles" class="checkbox rh-text clickable-size uiyellow" data-t="PART_ANIMATION">Partikelanimationer</div>
+                        <div id="isolines" data-ref="isolines" class="checkbox rh-text clickable-size uiyellow" data-t="PRESS">Tryck</div>
+                        <div id="radar-blitz" class="checkbox rh-text clickable-size uiyellow" data-t="BLITZ_ON">Visa blixtar</div>
+                        <div id="radar-blitz-sound" class="checkbox rh-text clickable-size uiyellow" data-t="SOUND_ON">Ljud</div>
+                    </div>
+
+                    <div class="rh-bottom__icons">
+                        <div id="info-icon" class="rh-text" data-tooltipsrc="ABOUT_DATA" data-tooltip="Om dessa data">
+                            <div class="clickable-size uiyellow noselect" data-do="rqstOpen,info" data-icon="L"></div>
+                        </div>
+                        <div id="fullscreen" data-ref="fullscreenEl" class="rh-text clickable-size iconfont uiyellow noselect" data-do="fullscreen" data-tooltipsrc="MENU_FULLSCREEN" data-tooltip="Helskärmsläge"></div>
+                    </div>
+                </div>
+
+                <div id="pois-switch" data-ref="poisSwitch" class="ui-switch size-m noselect notap">
+                    <div data-do="set,favs" data-tooltip="Mina favoriter" class="iconfont">k</div>
+                    <div data-do="set,cities" data-tooltip="Förutspått väder" class="iconfont selected">&amp;</div>
+                    <div data-do="set,wind" data-tooltip="Observerad vind" class="iconfont "></div>
+                    <div data-do="set,temp" data-tooltip="Observerad temp." class="iconfont"></div>
+                    <div data-do="set,metars" data-tooltip="Flygplatser" class="iconfont">Q</div>
+                    <div data-do="set,cams" data-tooltip="Webbkameror" class="iconfont ">l</div>
+                    <div data-do="set,pgspots" data-tooltip="Paraglidingplatser" class="iconfont"></div>
+                    <span data-do="rqstOpen,pois" class="clickable-size">Fler lager...</span>
+                </div>
+
+                <div id="product-switch" data-ref="productSwitch" class="ui-switch size-s noselect notap" data-tooltipsrc="MODEL" data-tooltip="Prognosmodell">
+                    <div data-do="set,ecmwf">ECMWF</div>
+                    <div data-do="set,gfs" class="selected">GFS</div>
+                    </div>
+                    <div id="legend" data-ref="legend" class="metric-legend noselect" data-tooltipsrc="CLICK_ON_LEGEND" data-tooltip="Klicka för att ändra enheter" data-overlay="rain" style="background: linear-gradient(to right, rgb(59, 124, 162), rgb(59, 124, 162), rgb(59, 124, 162), rgb(59, 124, 162), rgb(59, 126, 162), rgb(59, 128, 162), rgb(58, 133, 162), rgb(58, 137, 162), rgb(58, 153, 162), rgb(50, 166, 111), rgb(74, 164, 57), rgb(129, 162, 59), rgb(162, 162, 59), rgb(162, 60, 59), rgb(171, 54, 107), rgb(164, 58, 154), rgb(164, 58, 154));">
+                    <span style="width:12.5%">mm</span>
+                    <span style="width: 12.5%">1.5</span>
+                    <span style="width: 12.5%">2</span>
+                    <span style="width: 12.5%">3</span>
+                    <span style="width: 12.5%">7</span>
+                    <span style="width: 12.5%">10</span>
+                    <span style="width: 12.5%">20</span>
+                    <span style="width: 12.5%">30</span>
+                </div>
+            </section>
+
+            <span data-plugin="detail"></span>
+                    <div data-plugin="rplanner"></div>
+                    <div class="closing-x"></div>
+                </div>
+                <ul id="mobile-menu" class="bottom-border">
+                    <li data-do="title" data-icon="]" id="mm-home">
+                        <span data-t="HOME">Hem</span>
+                    </li>
+                    <li data-icon="" id="mm-radar" data-do="openRadarSat">
+                        <span data-t="RADAR_SAT">Radar och satellit</span>
+                        <nav class="ui-switch size-m notap" style="display: none;">
+                            <div data-t="RADAR" data-do="set,radar">Väderradar</div>
+                            <div data-t="SATELLITE" data-do="set,satellite">Satellit</div>
+                        </nav>
+                    </li>
+                    <li data-do="rqstOpen,menu" class="mm-menu" data-icon="d">
+                        <span data-t="MENU">Meny</span>
+                    </li>
+                </ul>
+
+                <div id="logo-wrapper" class="top-border left-border right-border">
+                    <a id="logo" target="_top" class="clickable noselect notap" data-do="title">
+                        <div class="w-sprite">
+
+                        </div>
+                        <img class="text" alt="Windy.com" src="img/logo201802/logo-text-windycom-white.svg">
+                        <div class="premium-logo">
+
+                        </div>
+                    </a>
+                </div>
+                <div id="top-messages"></div>
+                <div id="plugins" class="shy">
+                    <div id="plugin-patch" style="display: none;" class="">
+                        <div class="closing-x"></div>
+                        </div>
+                        <div id="plugin-isolines" style="display: none;" class="">
+                            <div class="closing-x"></div>
+                        </div>
+                        <div id="plugin-picker" class="picker" style="display: none;"></div>
+                        <div id="plugin-poi-libs" style="display: none;" class="">
+                            <div class="closing-x"></div>
+                        </div>
+                        <div id="plugin-contextmenu" class="drop-down-window" style="display: none; left: 451px; top: 331px;">
+                            <div class="context-coords" data-do="copy" data-tooltipsrc="COPY_TO_C" data-tooltip="Kopiera till klippbordet">N38°22'49", W36°43'58"</div>
+                            <nav class="menu-items" data-ref="menu">
+                                <a data-do="picker" class="clickable-size" data-t="SHOW_PICKER" data-icon="">Visa väderprognos</a>
+                                <a data-do="detail" class="clickable-size" data-t="D_FCST" data-icon="&amp;">Prognos för denna plats</a>
+                                <a data-do="rplanner" class="clickable-size" data-t="MENU_DISTANCE" data-icon=",">Avståndsplanering</a>
+                                <a data-do="sounding" class="clickable-size" data-t="SOUNDING" data-icon="">Prognossondering</a>
+                            </nav>
+                            <div class="closing-x"></div>
+                        </div>
+                    </div>
+                    <div id="search" class="shy left-border top-border">
+                        <div id="search-weather-bg">
+                            <div id="search-top-wrapper">
+                                <div id="menu-burger2" class="mobiletablethide tooltip-down" data-tooltipsrc="MENU" data-do="hamburgerMenu" data-tooltip="Meny">
+                                    <div class="iconfont clickable-size">d</div>
+                                </div>
+                                <input type="text" id="q" data-placeholder="SEARCH" autocomplete="off" spellcheck="false" autocorrect="off" autocapitalize="off" placeholder="Sök efter plats…" class="">
+                                <div id="share" class="mobilehide tooltip-down iconfont" data-tooltipsrc="SHARE" data-do="share" data-tooltip="Dela">F</div>
+                                <div id="fav" class="noselect shy">
+                                    <div class="fav-line fav-off iconfont clickable-size tooltip-down" data-do="rqstOpen,fav-alert-menu" data-tooltipsrc="D_FAVORITES" data-tooltip="Lägg till i favoriter">m</div>
+                                    <div class="fav-line fav-on iconfont clickable-size tooltip-down" data-do="rqstOpen,fav-alert-menu" data-tooltipsrc="D_FAVORITES2" data-tooltip="Ta bort från favoriter">k</div>
+                                    <span data-plugin="fav-alert-menu"></span>
+                                </div>
+                                <div id="search-my-loc" class="noselect shy iconfont">j</div>
+                                <div class="delete iconfont">[</div>
+                                <div class="cancel-search iconfont"></div>
+                            </div>
+                            <div id="plugin-hp-weather" class="weather-box clickable-size" style="display: none;">
+                                <div class="w-now">
+                        <big>0<sup>°</sup></big>    
+                        <span class="ws-wind">
+                            <img src="img/icons6/png_27px/8.png">
+                            <div class="iconfont" style="transform: rotate(284deg); -webkit-transform:rotate(284deg);">"</div> 5 kt
+                        </span>
+                    </div>
+                    <div class="slider-wrapper">
+                        <canvas width="527" height="120" style="width: 262px; height: 60px;"></canvas>
+                        <table>
+                            <tbody>
+                                <tr>
+                                    <td width="22.580645161290324%" data-afterbegin="WED2">Ons<img src="img/icons6/png_27px/3.png" srcset="img/icons6/png_27@2x/3.png 2x"><big>2°</big></td>
+                                    <td width="25.806451612903224%" data-afterbegin="THU2">Tors<img src="img/icons6/png_27px/7.png" srcset="img/icons6/png_27@2x/7.png 2x"><big>2°</big></td>
+                                    <td width="25.806451612903224%" data-afterbegin="FRI2">Fre<img src="img/icons6/png_27px/7.png" srcset="img/icons6/png_27@2x/7.png 2x"><big>3°</big></td>
+                                    <td width="25.806451612903224%" data-afterbegin="SAT2">Lör<img src="img/icons6/png_27px/3.png" srcset="img/icons6/png_27@2x/3.png 2x"><big>3°</big></td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                <div class="slider" style="background: 
+                linear-gradient(to right, rgb(244, 244, 244), rgb(244, 244, 244), rgb(244, 244, 244), rgb(244, 244, 244), 
+                rgb(244, 244, 244), rgb(118, 222, 250), rgb(244, 244, 244), rgb(244, 244, 244), rgb(244, 244, 244), 
+                rgb(244, 244, 244), rgb(244, 244, 244), rgb(118, 222, 250), rgb(0, 211, 224), rgb(0, 233, 113), rgb(0, 211, 224), 
+                rgb(0, 211, 224), rgb(244, 244, 244), rgb(244, 244, 244), rgb(244, 244, 244), rgb(244, 244, 244), rgb(244, 244, 244), 
+                rgb(244, 244, 244), rgb(244, 244, 244), rgb(244, 244, 244), rgb(244, 244, 244), rgb(244, 244, 244), rgb(244, 244, 244), 
+                rgb(244, 244, 244), rgb(244, 244, 244), rgb(244, 244, 244), rgb(244, 244, 244));">
+                </div>
+                <div class="slider-rain" style="display: block;">
+                    <i style="left: 41.935483870967744%"></i>
+                    <i style="left: 45.16129032258064%"></i>
+                    <i style="left: 48.38709677419355%"></i>
+                    <i style="left: 51.61290322580645%"></i>
+                    <i style="left: 54.83870967741935%"></i>
+                </div>
+            </div>
+            <div class="closing-x"></div>
+        </div>
+    
+
+  
+    <div id="warnings" class="weather-box animation flex-container" style="display: none;">
+        <div class="cap-line clickable-size " data-icon="|" data-severity="M">Average wind speed at se...
+            <small>Tis 3:00 - Sön 3:00</small>
+        </div>
+    </div>
+    <div id="articles" class="weather-box animation" style="display: none;">
+        <div class="article-announce-small bg-transparent clickable type-undefined" data-do="rqstOpen,articles,14751">
+            <span style="background-image: url('https://gallery.windy.com/albums/a/zazu-cyclone-fiji-tonga-2020.png?w=200');"></span>
+            <div class="article-warning warning-extreme">extreme warning</div>
+                <a href="https://www.windy.com/articles/cyclone-zazu-moving-away-from-tonga-14751" class="nomouse">Cyclone Zazu moving away from Tonga</a>
+        </div>
+    </div>
+    </div>
+-->
