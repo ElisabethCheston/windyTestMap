@@ -34,14 +34,13 @@ windyInit(options, windyAPI => {
     store.on('level', level => {
         console.log(`Level was changed: ${level}`);
     });
+    
 });
+
+
+
+
 /*
-L.control.zoom({
-    position: 'topleft'
-}).addTo(W.map)
-
-
-
 // Example //
 var littleton = L.marker([63.61, 17.02]).bindPopup('This is Littleton, CO.'),
     denver    = L.marker([63.74, 17.99]).bindPopup('This is Denver, CO.'),
@@ -58,6 +57,7 @@ var map = L.map('map', {
     zoom: 5,
     layers: [satellit, streets]
 });
+
 var baseMaps = {
     "Satellit": satellit,
     "Streets": streets
