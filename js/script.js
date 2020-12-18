@@ -41,9 +41,26 @@ windyInit(options, windyAPI => {
     });
   
 
-    const [spot, lat, lon, id, name, spotname, windlabel, windDirection] = kitespots[i];
-    
-var markers = [
+          // Windy API modules are imported via '@windy/nameOfModule'
+        import map from '@windy/map';
+        import interpolator from '@windy/interpolator';
+        import _ from '@windy/utils';
+        import store from '@windy/store';
+        import bcast from '@windy/broadcast';
+
+        /*
+        // List of wayponts to be interpolated
+        const points = [
+            ['Tours', 'city-2', 0.689, 47.39],
+            ['Le Mans', 'city-2', 0.2, 48.008],
+            ['Amilly', 'city-3', 2.767, 47.978],
+            ['Bourges', 'city-3', 2.399, 47.081],
+            ['Paris', 'city-1', 2.351, 48.857],
+            ['Chartres', 'city-2', 1.487, 48.447],
+        ];
+        */
+
+        var kitespots = [
         //Kalix//
             ["SpotLevel", 65.8108770, 23.6116663, "id1", "BREVIKEN",", Wind Direction ","S/SW"],
             ["SpotLevel", 65.8130515, 23.4892165, "id2", "BODÖN",", Wind Direction ","N/NW"],
@@ -131,37 +148,37 @@ var markers = [
             ["SpotLevel", 59.0972660, 18.3228420, "id72", "GÅLÖ",", Wind Direction ","SE"],
             ["SpotLevel", 58.8043955, 17.7977476, "id73", "ÖRUDDEN N",", Wind Direction ","W/NW"],
             ["SpotLevel", 58.7966607, 17.7912915, "id74", "ÖRUDDEN V",", Wind Direction ","S/SW"],
-            ["SpotLevel", 58.7988784, 17.8109458, "id75", "ÖRUDDEN S",", Wind Direction ","S/S"]
+            ["SpotLevel", 58.7988784, 17.8109458, "id75", "ÖRUDDEN S",", Wind Direction ","S/S"],
             ["SpotLevel", 58.7226834, 17.1059486, "id76", "VACCUM",", Wind Direction ","S/SW"],
         // Gotland EASTCOST //
             ["SpotLevel", 57.6731890, 18.3313751, "id77", "SNÄCK",", Wind Direction ","S/SW"],
             ["SpotLevel", 57.6537283, 18.3039127, "id78", "NORDERSTRAND",", Wind Direction ","S/SW"],
             ["SpotLevel", 57.6000832, 18.2128064, "id79", "FRIDHEM",", Wind Direction ","S/SW"],
-            ["SpotLevel", 57.5010071, 18.1130306, "id80", "GNISVÄRD",", Wind Direction ","S/SW"]
+            ["SpotLevel", 57.5010071, 18.1130306, "id80", "GNISVÄRD",", Wind Direction ","S/SW"],
             ["SpotLevel", 57.4912072, 18.1260356, "id81", "TOFTA",", Wind Direction ","S/SW"],
             ["SpotLevel", 57.4836655, 18.1258006, "id82", "TOFTA S",", Wind Direction ","S/SW"],
-            ["SpotLevel", 57.4366947, 18.1419227, "id83", "VÄSTERGARN N",", Wind Direction ","S/SW"]
+            ["SpotLevel", 57.4366947, 18.1419227, "id83", "VÄSTERGARN N",", Wind Direction ","S/SW"],
             ["SpotLevel", 57.8043955, 18.7977476, "id84", "VÄSTERGARN S",", Wind Direction ","S/SE"],
             ["SpotLevel", 57.4056765, 18.1546933, "id85", "KOVIK",", Wind Direction ","S/SW"],
-            ["SpotLevel", 57.3967423, 18.1640881, "id86", "TJURUDDEN",", Wind Direction ","S/W"]
+            ["SpotLevel", 57.3967423, 18.1640881, "id86", "TJURUDDEN",", Wind Direction ","S/W"],
         // Gotland SOUTH //
             ["SpotLevel", 57.1316122, 18.2168770, "id87", "NISSEVIKEN",", Wind Direction ","S/SW"],
             ["SpotLevel", 56.9286604, 18.2373114, "id88", "VALAR",", Wind Direction ","S/SW"],
-            ["SpotLevel", 57.7988784, 18.2784944, "id89", "HOLMHÄLLAR",", Wind Direction ","S/SW"]
+            ["SpotLevel", 57.7988784, 18.2784944, "id89", "HOLMHÄLLAR",", Wind Direction ","S/SW"],
             ["SpotLevel", 56.0151331, 18.3442752, "id90", "FALUDDEN S",", Wind Direction ","S/SE"],
-            ["SpotLevel", 57.7988784, 18.8109458, "id91", "FALUDDEN N",", Wind Direction ","E/NE"]
+            ["SpotLevel", 57.7988784, 18.8109458, "id91", "FALUDDEN N",", Wind Direction ","E/NE"],
             ["SpotLevel", 57.1241931, 18.43118507, "id92", "GANSVIK",", Wind Direction ","E/NE"],
         // Gotland WESTCOST //
             ["SpotLevel", 57.2839580, 18.6672809, "id93", "LAUSVIKEN",", Wind Direction ","N/NE"],
-            ["SpotLevel", 57.3331318, 18.7144050, "id94", "LJUGARN",", Wind Direction ","E"]
+            ["SpotLevel", 57.3331318, 18.7144050, "id94", "LJUGARN",", Wind Direction ","E"],
             ["SpotLevel", 57.3712321, 18.7797047, "id95", "ARDREVIKEN",", Wind Direction ","E/SE"],
             ["SpotLevel", 57.3740297, 18.7966770, "id96", "SJAUSTRU",", Wind Direction ","S/SE"],
-            ["SpotLevel", 57.3964000, 18.8540002, "id97", "JRP",", Wind Direction ","S/SE"]
+            ["SpotLevel", 57.3964000, 18.8540002, "id97", "JRP",", Wind Direction ","S/SE"],
             ["SpotLevel", 57.3988506, 18.8673187, "id98", "VÄSTVIKEN",", Wind Direction ","S/SE"],
-            ["SpotLevel", 57.3956900, 18.8796854, "id99", "SANDVIKEN",", Wind Direction ","S/SW"]
+            ["SpotLevel", 57.3956900, 18.8796854, "id99", "SANDVIKEN",", Wind Direction ","S/SW"],
             ["SpotLevel", 57.4030865, 18.9181516, "id100", "NATVIKSUDDEN",", Wind Direction ","E/NE/SE"],
             ["SpotLevel", 57.4379699, 18.8993677, "id101", "GROGARN",", Wind Direction ","N/NE"],
-            ["SpotLevel", 57.4349801, 18.8549507, "id102", "KATTVIK",", Wind Direction ","N/NW/NE"]
+            ["SpotLevel", 57.4349801, 18.8549507, "id102", "KATTVIK",", Wind Direction ","N/NW/NE"],
             ["SpotLevel", 57.6143897, 18.7676287, "id103", "ÅMINNE",", Wind Direction ","N/NE"],
             // Gotland NORTH //
             ["SpotLevel", 57.7177726, 18.8093575, "id104", "SLITE",", Wind Direction ","E/SE/NE"],
@@ -171,22 +188,77 @@ var markers = [
             ["SpotLevel", 57.7542217, 18.0093393, "id108", "FURILLEN",", Wind Direction ","W/SW"],
             ["SpotLevel", 57.9295233, 18.8955352, "id109", "SAXRIV",", Wind Direction ","W/NW"],
             ["SpotLevel", 57.8437760, 18.7848341, "id110", "BRÄGÅRN",", Wind Direction ","NW"],
-            ["SpotLevel", 57.8455552, 18.6083233, "id111", "IREVIKEN",", Wind Direction ","W/NW"]
+            ["SpotLevel", 57.8455552, 18.6083233, "id111", "IREVIKEN",", Wind Direction ","W/NW"],
             // FÅRÖ //
             ["SpotLevel", 57.9735893, 19.2501460, "id108", "EKEVIKEN",", Wind Direction ","N/NW"],
             ["SpotLevel", 57.9868174, 19.2241011, "id109", "VARPET",", Wind Direction ","N/NE"],
             ["SpotLevel", 57.9561473, 19.3311783, "id110", "SKALASAND",", Wind Direction ","E/SE"],
-            ["SpotLevel", 57.9513802, 19.2555524, "id111", "SUDERSAND",", Wind Direction ","E/SE"]
+            ["SpotLevel", 57.9513802, 19.2555524, "id111", "SUDERSAND",", Wind Direction ","E/SE"],
             ["SpotLevel", 57.9868616, 19.3039213, "id111", "SKÄR",", Wind Direction ","N/NE/NW"]
     ];
-        // Loop for the markers. //
-    for (var i = 0; i < markers.length; i++) {
-        spots = new L.marker([markers[i][1],markers[i][2]])
-            .bimarkers(markers[i][0],[i][4],[i][5],[i][6])
+    
+        // Loop for the kitespots. //
+    for (var i = 0; i < kitespots.length; i++) {
+        spots = new L.marker([kitespots[i][1],kitespots[i][2]])
+            .bimarkers(kitespots[i][0],kitespots[i][4],kitespots[i][5],kitespots[i][6])
             .addTo(map);
     }
     
-});
+
+        // List of current markers
+        let markers = null;
+
+        const icon = L.divIcon({
+            className: 'weather-at-city',
+            iconSize: [80, 40],
+            iconAnchor: [40, 20],
+        });
+
+        // Creates marker with content
+        const createPopup = (lat, lon, name) => {
+            const marker = L.marker([lat, lon], { icon }).addTo(map);
+            marker._icon.innerHTML = name;
+            return marker;
+        };
+
+    // Major interpolation function
+    const interpolateValues = () => {
+        /**
+        This example can interpolate only wind overlay, but
+        you can interpolate almost any raster layer of Windy
+        */
+        if (store.get('overlay') !== 'wind') {
+            console.warn('I can iterpolate only Wind sorry');
+            return;
+        }
+
+    // Interpolator returns interpolation function //
+    interpolator(interpolate => {
+        markers.forEach(m, i) => {
+
+            const [spot, lat, lon, id, name, spotname, windlabel, windDirection] = kitespots[i];
+
+            /**
+            // Interpolate finaly gets you the values //
+            * @param {Object} {lat, lon}
+            * @return {Array} array of raw meterological values or null, NaN, -1
+            */
+            const values = interpolate.call(interpolator, { lat, lon });
+
+            // Can only interpolate values for point that are visible on map //
+            if (Array.isArray(values)) {
+                const { wind, dir } = _.wind2bj(values);
+                m._icon.innerHTML = `${name}<br />${Math.round(
+                    wind
+                )}m/s&nbsp;${dir} `;
+            } else {
+                console.warn(
+                    `Unable to interpolate value for ${lat}, ${lon}.`
+                );
+            }
+        });
+    });
+};
 
 
 /*
