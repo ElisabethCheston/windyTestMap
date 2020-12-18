@@ -167,11 +167,17 @@ var markers = [
             ["SpotLevel", 57.7177726, 18.8093575, "id104", "SLITE",", Wind Direction ","E/SE/NE"],
             ["SpotLevel", 57.7344558, 18.8781290, "id105", "HIDEVIKEB",", Wind Direction ","S/SE"],
             ["SpotLevel", 57.7204868, 18.9115332, "id106", "ST OLOFHOLM",", Wind Direction ","E/SE/NE"],
-            ["SpotLevel", 57.7988784, 18.8109458, "id107", "ÖRUDDEN",", Wind Direction ","S/S"],
-            ["SpotLevel", 57.7966607, 18.7912915, "id108", "ÖRUDDEN",", Wind Direction ","S/SW"],
-            ["SpotLevel", 57.7988784, 18.8109458, "id109", "ÖRUDDEN",", Wind Direction ","S/S"],
-            ["SpotLevel", 57.7966607, 18.7912915, "id110", "ÖRUDDEN",", Wind Direction ","S/SW"],
-            ["SpotLevel", 57.7988784, 18.8109458, "id111", "ÖRUDDEN",", Wind Direction ","S/S"]
+            ["SpotLevel", 57.7886030, 18.9515102, "id107", "SJÖKROGEN",", Wind Direction ","SE"],
+            ["SpotLevel", 57.7542217, 18.0093393, "id108", "FURILLEN",", Wind Direction ","W/SW"],
+            ["SpotLevel", 57.9295233, 18.8955352, "id109", "SAXRIV",", Wind Direction ","W/NW"],
+            ["SpotLevel", 57.8437760, 18.7848341, "id110", "BRÄGÅRN",", Wind Direction ","NW"],
+            ["SpotLevel", 57.8455552, 18.6083233, "id111", "IREVIKEN",", Wind Direction ","W/NW"]
+            // FÅRÖ //
+            ["SpotLevel", 57.9735893, 19.2501460, "id108", "EKEVIKEN",", Wind Direction ","N/NW"],
+            ["SpotLevel", 57.9868174, 19.2241011, "id109", "VARPET",", Wind Direction ","N/NE"],
+            ["SpotLevel", 57.9561473, 19.3311783, "id110", "SKALASAND",", Wind Direction ","E/SE"],
+            ["SpotLevel", 57.9513802, 19.2555524, "id111", "SUDERSAND",", Wind Direction ","E/SE"]
+            ["SpotLevel", 57.9868616, 19.3039213, "id111", "SKÄR",", Wind Direction ","N/NE/NW"]
     ];
         // Loop for the markers. //
     for (var i = 0; i < markers.length; i++) {
