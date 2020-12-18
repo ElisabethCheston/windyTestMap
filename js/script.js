@@ -1,7 +1,7 @@
 
 // import leaflet from leaflet
 
-// Calling the Windy map with lat/lng start view. Setting the map in a 24hour foormat. //
+// Calling the Windy map with lat/lng start view. Setting the map in a 24hour format. //
 const options = {
     // Required: API key
     key: 'Ij2CVHcL4d5ByrXOrtQg71Abhm2gFLGO',
@@ -41,6 +41,16 @@ windyInit(options, windyAPI => {
 
 // Creating the layer controller //
 
+ var baseLayers = {
+    "Mapbox": mapbox,
+    "OpenStreetMap": osm
+ };
+ 
+ var overlays = {
+    "Marker": marker
+ };
+ 
+L.control.layers(baseLayers, overlays).addTo(map);
 
 
 

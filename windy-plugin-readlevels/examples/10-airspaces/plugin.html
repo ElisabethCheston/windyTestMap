@@ -1,0 +1,264 @@
+<plugin>
+
+    <div class="mobile-header">openAIP Airspaces:</div>
+
+	<div class="plugin-content">
+        <div id="list" >
+    		<h2 style="color:white; text-shadow:0px 0px 4px black;">openAIP Airspaces:</h2>
+            <div id="aipdiv" style="margin-top:15px;"></div><br>
+        </div>
+	</div>
+
+<script>
+    let mobl=W.rootScope.isMobile;
+
+    let aboutPlugin=document.createElement('div');
+    aboutPlugin.innerHTML=`
+        <div id="aboutplugin" >This plugin displays the
+                <a style="text-decoration:underline" href="http://www.openaip.net" target="_blank">openAIP</a>
+                airspaces translated to geojson.
+        </div>
+    `;
+    document.getElementById("windy-plugin-airspaces").appendChild(aboutPlugin);
+
+    document.getElementById("open-in-app").style.display="none";
+
+    let openasp=document.createElement("div");
+    openasp.innerHTML="Show Airspaces";
+    openasp.style="display:inline-block; padding:4px; background-color:rgba(0,0,0,0.4); margin-left:6px; border-radius:6px;  cursor:pointer;";
+    document.getElementById("search").appendChild(openasp);
+    openasp.addEventListener("click",()=>{broadcast.emit('rqstOpen','windy-plugin-airspaces')});
+
+    let cntdiv=[],cnttxt=[],cntremove=[];
+    let catAr=[];
+
+    //load airspace list
+    let fetchTries=0;
+    let countries=[];
+
+    let fetchCountryList=()=>{
+        fetch("https://www.openaipgeojson.com/countries.json").then((r)=>r.json()).then(r=>{
+            countries=r;
+            countries.forEach((e,i)=>{
+                cntdiv[i]=document.createElement("div");
+                cntdiv[i].className="airspace-div";
+                cnttxt[i]=document.createElement("span");
+                let s=e.name.slice(0,-3); s=s[0].toUpperCase()+s.slice(1);
+                for (let j=0,l=s.length;j<l;j++)if(s[j]=="_")s=s.slice(0,j)+" "+s[j+1].toUpperCase()+s.slice(j+2);
+                cnttxt[i].innerHTML=s;
+                cnttxt[i].dataset.i=i;
+                cnttxt[i].className="airspace-div-txt";
+                cnttxt[i].addEventListener("click",i=>{
+                    let thisN=i.srcElement;
+                    thisN.nextSibling.style.display="inline-block";
+                    thisN.style.fontWeight="bold";thisN.style.opacity=1;
+                    fetchAsp(thisN.dataset.i);
+                });
+
+                cntremove[i]=document.createElement("span");
+                cntremove[i].className="closing-x-small";
+                cntremove[i].dataset.i=i;
+                cntremove[i].addEventListener("click",i=>{
+                    let thisN=i.srcElement;
+                    map.removeLayer(countries[thisN.dataset.i].gjLayer); delete countries[thisN.dataset.i].gjLayer;
+                    //console.log(countries[thisN.dataset.i].gjLayer);
+                    thisN.previousSibling.style.fontWeight="normal"; thisN.previousSibling.style.opacity=0.9;
+                    thisN.style.display="none";
+                });
+
+                cntdiv[i].appendChild(cnttxt[i]);
+                cntdiv[i].appendChild(cntremove[i]);
+                document.getElementById("aipdiv").appendChild(cntdiv[i]);
+            });
+        }).catch(error=>{
+            console.error('Error:', error, 'Attempt',fetchTries);
+            fetchTries++;
+            if(fetchTries<10){setTimeout(fetchCountryList,1000)}
+            else document.getElementById("aipdiv").innerHTML="Failed to load country list.<br>You can try to reload plugin.";
+        });
+    }
+    fetchCountryList();
+
+    const fetchAsp=i=>{
+        let bnds=countries[i].bounds[0];
+        map.panTo([(bnds[1][0]-bnds[0][0])/2,(bnds[1][1]-bnds[0][1])/2]);
+        map.fitBounds(bnds);
+        if (!countries[i].asp){
+            fetch(`https://www.openaipgeojson.com/${countries[i].name}.geojson`).then((r)=>r.json()).then(r=>{
+                countries[i].asp=r;
+                load(i);
+            });
+        } else if (!countries[i].gjLayer)load(i);
+    }
+
+    //load airspace as layer
+    const load=i=>{
+        countries[i].gjLayer=L.geoJson(countries[i].asp.features,{
+            style: feature=>{return {weight:1, fill:0, opacity:0.4, color:aspColor(feature.properties.CAT)};}
+        }).addTo(W.maps);
+    }
+
+    const aspColor=n=>{
+        for (var ii=0;ii<catAr.length&&catAr[ii]!=n;ii++);
+        if (ii==catAr.length)catAr.push(n);
+
+        switch (n) {
+            case 'RESTRICTED':  return "lightpink";     break;
+            case 'PROHIBITED':  return "orange";           break;
+            case 'DANGER':      return "orangered";     break;
+            case 'CTR':         return "lightblue";     break;
+            case 'A':           return "aliceblue";     break;
+            case 'C':           return "cyan";     break;
+            case 'D':           return "aqua";     break;
+            case 'E':           return "peachpuff";     break;
+            case 'F':           return "lawngreen";     break;
+            case 'B':           return "lightcyan";          break;
+            case 'G':           return "lightyellow";     break;
+            case 'TMZ':         return "lightgreen";    break;
+            case 'WAVE':        return "mistyrose";     break;
+            case 'RMZ':         return "palegreen";     break;
+            case 'gliding':     return "lightsalmon";     break;
+            case 'FIR':         return "aquamarine";     break;
+            default:            return "white";
+        }
+    }
+
+    //algorithm from github - substack - point-in-polygon, MITlic
+    const checkPoly= function(point, vs) {
+        var x = point[0], y = point[1];
+        var inside = false;
+        for (var i = 0, j = vs.length - 1; i < vs.length; j = i++) {
+            var xi = vs[i][0], yi = vs[i][1];
+            var xj = vs[j][0], yj = vs[j][1];
+            var intersect = ((yi > y) != (yj > y))
+             && (x < (xj - xi) * (y - yi) / (yj - yi) + xi);
+            if (intersect) inside = !inside;
+        }
+        return inside;
+    };
+
+    picker.on('pickerOpened', findAsp);
+    picker.on('pickerMoved', findAsp);
+
+    let pckr={_icon:0};
+    let dragpause;
+    let cntryAr=[];
+    let prevCntryAr=[];
+
+    ////find airspace:
+    ////  find picker marker,
+    ////  then look for area then iterate through geojson object to find polygon and name
+    ////  then set style of polygon
+    ////  then setstyle of geojson layer
+    ////  then reset style of previous layers left
+
+
+    function findAsp(e){
+        //find picker marker if desktop
+        let tries=0;
+        let wait4pckr=()=>{
+            map.eachLayer(l=>{
+                if(l.options&&l.options.icon&&l.options.icon.options.className=="picker open"){
+                    pckr=l;
+                    pckr.on("movestart",()=>{document.getElementById("picker_asp").innerHTML="Waiting...."});
+                    pckr.on("drag",(e)=>{
+                        
+                        clearTimeout(dragpause);
+                        dragpause=setTimeout(findAsp,300,e.target._latlng);
+                    });
+                }
+            });
+            if (!pckr._icon){tries++;if(tries<10)setTimeout(wait4pckr,200);}
+        }
+        if (!pckr._icon&&!mobl)wait4pckr();
+
+        let c= [e.lon||e.lng,e.lat]; //points obj for geojson
+        let cc = [e.lat,e.lon||e.lng];//points obj for leaflet
+
+        let aspAr=[];
+        let txt="";
+        cntryAr=[];
+
+        let cntryBounds=i=>{
+            for(let j=0,l=countries[i].bounds.length;j<l;j++){
+                let bnds=L.bounds(countries[i].bounds[j]);
+                if (bnds.contains(cc)) return true;
+            }
+            return false;
+        }
+
+        countries.forEach((cntry,i)=>{
+            if (cntry.gjLayer&&cntryBounds(i)){
+                cntryAr.push(i);
+
+                cntry.asp.features.forEach(e=>{
+                    if(checkPoly(c,e.geometry.coordinates[0])){
+                        txt+=//(txt.length?"<br>":"")+
+                        `<div onclick='let d=this.nextElementSibling; if(d.style.display=="none"){d.style.display=""}else{d.style.display="none"}' style='color:${aspColor(e.properties.CAT)}; cursor:pointer; z-Index:999; word-wrap:normal;'>${e.properties.N}&nbsp;&nbsp;&nbsp;</div>
+                        <div style='display:none'><span style='font-size:10px;'>&nbsp;&nbsp;Cat:&nbsp;${e.properties.CAT}</span>
+                        <br><span style='font-size:10px;'>&nbsp;&nbsp;${e.properties.AB}${e.properties.AB_U}-${e.properties.AT}${e.properties.AT_U}</span></div>`;
+                        aspAr.push(e.properties.ID);
+                    }
+                });
+
+                cntry.gjLayer.eachLayer(e=>{
+                    let fnd=false;
+                    for (let j=0, l=aspAr.length;j<l;j++)if (aspAr[j]==e.feature.properties.ID)fnd=true;
+                    if (fnd) {
+                        e.options.color=aspColor(e.feature.properties.CAT);
+                        e.options.weight=2;
+                        e.options.opacity=1;
+                    }  else  {
+                        e.options.color=aspColor(e.feature.properties.CAT);
+                        e.options.weight=1;
+                        e.options.opacity=0.4;
+                    }
+                });
+                cntry.gjLayer.setStyle();
+            }
+        });
+
+        let createPicker_aspDiv=()=>{
+            let pa=document.createElement("div");
+            pa.id="picker_asp";
+            pa.innerHTML=txt;
+            pa.style.textHeight="100%"; pa.style.fontSize="10px";
+            if(!mobl){
+                let pckEl=document.getElementsByClassName("picker-content noselect")[0];
+                pckEl.appendChild(pa);
+                if(mobl)pa.style.paddingLeft="8px";
+            } else {
+                let pckEl=document.getElementById("plugin-picker");
+                pa.className="airspace-mblpckr";
+                pa.style.top=pckEl.style.top;
+                pckEl.appendChild(pa);
+            }
+        }
+
+        if(!document.getElementById("picker_asp")){
+            createPicker_aspDiv();
+        }   else document.getElementById("picker_asp").innerHTML=txt;
+
+        ////prevCntryAr = record of previous country bounds, so that style of countries left can be reset, without resetting all.
+        for(let j=0,l=prevCntryAr.length;j<l;j++){
+            for(var k=0,ll=cntryAr.length;k<ll&&prevCntryAr[j]!=cntryAr[k];k++);
+            if (k==ll){
+                countries[prevCntryAr[j]].gjLayer.eachLayer(e=>{
+                    e.options.color=aspColor(e.feature.properties.CAT);
+                    e.options.weight=1; e.options.opacity=0.4;
+                });
+                countries[prevCntryAr[j]].gjLayer.setStyle();
+            }
+        }
+        prevCntryAr=cntryAr.map(e=>e);
+    };
+
+
+    import map from '@windy/map';
+    import interpolator from '@windy/interpolator';
+    import broadcast from '@windy/broadcast';
+    import store from '@windy/store';
+    import picker from '@windy/picker';
+    import utils from '@windy/utils';
+</script>
+</plugin>

@@ -1,0 +1,65 @@
+{
+  "_from": "windy-plugin-readlevels",
+  "_id": "windy-plugin-readlevels@0.1.7",
+  "_inBundle": false,
+  "_integrity": "sha512-6ByqzV6t7E79jexCDhTL9VDGdZ/7w5jCFbdLfY/VJCMTt3Aw3JHVc1PByGIPRH3dpT6QVVzUJwYOR4RmGR+cXA==",
+  "_location": "/windy-plugin-readlevels",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "tag",
+    "registry": true,
+    "raw": "windy-plugin-readlevels",
+    "name": "windy-plugin-readlevels",
+    "escapedName": "windy-plugin-readlevels",
+    "rawSpec": "",
+    "saveSpec": null,
+    "fetchSpec": "latest"
+  },
+  "_requiredBy": [
+    "#USER",
+    "/"
+  ],
+  "_resolved": "https://registry.npmjs.org/windy-plugin-readlevels/-/windy-plugin-readlevels-0.1.7.tgz",
+  "_shasum": "9c133d99b2fb631fcaee5ef7f78b7ce30507ecef",
+  "_spec": "windy-plugin-readlevels",
+  "_where": "/workspace/windyTestMap",
+  "author": {
+    "name": "rittels"
+  },
+  "bugs": {
+    "url": "https://github.com/rittels/wndy/issues"
+  },
+  "bundleDependencies": false,
+  "dependencies": {
+    "@babel/core": "^7.1.6",
+    "@babel/preset-env": "^7.1.6",
+    "chokidar": "^2.0.4",
+    "colorette": "^1.0.6",
+    "commander": "^2.19.0",
+    "consola": "^1.4.5",
+    "decache": "^4.5.0",
+    "express": "^4.16.4",
+    "fs-extra": "^7.0.1",
+    "less": "^3.8.1",
+    "prompts": "^1.2.1",
+    "riot-compiler": "^3.5.2",
+    "ucfirst": "^1.0.0"
+  },
+  "deprecated": false,
+  "description": "read weather data from different levels at specific picker pos",
+  "homepage": "https://github.com/rittels/wndy#readme",
+  "license": "MIT",
+  "main": "dist/plugin.js",
+  "name": "windy-plugin-readlevels",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rittels/wndy.git"
+  },
+  "scripts": {
+    "prepublishOnly": "node ./test/prepublish.js",
+    "start": "node ./compiler.js --build --watch --prompt --serve --transpile",
+    "start-dev": "node ./compiler.js --build --watch --serve --transpile",
+    "test": "node ./test/prepublish.js"
+  },
+  "version": "0.1.7"
+}

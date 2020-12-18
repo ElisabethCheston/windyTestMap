@@ -1,0 +1,773 @@
+<plugin>
+    <div class="mobile-header">mobile plugin</div>
+
+	<div id="pg1" class="plugin-content" style="top:5px; bottom:115px; ">
+        <div id="fp-table-h">
+            <span class="checkbox off"  onclick="console.log(this.classList); this.classList.toggle('off');"></span>
+            <span id="wp-h"   class="fp-cell" style="width:10px"></span>
+            <span id="wp-h"   class="fp-cell" style="width:80px">Waypoint</span>
+            <span id="spd-h"  class="fp-cell" ></span>
+            <span id="dist-h" class="fp-cell" ></span>
+            <span id="ete-h"  class="fp-cell" >ETE</span>
+            <span id="etec-h"  class="fp-cell" >ETE-cor</span>
+        </div>
+        <div id="fp-table">
+
+        </div>
+    </div>
+    <div id="pg2" class="plugin-content" style='top:calc(100% - 110px); bottom:60px;'>
+    <div>
+        <div style="height:20px">Air speed:&nbsp;<span id="airspeed"></span></div>
+        <div  id="range-container">
+            <input id="speed-range" style="opacity:0; position: absolute; top:5px; left:0px; width:200px; height:20px;" type="range" name="spd" min="0" max="200">
+            <div id="speed-thumb"></div>
+        </div>
+    </div>
+    </div>
+    <div id="pg3" class="plugin-content" style='top:calc(100% - 55px); bottom:5px;'>
+        <div onclick="document.getElementById('load-save').click()" id="ghost-load-div">Load flightplan</div>
+        <input id="load-save" style="display:none" type="file">
+    </div>
+
+
+<script>
+
+	// Windy API modules are imported via '@windy/nameOfModule'
+	import map from '@windy/map'
+	import interpolator from '@windy/interpolator'
+	import store from '@windy/store'
+	import bcast from '@windy/broadcast'
+    import $ from '@windy/$'
+    import utils from '@windy/utils'
+    import Evented from '@windy/Evented'
+    import picker from '@windy/picker';
+    import LatLon from './geodesy.mjs';
+    import loadsave from './load_save_fp.mjs';
+
+    console.log(bcast);
+
+    let openfp=document.createElement("div");
+    openfp.innerHTML="FP";
+    //openfp.style="display:inline-block; padding:4px; background-color:rgba(0,0,0,0.4); margin-left:6px; border-radius:6px;  cursor:pointer;";
+    openfp.className="plugin-buttons";
+    openfp.style.top="-15px";
+    openfp.addEventListener("click",()=>{bcast.emit('rqstOpen','windy-plugin-fptest')});
+    $('#bottom').appendChild(openfp);
+    let interpStart=document.createElement("div");
+    interpStart.className="plugin-buttons";
+    interpStart.style.top="-40px";
+    interpStart.innerHTML="Start interpolator";
+    interpStart.addEventListener("click",interpolatePoints);
+    $('#bottom').appendChild(interpStart);
+
+
+    let ADpluginButton=false;
+    let ADinfo;
+    let centerBeforeAD,zoomBeforeAD;
+    bcast.on("pluginOpened",e=>{
+        if (e=="airport"){zoomBeforeAD=map.getZoom();  centerBeforeAD=map.getCenter();}
+    });
+    bcast.on("pluginClosed", e=>{
+        if (e=="airport")map.setView(centerBeforeAD,zoomBeforeAD);
+    });
+    bcast.on("airportLoaded",e=>{console.log("airport loaded",e);
+        ADinfo={coords:{lat:e.lat,lng:e.lon},Waypoint:e.icao};
+        if(!ADpluginButton){
+            let addAD=document.createElement("div");
+            addAD.id="addAD";
+            addAD.className=$('.switch-wrapper').firstElementChild.className;
+            addAD.style.marginTop="2px";
+            addAD.innerHTML="<div></div><div class='selected' style='width:170px; cursor:pointer;' >Add to Flightplan</div><div></div>";
+            addAD.addEventListener("click",()=>{
+                console.log(e.lat);
+                fp.push(ADinfo);
+                console.log(fp);
+                makeInterPoints();
+                bcast.fire("rqstClose","airport");
+            });
+            $(".switch-wrapper").appendChild(addAD);
+            ADpluginButton=true;
+        }
+    });
+
+    function loadcbf(e){
+        console.log(e);
+        fp=e.map(x=>{return{coords:x.coords,Waypoint:x.Waypoint?x.Waypoint:""}});
+        console.log(fp);
+        makeInterPoints();
+    };
+
+    $("#load-save").addEventListener("change",f=>{
+        for (let i=fp.length-1;i>=0;i--)deleteWP(i,false);      //false = prevent make interpoints after delete
+        loadsave.rdfx(f.target.files,loadcbf);
+    });
+
+    map.on('click',e=>console.log(e));
+    //bcast.on('detailRendered', e=>{console.log("DETAIL",e)});
+
+
+
+    console.log(this);
+
+    let mobl=W.rootScope.isMobile;
+    let fp=[];
+    let bnds=[];
+    let points=[];
+    let wait4redraw=false;    let wait4fit=false;
+    let currentpath;    let reqpath;
+    let reqbnds;
+    let origbnds, origc, origz;
+    let allowOnTimestamp=true;
+    let pickerPos;
+    //let stoppedByCORS=false;
+    let tn=Date.now();
+    let h3=60*60*1000*3;
+    let OL=["wind","gust","rain","temp","visibility","pressure"];  let OLi=0;
+    let pckEl;
+    let hrsInt=3;  //hour interval of path, different for different products.
+    let metric_w=store.get("metric_wind");
+    let spd=75  *0.44704;  //mph to mps
+    let interdist=3000;
+
+    console.log(utils);
+    console.log(store);
+
+
+
+    function spd2val(){
+        $("#speed-range").value=Math.sqr(spd-10)*10;
+    }
+
+    const spdf={"kt":1.94384, "km/h":3.6,  "mph":2.23694, "m/s":1, "bft":1.94384};
+    const disf={"kt":1/1852, "km/h":0.001, "mph":1/1609.34, "m/s":1, "bft":1/1852};
+
+    function disU(){
+        if (!metric_w)metric_w=store.get("metric_wind");
+        switch (metric_w){
+            case "km/h":return "km"; break;
+            case "mph": return "miles"; break;
+            case "m/s": return "meter"; break;
+            default: return "NM";
+        }
+    }
+    function spdstr(spd,u){
+        return Math.round(spd*spdf[metric_w])+(u?(metric_w=="bft"?"kt":metric_w):"");
+    }
+    function diststr(d,u){
+        if (!metric_w)metric_w=store.get("metric_wind");
+        let dec=metric_w=="m/s"?1:100;
+        let unit;
+        if (u) switch (metric_w){
+            case "km/h":unit="km"; break;
+            case "mph": unit="M"; break;
+            case "m/s": unit="m"; break;
+            default:    unit="NM";
+        }
+        console.log(d, disf[metric_w]);
+        return Math.round(d*disf[metric_w]*dec)/dec+(u?unit:"");
+    }
+    function hms(t){
+            t=Math.round(t/1000);
+            let s=t%60;
+            let m=Math.floor(t/60)%60;
+            let h=Math.floor(t/3600);
+            return ("00"+h).slice(-2)+":"+("00"+m).slice(-2)+":"+("00"+s).slice(-2);
+        }
+    function setHeadings(){
+    //set headings
+        $('#spd-h').innerHTML=metric_w=="bft"?"kt":metric_w;
+        $("#dist-h").innerHTML=disU();
+    } setHeadings();
+
+    function adjSpdStr(e){  //adjust and round spd, write airspeed div
+        if (typeof e=="undefined") metric_w=store.get('metric_wind');
+        else metric_w=e;
+        let inc=metric_w=="m/s"?2:5;  if (spd>100)inc*=2;
+        spd=(Math.floor(spd*spdf[metric_w]/inc)*inc)/spdf[metric_w];
+        document.getElementById('airspeed').innerHTML=spdstr(spd,true);
+    }
+
+    $("#speed-range").addEventListener("input",e=>{
+        //console.log(e.target.value);
+        document.getElementById('speed-thumb').style.left=Math.floor(e.target.value*180/200)+1+'px';
+        spd=10+(Math.pow(0.1*e.target.value,2));
+        adjSpdStr();
+    });
+
+    store.on('metric_wind',e=>{
+        adjSpdStr(e);
+        console.log($("#info-air-spd"));
+        if(typeof ghostmrkr.i!=='undefined' && $("#info-air-spd")){
+            console.log($("#info-air-spd"));
+            let pnt=fp[ghostmrkr.i].inter[ghostmrkr.j];
+            let u=metric_w=="bft"?"kt":metric_w;
+            $('#info-air-spd').innerHTML=(Math.round(spd*spdf[metric_w]).toFixed(1))+u;
+            $('#info-wind-spd').innerHTML=pnt.w?(pnt.w.wind*spdf[metric_w]).toFixed(1)+u:"Not avail";
+            $('#info-ground-spd').innerHTML=pnt.gspd?(pnt.gspd*spdf[metric_w]).toFixed(1)+u:"Not avail";
+        }
+        $('#spd-h').innerHTML=metric_w=="bft"?"kt":metric_w;
+        let d; switch (metric_w){case "km/h":d="km"; break;case "mph": d="miles"; break;case "m/s": d="meter"; break;  default: d="NM";}
+        $("#dist-h").innerHTML=d;
+    });
+
+    function time2path(t){
+        //hrsInt=(Math.floor((t+h3)/(12*3600*1000))-Math.floor(tn/(12*3600*1000))>10)?6:3;
+        let tmshift=new Date(t+hrsInt*30*60*1000);
+        return tmshift.getUTCFullYear()+"/"+("0"+(tmshift.getUTCMonth()+1)).slice(-2)+"/"+("0"+tmshift.getUTCDate()).slice(-2)+"/"+("0"+Math.floor(tmshift.getUTCHours()/hrsInt)*hrsInt).slice(-2);
+    }
+    function path2maxt(s){
+        let a=s.split('/').map(e=>Number(e));
+        //console.log(a);
+        return Date.UTC(a[0],a[1]-1,a[2],a[3])+90*60*1000;
+    }
+    function time2maxt(t){
+        //hrsInt=(Math.floor((t+h3)/(12*3600*1000))-Math.floor(tn/(12*3600*1000))>10)?6:3;
+        let tmshift=new Date(t+hrsInt*30*60*1000);
+        return Math.floor(tmshift/(hrsInt*3600*1000))*(hrsInt*3600*1000)+hrsInt*30*60*1000;
+    }
+    function checkPntsEq(p1,p2){
+        let ln1=p1.lng||p1.lon; let ln2=p2.lng||p2.lon;
+        return Math.abs(p1.lat-p2.lat)<0.000000001 && Math.abs(ln1-ln2)<0.000000001;
+    }
+    function deleteWP(i,updatepoints){
+        if (typeof makepoints!=="undefined")makepoints=true;
+        for(var ii=i+1;ii<fp.length;ii++){
+            fp[ii].marker.i--;
+            if (ii<fp.length-1){fp[ii].lineGhost.i--;fp[ii].line.i--;}
+        }
+        map.removeLayer(fp[i].marker);
+        const remline=()=>{map.removeLayer(fp[i].lineGhost); map.removeLayer(fp[i].line);}
+        const remprvline=()=>{map.removeLayer(fp[i-1].lineGhost); map.removeLayer(fp[i-1].line);}
+        if (i==0){remline()} else if (i==fp.length-1){remprvline()} else {remline();remprvline();}
+        fp.splice(i,1);
+        allowOnTimestamp=false;setTimeout(()=>allowOnTimestamp=true,500);
+        if(i>0)fillPlaceMarker(i-1,0,true,false,true);
+        else if (fp.length>0) fillPlaceMarker(0,0,true,false,true);
+        let rows= $('#fp-table').children;
+        rows[i].remove();
+        for (let j=i;j<fp.length;j++){
+            rows[j].children[1].innerHTML=j;
+            //console.log("Row update no",j);
+            //if (j==fp.length-1){
+            //    console.log("LAST ROW",rows[j].children);
+            //    for (let k=3;k<rows[j].children.length;k++) rows[j].children[k].innerHTML="";
+            //}
+        }
+        //console.log(fp);
+        if(updatepoints)makeInterPoints();
+    }
+    function addWPButton(){
+        let aw=document.createElement("div");
+        aw.id="add-wp-button";
+        aw.innerHTML="Add WP";
+        aw.style.textHeight="100%"; aw.style.fontSize="10px";
+        aw.addEventListener("click",()=>{
+            if (!fp.length||!checkPntsEq(pickerPos, fp[fp.length-1].coords)) fp.push({coords:pickerPos});
+            else console.error("Trying to add the same WP!!");
+            makeInterPoints();
+        });
+        if(!mobl){
+                pckEl=document.getElementsByClassName("picker-content noselect")[0].parentNode;
+                pckEl.appendChild(aw);
+                aw.className="addwp-dskpckr";
+
+        } else {
+                pckEl=document.getElementById("plugin-picker");
+                aw.className="addwp-mblpckr";
+                aw.style.top=pckEl.style.top;
+                pckEl.appendChild(aw);
+        }
+    }
+    function storePckPos(e){
+        pickerPos={lat:e.lat,lng:e.lon};
+        if (!$("#add-wp-button"))addWPButton();
+    }
+
+    picker.on('pickerOpened', e=>{if(pckEl){pckEl.style.visibility="visible"};  storePckPos(e);});
+    picker.on('pickerMoved', storePckPos);
+    bcast.on("redrawFinished", e=>{
+        currentpath=e.path;
+        console.log(currentpath,reqpath);
+        if(currentpath==reqpath)  {wait4redraw=false}
+        else if (Number(reqpath.slice(-2))-Number(currentpath.slice(-2))==3) {hrsInt=6; wait4redraw=false}
+        let cityar=[];
+        for (let j=1; j<5; j++){
+            cityar[j]=document.getElementsByClassName("city-"+j);
+            for (let i=0;i<cityar[j].length;i++){
+                cityar[j][i].style.pointerEvents="none";
+            }
+        }
+        //cityar.forEach(function(e){console.log(e)});
+        //console.log("Redraw completed: path:",currentpath,"req path",reqpath);
+    });
+    bcast.on("metricChanged",e=>{
+        //console.log(e);
+        //console.log(store.get("timestamp"));
+    });
+
+    function moveMrkr(){
+        //console.log(store.get("path"));
+        let tt=store.get("timestamp");
+        //console.log(time2path(tt));
+        if (allowOnTimestamp&&fp.length>1){
+            let t=store.get("timestamp");
+            //console.log("newtime:",t);
+            let pdiff, tdiff=Infinity; let fnd=false;
+            let i=0,j=0; let lasti=fp.length-2; let lastj= fp[lasti].inter.length-1;
+            if (fp[lasti].inter[lastj].tcor<t) {i=lasti; j=lastj}
+            else if (fp[i].inter[j].tcor<t){
+                for (i=0; i<fp.length-1&&!fnd;i++){
+                    if (fp[i].inter[0].tcor<t && fp[i].inter[fp[i].inter.length-1].tcor>t)fnd=true;
+                }
+                i--;
+                if (fnd){
+                    j=Math.floor(((t-fp[i].inter[0].tcor)/(fp[i].inter[fp[i].inter.length-1].tcor-fp[i].inter[0].tcor))*fp[i].inter.length);
+                    //console.log("j",j);
+                }
+            }
+
+            //console.log(i,j);
+            //if(fnd){j--;if (j<0){i--;j=fp[i].inter.length-1;}}
+            fillPlaceMarker(i,j,false);
+            ghostmrkr.setLatLng(fp[i].inter[j].c);
+        }
+    }
+
+    store.on("timestamp",()=>{
+        console.log(store.get("path"));
+        moveMrkr();
+    });
+
+
+    let boundschanged=false;
+
+    let infoicon=L.divIcon({html:
+        `<div id="mrkr" style="position:absolute;  font-family:arial; color:white;  text-shadow: 1px 1px 1px rgba(0,0,0,0.8); background-color:transparent; white-space:nowrap;">
+            <div style="display:block; position:absolute; left:-15px; top:0px; width:30px; height:140px; cursor:move;">
+                <div style="position:absolute;left:15px;top:3px;border-left:2px solid rgba(0,0,0,0.4); height:112px;"></div>
+                <div style="display:none; position:absolute; left:12px; top:calc(120.5px); background-color:white; width:8px; height:8px; border-radius:4px;"></div>
+            </div>
+            <div id="posname" style="position:absolute; top:-20px; left:0px; transform:translateX(-50%); font-weight:bold; font-size:14px;"></div>
+            <div style="pointer-events: none; position:absolute; font-size:11px; line-height:110%;  left:-70px; top:0px; ">
+                <span id="mrkr tm"      ></span>
+                <span id="mrkr dt"      ></span>
+                <span id="mrkr lvl"     ></span>
+                <span id="elev"         ></span>
+                <span id="pressure alt" ></span>
+                <span id="density alt"  ></span>
+            </div>
+            <div id="showWP"  style="z-Index:999; padding:0px 3px; font-size:14px; position:absolute; top:0px;left:110px; display:inline-block; border:1px solid transparent; text-shadow: 2px 2px 3px rgba(165,30,37, 1)">X</div>
+            <div id="refresh mrkr" onclick="this.style.borderColor=\'white\'" style="display:none; opacity:0; padding:0px 3px; font-size:14px; position:absolute; top:-20px;left:90px; display:inline-block; border:1px solid transparent; text-shadow: 2px -2px 3px rgba(165,30,37, 1); transform:rotate(90deg);">&#8635;</div>
+            <span id="mrkrspan" style="pointer-events: none; line-height:110%; font-size:11px; position:absolute; padding:3px;  border-radius:5px;  left:0px; opacity:1; background-color:rgba(0,0,0,0.4);">  </span><br>
+        </div>`
+    ,iconAnchor:[0,125]});
+    let infomrkr = L.marker([0,0],{icon:infoicon, clickable:true});
+    infomrkr.addTo(map);
+    L.DomEvent.addListener( $('#showWP'), 'click', e=>{
+        //use Leaflet addListener and not usual addEventListener to allow stop propagtion of the click, which when then open the picker
+        L.DomEvent.stopPropagation(e);
+        let p=activemrkr.getLatLng();
+        bcast.fire('rqstOpen','picker',{lat:p.lat,lon:p.lng});
+        $('#mrkr').style.visibility="hidden";
+    });
+
+    var delm=L.divIcon({html:
+        `<div id="delete-wp" style="display:none; position:absolute; border-radius:3px; left:-10px; top:-30px; background-color:rgba(0,0,0,0.4);">Delete?</div>`
+    ,iconAnchor:[0,0]});
+
+    let delmrkr=L.marker([0,0],{icon:delm, clickable:true}).addTo(map);
+    delmrkr.on("click",e=>{
+        console.log(e.latlng);
+        for (var i=0;i<fp.length&&!checkPntsEq(e.latlng,fp[i].coords);i++);
+        if (i<fp.length)console.log("found:",i);
+    });
+
+    var  activem=L.divIcon({html:
+        '<div  style=" opacity:1; position:absolute; left:-10px; top:-10px; width:20px; height:20px; background-color:transparent; ">'
+        +'<svg id="plane-svg" height="20" width="20" style="position:absolute; transform:rotate(20deg)">'
+        +'<path fill-opacity="0" stroke-width="1" stroke="white" d= "M9, 3 10,3 11,3 12,5 12,9 13,10 18,10 19,11 19,13 11,13 11,17 12,18 13,18 14,19 14,20 6, 20 6, 19 7, 18 8, 18 9, 17 9, 13 1, 13 1, 12 1, 11 2, 10 7, 10 8, 9 8, 5 9, 3 10,3 z" />'
+        +'</svg>'
+        +'</div>'
+    ,iconAnchor:[0,0]});
+
+    var ghostm=L.divIcon({html:
+        '<div  style="position:absolute; opacity:0; left:-18px; top:-18px; width:34px; height:34px; background-color:transparent; color:green; ">'
+        +'<div style="display:block; position:absolute; left:10px; top:10px; border:1px solid white; border-radius:6px; width:16px; height:16px; background-color:transparent; opacity:1;"></div>'
+        +'</div>'
+    ,iconAnchor:[0,0]});
+
+    var wpm=L.divIcon({html:
+        '<div  style="position:absolute; opacity:0.8; left:-9px; top:-10.5px; width:22px; height:22px; background-color:transparent; ">'
+        +'<div style="display:block; position:absolute; left:5px; top:5px; border:1px solid white; border-radius:6px; width:10px; height:10px; background-color:transparent; opacity:1;"></div>'
+        +'</div>'
+    ,iconAnchor:[0,0]});
+
+    let ghostmrkr=  L.marker([1,1],{icon:ghostm,draggable:true,zIndexOffset:999}).addTo(map);
+    let activemrkr= L.marker([1,1],{icon:activem,draggable:false}).addTo(map);
+    //let wpmrkr=     L.marker([1,1],{icon:wpm,draggable:false}).addTo(map);
+
+    /*const nearestPnt=(ar,p)=>{
+        let minD=Infinity; let d; let fnd=0;
+        for(let i=0; i<ar.length;i++){
+            d=Math.pow((p.lat-ar[i].lat),2)+Math.pow((p.lng-ar[i].lng),2);
+            if (d<minD){minD=d;fnd=i;}
+        }
+        return fnd;
+    }*/
+
+    function findPoint(p){
+        //use current i
+        console.log(ghostmrkr.i);
+        if (!LatLon.prototype.isPrototypeOf(p))p=LatLon(p.lat,p.lng||p.lon);
+        let minCTD=Infinity;   let ii=-1;
+        let a=[];
+        for (let i=0;i<fp.length-1;i++){
+            let ps=fp[i].inter[0].c; let pe=fp[i].inter[fp[i].inter.length-1].c;
+            //let l=fp[i].inter.length;
+            let ATD=p.alongTrackDistanceTo(ps,pe);
+            a[i]={atd:ATD/fp[i].dist, ctd:Math.abs(p.crossTrackDistanceTo(ps,pe))};
+            if (a[i].atd>=0&&a[i].atd<=1&&a[i].ctd<minCTD){minCTD=a[i].ctd;ii=i;}
+        }
+        if (ii>=0) return {i:ii,j: Math.round(a[ii].atd*(fp[ii].inter.length-1))}
+    }
+
+    function fillPlaceMarker(i,j,setTimestamp,err,WPmrkr){
+        $('#mrkr').style.visibility="visible";
+        let pnt={};
+        if (i==0&&fp.length==1)pnt={c:fp[i].coords,t:fp[i].t,hd:0};//inter array is not available.
+        else if(i<fp.length-1)pnt=fp[i].inter[j];
+        else pnt=fp[i-1].inter[fp[i-1].inter.length-1];  //if last point,  then use last element of previous leg.
+
+        activemrkr.setLatLng(pnt.c);
+        infomrkr.setLatLng(pnt.c);
+        ghostmrkr.setLatLng(pnt.c);
+        $("#plane-svg").style.transform=`rotate(${pnt.hd?pnt.hd:pnt.b}deg)`;
+        if (setTimestamp){
+            let t=pnt.tcor||pnt.t;
+            store.set("timestamp",t);
+        }
+        let tm=new Date(pnt.tcor?pnt.tcor:pnt.t);
+        let tmstr=("00"+tm.getUTCHours()).slice(-2)+":"+("00"+tm.getUTCMinutes()).slice(-2)+":"+("00"+tm.getUTCSeconds()).slice(-2);
+        let dtstr=("00"+tm.getUTCDate()).slice(-2)+":"+["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"][tm.getUTCMonth()];
+
+        if (err){
+            $("#mrkrspan").innerHTML=err;
+        } else {
+            $("#mrkrspan").innerHTML=`
+                Time: ${tmstr}<br>
+                Date: ${dtstr}<br>
+                ETE: ${hms(fp[i].ETE)}<br>
+                ETE corrected:  ${fp[i].ETEcor?hms(fp[i].ETEcor):"Not avail"}<br>
+                Air speed: <span id='info-air-spd'>      ${(Math.round(spd*spdf[metric_w]).toFixed(1))+metric_w}                </span><br>
+                Wind speed: <span id='info-wind-spd'>    ${pnt.w?(pnt.w.wind*spdf[metric_w]).toFixed(1)+metric_w:"Not avail"}   </span><br>
+                Ground speed: <span id='info-ground-spd'>${pnt.gspd?(pnt.gspd*spdf[metric_w]).toFixed(1)+metric_w:"Not avail"}  </span>
+            `;
+        }
+        if (WPmrkr){
+            $("#mrkrspan").innerHTML+=`<br><span id="deletespan" style="text-shadow:2px 2px 2px red; z-index:1999; cursor:pointer; pointer-events: auto;">Delete?</span>`;
+            L.DomEvent.addListener(  $("#deletespan"),'click', e=>{
+                L.DomEvent.stopPropagation(e);
+                deleteWP(i,true); //makepoints after delete
+            });
+        }
+        //console.log(ghostmrkr,activemrkr);
+    }
+
+    ghostmrkr.on("drag",e=>{
+        allowOnTimestamp=false;
+        let r=findPoint(e.target._latlng);
+        if (r){
+            ghostmrkr.i=r.i; ghostmrkr.j=r.j;
+            fillPlaceMarker(r.i,r.j,true);
+        }
+    });
+    ghostmrkr.on("dragstart",e=>{
+        bcast.fire('rqstClose','picker')
+        $('#mrkr').style.visibility="visible";
+    });
+
+    ghostmrkr.on("dragend",e=>{
+        allowOnTimestamp=true,e.target.setLatLng(activemrkr.getLatLng());
+    });
+
+    ghostmrkr.on("click",e=>{
+        //if(pckEl)pckEl.style.visibility="hidden";
+        bcast.fire('rqstClose','picker');
+        $('#mrkr').style.visibility="visible";
+    })
+
+    const toLatLng=c=> {return {lat:c.lat,lng:c.lon}};
+    const toLatLon=c=> {return {lat:c.lat,lon:c.lng}};
+
+    function makeInterPoints(){
+        const addWPmarker=i=>{
+            if (fp[i].marker){fp[i].marker.setLatLng(fp[i].coords)}
+            else {
+                fp[i].marker=L.marker(fp[i].coords,{icon:wpm, clickable:true, draggable:false}).addTo(map);
+                fp[i].marker.i=i;
+                fp[i].marker.on("click",e=>{
+                    console.log(e.latlng);
+                    console.log("CLICKED", e.target.i);
+                    allowOnTimestamp=false;setTimeout(()=>allowOnTimestamp=true,500);
+                    fillPlaceMarker(e.target.i,0,true,false,true);
+                });
+            }
+        }
+        function fillFProw(i){
+            console.log("FIll",i,fp[i].dist);
+            console.log( $('#fp-table').children[i]);
+            let row=$('#fp-table').children[i].children;
+            console.log(row);
+            for (let j=1;j<row.length;j++){
+                let s="";
+                if (row[j].classList[1]=='wpno'){s=i}
+                else if (row[j].classList[1]=='wp' && fp[i].Waypoint){s=fp[i].Waypoint}
+                else if (row[j].classList[1]=='spd' && i<fp.length-1){s=spdstr(spd);}
+                else if (row[j].classList[1]=='dist'&& i<fp.length-1){s=diststr(fp[i].dist);}
+                else if (row[j].classList[1]=='ete' && i<fp.length-1){s=hms(fp[i].ETE);}
+                else if (row[j].classList[1]=='etecor' && fp[i].ETEcor){s=hms(fp[i].ETEcor);}
+                if(s)row[j].innerHTML=s;
+            }
+        }
+        function makeWPname(i){
+            if(!fp[i].Waypoint)fp[i].Waypoint=(fp[i].coords.lat<0?"S":"N")+Math.abs(fp[i].coords.lat).toFixed(3)+(fp[i].coords.lng<0?"W":"E")+Math.abs(fp[i].coords.lng).toFixed(3);
+            return fp[i].Waypoint;
+        }
+
+        const addFProw=i=>{
+            let rows=$('#fp-table').children; let rl=rows?rows.length:0;
+            let notlast=i==fp.length-1?false:true;
+            if (rl==i){                //DOM row element not yet created - create and fill
+                console.log(fp[i].Waypoint);
+                let rw=document.createElement("div");
+                rw.innerHTML=`
+                <span  class="checkbox off" onclick="console.log(this.classList); this.classList.toggle('off');"></span>
+                <span  class="fp-cell wpno" style="width:10px; font-size:8px;">${i}</span>
+                <span  class="fp-cell wp"   style="width:80px; font-size:10px;">${fp[i].Waypoint?fp[i].Waypoint:""}</span>
+                <span  class="fp-cell spd"   >${notlast? spdstr(spd):""}</span>
+                <span  class="fp-cell dist"  >${notlast? diststr(fp[i].dist):""}</span>
+                <span  class="fp-cell ete"   >${notlast? hms(fp[i].ETE):""}</span>
+                <span  class="fp-cell etecor">${notlast? (fp[i].ETEcor?hms(fp[i].ETEcor):""):""}</span>
+                `;
+                $('#fp-table').appendChild(rw);
+            } else fillFProw(i);  //previously created - fill
+        }
+
+        for (var i=0;i<fp.length-1;i++){
+            let ll=LatLon(fp[i].coords.lat,fp[i].coords.lng);
+            let ll2=LatLon(fp[i+1].coords.lat,fp[i+1].coords.lng);
+
+            if (fp[i].inter)   console.log(!(checkPntsEq(ll,fp[i].inter[0].c) && checkPntsEq(ll2,fp[i].inter[fp[i].inter.length-1].c))  );
+            if  (!fp[i].inter ||
+                 !(checkPntsEq(ll,fp[i].inter[0].c) && checkPntsEq(ll2,fp[i].inter[fp[i].inter.length-1].c)))
+            {
+                console.log(i, !fp[i].inter);
+                //if (fp[i].inter){
+                //    console.log( checkPntsEq(ll,fp[i].inter[0].c), checkPntsEq(ll2,fp[i].inter[fp[i].inter.length-1].c));
+                //}
+                fp[i].dist=ll.distanceTo(ll2);      console.log("NEW D:",fp[i].dist);
+                fp[i].ETE=1000*fp[i].dist/spd;
+                fp[i].inter=[];
+                let n=Math.floor(fp[i].dist/interdist);
+                let f=1/n;
+                let d=fp[i].dist/n;
+                fp[i].d=d;
+                if (!fp[i].t){
+                    if(i==0)fp[i].t=Math.round(Date.now());
+                    else    fp[i].t=(fp[i-1].t+1000*fp[i-1].dist/spd);
+                }
+                for(let j=0;j<n+1;j++){
+                    let tt=1000*(d*j)/spd;
+                    fp[i].inter[j]={c:ll.intermediatePointTo(ll2,(f*j)),
+                                    d:((j>0&&j<n)?d:d/2),
+                                    t:fp[i].t+tt // -((j>0&&j<n)?d/2:0)
+                    };
+                    //console.log(fp[i].inter[j-1].c.bearingTo(fp);
+                    if (j>0)    fp[i].inter[j-1].b=fp[i].inter[j-1].c.bearingTo(fp[i].inter[j].c);
+                    if (j==n)   fp[i].inter[j].b=fp[i].inter[j-1].b;
+                    //console.log(Math.round(fp[i].dist),Math.round(d*j), new Date(fp[i].t+tt), j>0?fp[i].inter[j-1].b:0);
+                }
+                //Lines
+
+                fp[i].lineGhost=L.polyline([],{color:'white',opacity:0,weight:16}).addTo(map);
+                fp[i].lineGhost.i=i;
+                fp[i].line=L.polyline([],{color:'white',opacity:1,weight:2,smoothFactor:2,clickable:false}).addTo(map);
+                fp[i].line.i=i;
+                for (var j=0,jl=fp[i].inter.length;j<jl;j++){
+                    fp[i].lineGhost.addLatLng(fp[i].inter[j].c);
+                    fp[i].line.addLatLng(fp[i].inter[j].c);
+                }
+                fp[i].lineGhost.on("click",e=>{
+                    let r=findPoint(e.latlng);
+                    allowOnTimestamp=false; setTimeout(()=>allowOnTimestamp=true,500);
+                    fillPlaceMarker(r.i,r.j,true);
+                    ghostmrkr.setLatLng(fp[r.i].inter[r.j].c);
+                    ghostmrkr.i=r.i; ghostmrkr.j=r.j;
+                    bcast.fire('rqstClose','picker');
+                });
+                makeWPname(i);
+                addWPmarker(i);
+                console.log("ADD FP ROW:",i,fp[i].dist);
+                addFProw(i);
+            }
+        }
+        if(fp.length){makeWPname(i); addWPmarker(i); addFProw(i);}
+        //activemrkr.setLatLng(fp[0].coords);
+        //ghostmrkr.setLatLng(fp[0].coords);
+
+        //console.log(fp);
+    }
+
+    /*function findBounds(){
+        let mxlt=-Infinity,mxln=-Infinity; let mnlt=Infinity,mnln=Infinity;
+        for (let i=0;i<fp.length;i++){
+            if (fp[i].coords.lat>mxlt)mxlt=fp[i].coords.lat;
+            if (fp[i].coords.lng>mxln)mxln=fp[i].coords.lng;
+            if (fp[i].coords.lat<mnlt)mnlt=fp[i].coords.lat;
+            if (fp[i].coords.lng<mnln)mnln=fp[i].coords.lng;
+        }
+        //console.log(mnlt,mnln,mxlt,mxln);
+        bnds=[[mnlt,mnln],[mxlt,mxln]];
+        return bnds;
+    }
+*/
+    function findBoundsj(i,j,n){
+        let mxlt=-Infinity,mxln=-Infinity; let mnlt=Infinity,mnln=Infinity;
+        for (var k=0, il=fp.length-1; i<il && k<n ;i++){
+            for (var jl=fp[i].inter.length; j<jl && k<n ;j+=1,k+=1){
+                let p=fp[i].inter[j].c;
+                if (p.lat>mxlt)mxlt=p.lat;
+                if (p.lat<mnlt) mnlt=p.lat;
+                if (p.lon>mxln)mxln=p.lon;
+                if (p.lon<mnln) mnln=p.lon;
+            }
+            j=j-jl;
+        }
+        //console.log(mnlt,mnln,mxlt,mxln);
+        bnds=[[mnlt-0.1,mnln-0.1],[mxlt+0.1,mxln+0.1]];
+        return bnds;
+
+    }
+
+    function interpolatePoints(){
+        //console.log("start interpolation");
+        origbnds=map.getBounds();
+        allowOnTimestamp=false;
+        let i=0;  let l=fp.length-1;
+        let j=0;
+        let ETEcor=0;
+        let tAntic;
+        let redrawtries=0;
+        fp[0].inter[0].t=store.get("timestamp");
+        let maxt=time2maxt(fp[0].inter[0].t);
+        let err;
+        hrsInt=3;
+
+        store.set("particlesAnim","off");
+
+        //let maxt=path2maxt(currentpath);
+        //map.fitBounds(findBoundsj(i,j,(j+50)<fp[i].inter.length?(j+50):fp[i].inter.length-1));
+        reqbnds=findBoundsj(i,j, Math.round( 2*(hrsInt*3600)/ (fp[i].d/spd))   );
+        map.fitBounds(reqbnds);
+        wait4fit=true;
+
+        let calc_store_interpval=interp=>{
+            for (;i<l&&!wait4redraw;i++){
+                let lj=fp[i].inter.length-1;
+                if (j==0)fp[i].ETEcor=0;
+                for (;j<fp[i].inter.length&&!wait4redraw;j++){
+                    if (OLi==0){
+                        let val=interp(fp[i].inter[j].c);
+                        //console.log(val);
+                        let wd=Math.round(Math.atan(val[0]/val[1])*180/Math.PI);
+                        if (val[1]>0)wd+=180;
+                        if(wd<0)wd+=360; if(wd>360)wd-=360;
+                        let windspd=Math.round(Math.sqrt(val[0]*val[0]+val[1]*val[1])*100)/100;
+                        fp[i].inter[j].w={wind:windspd, dir:wd};
+
+                        //bereken grond spoed en heading
+                        let td=fp[i].inter[j].b;  //track direction
+                        let hspd=spd;  //air speed
+                        wd=(wd+180)%360;  //reverse wind direction - direction of wind movement not direction of origin
+                        let deltad=(td-wd) *Math.PI/180;
+                        let trackspd1=Math.cos(deltad)*windspd;
+                        let vert=Math.sin(deltad)*windspd;
+                        let rt=vert/hspd;  if (rt>1){rt=1}else if (rt<-1)rt=-1;
+                        let deltahdr=Math.asin(rt);
+                        let deltahd=deltahdr *180/Math.PI;
+                        //trackspd2=Math.sqrt(hspd*hspd-vert*vert);
+                        let trackspd2=Math.cos(deltahdr)*hspd;
+                        let trackspd=trackspd1+trackspd2;
+                        let hd=td+deltahd;
+                        hd=hd%360;
+                        fp[i].inter[j].hd=hd;
+                        fp[i].inter[j].gspd=trackspd;
+
+                        if (trackspd<=0){
+                            err="Wind too strong!!";
+                            fillPlaceMarker(i,j,false,err);
+                            i=l;
+                            j=fp[i].inter[j].length;
+                        }   else  {
+
+                            //bereken gekor tyd
+                            let ETEinter=1000*(fp[i].inter[j].d/fp[i].inter[j].gspd);
+                            fp[i].ETEcor+=ETEinter;
+                            if (j==0){
+                                if (i==0) {fp[i].inter[j].tcor=fp[i].inter[j].t;}
+                                else  {fp[i].inter[j].tcor=fp[i-1].inter[fp[i-1].inter.length-1].tcor}
+                                fp[i].inter[j+1].tcor=fp[i].inter[j].tcor+ETEinter;
+                            } else if (j<fp[i].inter.length-1) {
+                                fp[i].inter[j].tcor+=ETEinter/2;
+                                fp[i].inter[j+1].tcor=fp[i].inter[j].tcor+ETEinter/2;
+                            } else { //last el of inter
+                                fp[i].inter[j].tcor+=ETEinter;
+                            }
+                        }
+                    }
+
+                    tAntic=Math.round(fp[i].inter[j].tcor?fp[i].inter[j].tcor:fp[i].inter[j].t);// anticipated time at next point
+
+                    if (tAntic>maxt){
+                        reqbnds=findBoundsj(i,j,Math.round( 2*(hrsInt*3600)/ (fp[i].d/spd)));
+                        map.fitBounds(reqbnds);
+                        reqpath=time2path(tAntic);
+                        maxt=time2maxt(tAntic);
+                        wait4redraw=true;
+                        store.set('timestamp',tAntic);
+                        callIPafterRedraw();
+                    }
+                    if(!err)fillPlaceMarker(i,j,false);
+                    //console.log(currentpath,"required:",i,j,fp[i].inter[j].tcor,time2path(fp[i].inter[j].tcor));
+                }
+                if (!(wait4redraw)){j=0;} else j--;
+            }
+            i--;
+            if (!wait4redraw){
+                allowOnTimestamp=true;
+                setTimeout(()=>{
+                    map.fitBounds(origbnds);
+                    store.set("particlesAnim","on");
+                    ghostmrkr.setLatLng(fp[0].coords);
+                    fillPlaceMarker(0,0,true);
+                },200);
+            }
+        }
+        let callIPafterRedraw=()=>{
+            if (wait4redraw){
+                console.log("waiting for redraw");
+                redrawtries++;
+                if (redrawtries>60) {
+                    store.set('timestamp',tAntic);
+                    redrawtries=0;
+                    callIPafterRedraw();
+                }   else setTimeout(callIPafterRedraw,200);
+            }   else{
+                redrawtries=0;
+                try { interpolator(calc_store_interpval);}  catch(error) {console.log("Interpolator error:",error)};
+            }
+        }
+        if(!wait4redraw)callIPafterRedraw();
+    }
+</script>
+</plugin>

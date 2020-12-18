@@ -1,0 +1,1035 @@
+<plugin>
+    <div class="mobile-header">mobile plugin</div>
+
+	<div id="pg1" class="plugin-content" style="top:5px; bottom:115px; ">
+        <div id="fp-table-h">
+            <span class="checkbox off"  onclick="console.log(this.classList); this.classList.toggle('off');"></span>
+            <span id="wp-h"   class="fp-cell" style="width:10px"></span>
+            <span id="wp-h"   class="fp-cell" style="width:80px">Waypoint</span>
+            <span id="spd-h"  class="fp-cell" ></span>
+            <span id="dist-h" class="fp-cell" ></span>
+            <span id="ete-h"  class="fp-cell" >ETE</span>
+            <span id="etec-h"  class="fp-cell" >ETE-cor</span>
+        </div>
+        <div id="fp-table">
+
+        </div>
+    </div>
+    <div id="pg2" class="plugin-content" style='top:calc(100% - 110px); bottom:40px;'>
+    </div>
+
+    <div id="pg3" class="plugin-content" style='top:calc(100% - 35px); bottom:5px;'>
+            <div onclick="document.getElementById('load-save').click()" id="ghost-load-div">Load flightplan</div>
+            <input id="load-save" style="display:none" type="file">
+    </div>
+
+
+
+<script>
+
+//// Windy API modules are imported via '@windy/nameOfModule'
+    import map from '@windy/map'
+    import interpolator from '@windy/interpolator'
+    import store from '@windy/store'
+    import bcast from '@windy/broadcast'
+    import $ from '@windy/$'
+    import utils from '@windy/utils'
+    import Evented from '@windy/Evented'
+    import picker from '@windy/picker';
+    import LatLon from './geodesy.mjs';
+    import loadsave from './load_save_fp.mjs';
+    import heremap from './heremap.mjs';
+
+    console.log(bcast);
+    console.log(store);
+
+    ////Variables
+
+    let mobl=W.rootScope.isMobile;
+    let fp=[];
+    let bnds=[];
+    let points=[];
+    let wait4redraw=false;    let wait4fit=false;
+    let currentpath;    let reqpath;
+    let reqbnds;
+    let origbnds, origc, origz;
+    let allowOnTimestamp=true;
+    let pickerPos;
+    let tn=Date.now();
+    let h3=60*60*1000*3;
+    let OL=["wind","gust","rain","temp","visibility","pressure"];  let OLi=0;
+    let pckEl;
+    let hrsInt=3;  //hour interval of path, different for different products.
+    let metric_w=store.get("metric_wind");
+    let interdist=3000;
+
+    let boundschanged=false;
+    let spd=localStorage.getItem("airspeed");
+    if (!spd)spd=75  *0.44704;  //mph to mps
+
+    let hideCities=false;
+    let stopCities=true;
+
+    let overlayLayer, cityLayer, bmLayer, particlesLayer;
+    let topoLayer=[{nm:"opentopo"},{nm:"esri"},{nm:"here"},{nm:"google"}];
+    let curTopo;
+
+
+    ////Add buttons to open-close plugin
+
+    let openfp=document.createElement("div");
+    openfp.innerHTML="Open Route Plan";
+    //openfp.style="display:inline-block; padding:4px; background-color:rgba(0,0,0,0.4); margin-left:6px; border-radius:6px;  cursor:pointer;";
+    openfp.className="plugin-buttons";
+    openfp.style.top="-15px";
+    openfp.addEventListener("click",()=>{bcast.emit('rqstOpen','windy-plugin-fptest')});
+    $('#bottom').appendChild(openfp);
+
+    let interpStart=document.createElement("div");
+    interpStart.className="plugin-buttons";
+    interpStart.style.top="-40px";
+    interpStart.innerHTML="Read Wx Data";
+    interpStart.addEventListener("click",interpolatePoints);
+    $('#bottom').appendChild(interpStart);
+
+    //let topodiv=[];
+    topoLayer.forEach((e,i)=>{
+        e.div=document.createElement("div");
+        e.div.className="plugin-buttons";
+        e.div.style.top="-65px";
+        e.div.style.width="65px";
+        e.div.style.left=(68*i)+"px";
+        e.div.innerHTML=`<span>${e.nm}</span>`;
+        e.div.addEventListener("click",()=>{
+            if (e.nm==curTopo){
+                overlayLayer.setOpacity(1);
+                if (e.hideCities)cityLayer.setOpacity(1);
+                changeLabels(cityLayer._container,'white');
+                map.removeLayer(e.nm);
+                curTopo="";
+            } else {
+                if (curTopo)map.removeLayer(topoLayer[topoLayer.findIndex(e=>e.nm==curTopo)].lr);
+                if (e.lr) e.lr.addTo(map);
+                else   loadTopoLayer(e);
+                overlayLayer.setOpacity(0.65);
+                if (e.hideCities) cityLayer.setOpacity(0);
+                else {cityLayer.setOpacity(1);changeLabels(cityLayer._container,'black');}
+                curTopo=e.nm;
+            }
+        });
+        $('#bottom').appendChild(e.div);
+    });
+
+    //// Airport plugin
+
+    let ADpluginButton=false;
+    let ADinfo;
+    let centerBeforeAD,zoomBeforeAD;
+    bcast.on("pluginOpened",e=>{
+        if (e=="airport"){zoomBeforeAD=map.getZoom();  centerBeforeAD=map.getCenter();}
+    });
+    bcast.on("pluginClosed", e=>{
+        if (e=="airport")map.setView(centerBeforeAD,zoomBeforeAD);
+    });
+    bcast.on("airportLoaded",e=>{console.log("airport loaded",e);
+        ADinfo={coords:{lat:e.lat,lng:e.lon},Waypoint:e.icao};
+        if(!ADpluginButton){
+            let addAD=document.createElement("div");
+            addAD.id="addAD";
+            addAD.className=$('.switch-wrapper').firstElementChild.className;
+            addAD.style.marginTop="2px";
+            addAD.innerHTML="<div></div><div class='selected' style='width:170px; cursor:pointer;' >Add to Flightplan</div><div></div>";
+            addAD.addEventListener("click",()=>{
+                console.log(e.lat);
+                fp.push(ADinfo);
+                console.log(fp);
+                makeInterPoints();
+                bcast.fire("rqstClose","airport");
+            });
+            $(".switch-wrapper").appendChild(addAD);
+            ADpluginButton=true;
+        }
+    });
+
+    ////topo map
+
+    function loadTopoLayer(e){
+        switch (e.nm){
+            case "opentopo":
+                e.hideCities=true;
+                e.lr=L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
+                    maxZoom: 17,
+                    attribution: 'Map data: &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, <a href="http://viewfinderpanoramas.org">SRTM</a> | Map style: &copy; <a href="https://opentopomap.org">OpenTopoMap</a> (<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC-BY-SA</a>)'
+                }).addTo(map);
+            break;
+            case "esri":
+                e.hideCities=false;
+                e.lr=L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Physical_Map/MapServer/tile/{z}/{y}/{x}', {
+                    attribution: 'Tiles &copy; Esri &mdash; Source: US National Park Service',
+                    maxZoom: 8
+                }).addTo(map);
+            break;
+            case "google":
+                e.hideCities=true;
+                e.lr=L.tileLayer('https://{s}.google.com/vt/lyrs=p&hl=en&x={x}&y={y}&z={z} ', {
+                    maxZoom: 20,
+                    subdomains:['mt0','mt1','mt2','mt3']
+                }).addTo(map);
+            break;
+            case "here":
+                e.hideCities=false;
+                e.lr=heremap({
+                    appId: 'Ps0PWVjNew3jM9lpFHFG', appCode: 'eEg9396D7_C6NCcM1DUK2A',
+                    resource:'basetile', scheme:'terrain.day'
+                }).addTo(map);
+            break;
+        }
+    }
+
+    map.eachLayer((e)=>{
+        console.log("LAYER", e);//layerAr.push(e);
+        if (e._container&& e._container.classList.contains("basemap-layer")){ bmLayer=e;}
+        else if (e.hasOwnProperty('latestParams')){  overlayLayer=e;  }
+        else if (e.hasOwnProperty('cityDivs')){ cityLayer=e;  }
+        else if (e._canvas.classList.contains("particles-layer")){ particlesLayer=e; }
+    });
+
+    //console.log(map.getPanes());
+    $("#map-container").style.backgroundColor="white";
+
+    let bmo=0; let olo=0; let clo=0; let plo=0;
+    document.onkeypress=(e)=>{
+        let k=e.charCode;
+        console.log(e);
+        //bmLayer.setOpacity(1);overlayLayer.setOpacity(1); cityLayer.setOpacity(1);
+        if (k==49){bmo=bmo?0:1; bmLayer.setOpacity(bmo);}
+        else if (k==50){olo=olo?0:1; overlayLayer.setOpacity(olo);}
+        else if (k==51){clo=clo?0:1; cityLayer.setOpacity(clo);}
+        //else if (k==52){plo=plo?0:1; particlesLayer.setOpacity(plo);}
+        else if (k==53){
+            //bmLayer.options.tilesize=512;
+            console.log();
+            let a=store.get("color2_wind");
+            console.log(a);
+            a.forEach(e=>{e[1][3]=0.1});
+            console.log(a);
+            store.set("color2_wind",a);
+            //$(".basemap-layer").children[1].style.visibility="hidden";
+        }
+
+    }
+
+    function changeLabels(el,col){
+        if(el.children){
+            let c=el.children;
+            for (let i=0;i<c.length;i++){
+                if (!hideCities) c[i].style.color=col;
+                if (stopCities)  c[i].style.pointerEvents="none";
+                changeLabels(c[i],col);
+            }
+        }
+    }
+
+
+    //// Load fp with loadsave object in mjs file
+
+    function loadcbf(e){
+        console.log(e);
+        fp=e.map(x=>{return{coords:x.coords,Waypoint:x.Waypoint?x.Waypoint:""}});
+        console.log(fp);
+        makeInterPoints();
+        map.fitBounds(findBoundsj(0,0,Infinity));
+    };
+
+    $("#load-save").addEventListener("change",f=>{
+        for (let i=fp.length-1;i>=0;i--)deleteWP(i,false);      //false = prevent make interpoints after delete
+        loadsave.rdfx(f.target.files,loadcbf);
+    });
+
+    //// make speed, distance and time strs
+
+    const spdf={"kt":1.94384, "km/h":3.6,  "mph":2.23694, "m/s":1, "bft":1.94384};
+    const disf={"kt":1/1852, "km/h":0.001, "mph":1/1609.34, "m/s":1, "bft":1/1852};
+    function disU(){
+        if (!metric_w)metric_w=store.get("metric_wind");
+        switch (metric_w){
+            case "km/h":return "km"; break;
+            case "mph": return "miles"; break;
+            case "m/s": return "meter"; break;
+            default: return "NM";
+        }
+    }
+    function spdstr(spd,u){
+        return Math.round(spd*spdf[metric_w])+(u?(metric_w=="bft"?"kt":metric_w):"");
+    }
+    function diststr(d,u){
+        if (!metric_w)metric_w=store.get("metric_wind");
+        let dec=metric_w=="m/s"?1:100;
+        let unit;
+        if (u) switch (metric_w){
+            case "km/h":unit="km"; break;
+            case "mph": unit="M"; break;
+            case "m/s": unit="m"; break;
+            default:    unit="NM";
+        }
+        console.log(d, disf[metric_w]);
+        return Math.round(d*disf[metric_w]*dec)/dec+(u?unit:"");
+    }
+    function hms(t){
+            t=Math.round(t/1000);
+            let s=t%60;
+            let m=Math.floor(t/60)%60;
+            let h=Math.floor(t/3600);
+            return ("00"+h).slice(-2)+":"+("00"+m).slice(-2)+":"+("00"+s).slice(-2);
+        }
+    function setHeadings(){
+        $('#spd-h').innerHTML=metric_w=="bft"?"kt":metric_w;
+        $("#dist-h").innerHTML=disU();
+    } setHeadings();
+
+    //// range
+
+
+    let rangeAr=[{n:"Airspeed"},{n:"Altitude"},{n:"Time"}];
+    for(let rr=0;rr<3;rr++){
+        let r=rangeAr[rr];
+        let ce=(tp,p)=>{let c=document.createElement(tp); p.appendChild(c); return c;}
+
+        let rrow=document.createDocumentFragment();
+        let rw=ce("div",rrow);
+        let rt=ce("span",rw);   rt.style.width="150px"; rt.style.height="20px"; rt.style.display="inline-block";
+        let rtn=ce("span",rt);  rtn.innerHTML=r.n+":&nbsp;";
+        r.r_value=ce("span",rt);
+        let rc=ce("div",rw);     rc.className="range-container";
+        r.r_input=ce("input",rc);  r.r_input.className="range-elm"; r.r_input.type="range"; r.r_input.min="0"; r.r_input.max="200";
+        r.r_thumb=ce("div",rc);  r.r_thumb.id=r.n+"thmb";  r.r_thumb.className="range-thumb";
+
+        r.r_input.addEventListener("input",e=>{
+            console.log(e.target);
+            val2spdThumb(r,e.target.value);
+            //console.log(r.r_thumb.id);
+            spd=10+(Math.pow(0.1*e.target.value,2));
+            adjSpdStr(r);
+            localStorage.setItem("airspeed",spd);
+
+        });
+
+        /*r.innerHTML=`
+            <span style="width:180px;height:20px; dis">
+                <span>${r.n}:</span>
+                <span  id="${r.n}"></span>
+            </span>
+            <div        class="range-container" id="${r.n}-container" style="display:inline-block">
+                <input  class="range-elm"       id="${r.n}-range" type="range" name="spd" min="0" max="200">
+                <div    class="range-thumb"     id="${r.n}-thumb"></div>
+            </div>
+        `;*/
+
+
+        $("#pg2").appendChild(rrow);
+
+    }
+
+    function adjSpdStr(r,e){  //adjust and round spd, write airspeed div
+        if (typeof e=="undefined") metric_w=store.get('metric_wind');
+        else metric_w=e;
+        let inc=metric_w=="m/s"?2:5;  if (spd>100)inc*=2;
+        spd=(Math.round(spd*spdf[metric_w]/inc)*inc)/spdf[metric_w];
+        r.r_value.innerHTML=spdstr(spd,true);
+    }
+    function val2spdThumb(r,v){
+        console.log(r);
+        r.r_thumb.style.left=Math.floor(v*180/200)+1+'px';
+    }
+
+    function spd2val(s){
+        let v= Math.sqrt(s-10)*10;
+        rangeAr[0].r_value.value= v;
+        val2spdThumb(rangeAr[0],v);
+        adjSpdStr(rangeAr[0]);
+        //console.log("Speed",spd, $("#speed-range").value);
+    }
+    spd2val(spd);
+
+
+
+   ////various functions
+
+    function time2path(t){
+        //hrsInt=(Math.floor((t+h3)/(12*3600*1000))-Math.floor(tn/(12*3600*1000))>10)?6:3;
+        let tmshift=new Date(t+hrsInt*30*60*1000);
+        return tmshift.getUTCFullYear()+"/"+("0"+(tmshift.getUTCMonth()+1)).slice(-2)+"/"+("0"+tmshift.getUTCDate()).slice(-2)+"/"+("0"+Math.floor(tmshift.getUTCHours()/hrsInt)*hrsInt).slice(-2);
+    }
+    function path2maxt(s){
+        let a=s.split('/').map(e=>Number(e));
+        //console.log(a);
+        return Date.UTC(a[0],a[1]-1,a[2],a[3])+90*60*1000;
+    }
+    function time2maxt(t){
+        //hrsInt=(Math.floor((t+h3)/(12*3600*1000))-Math.floor(tn/(12*3600*1000))>10)?6:3;
+        let tmshift=new Date(t+hrsInt*30*60*1000);
+        return Math.floor(tmshift/(hrsInt*3600*1000))*(hrsInt*3600*1000)+hrsInt*30*60*1000;
+    }
+    function checkPntsEq(p1,p2){
+        let ln1=p1.lng||p1.lon; let ln2=p2.lng||p2.lon;
+        return Math.abs(p1.lat-p2.lat)<0.000000001 && Math.abs(ln1-ln2)<0.000000001;
+    }
+    const toLatLng=c=> {return {lat:c.lat,lng:c.lon}};
+    const toLatLon=c=> {return {lat:c.lat,lon:c.lng}};
+
+    ////delete wp
+
+    function deleteWP(i,updatepoints){
+        if (typeof makepoints!=="undefined")makepoints=true;
+        for(var ii=i+1;ii<fp.length;ii++){
+            let r=fp[ii].rowdiv.children;  r[0].dataset.i--; r[1].innerHTML=r[0].dataset.i;
+            fp[ii].marker.i--;
+            fp[ii].lineGhost.i--;
+            fp[ii].line.i--;
+            fp[ii].i--;
+        }
+        map.removeLayer(fp[i].marker);
+        map.removeLayer(fp[i].lineGhost);
+        map.removeLayer(fp[i].line);
+        if(i>0)fp[i-1].inter=[];
+        //const remprvline=()=>{map.removeLayer(fp[i-1].lineGhost); map.removeLayer(fp[i-1].line);}
+        //if (i==0){remline()} else if (i==fp.length-1){remprvline()} else {remline();remprvline();}
+        fp[i].rowdiv.remove();
+        fp.splice(i,1);
+        allowOnTimestamp=false;setTimeout(()=>allowOnTimestamp=true,500);
+        ghostmrkr.j=0;
+        ghostmrkr.i=i>0?i-1:0;
+        if (fp.length)fillPlaceMarker(ghostmrkr.i,ghostmrkr.j,true,false,true);
+        //let rows= $('#fp-table').children;
+
+        //for (let j=i;j<fp.length;j++){
+
+       //     rows[j].children[1].innerHTML=j;
+            //console.log("Row update no",j);
+            //if (j==fp.length-1){
+            //    console.log("LAST ROW",rows[j].children);
+            //    for (let k=3;k<rows[j].children.length;k++) rows[j].children[k].innerHTML="";
+            //}
+        //}
+        //console.log(fp);
+        if(updatepoints)makeInterPoints();
+    }
+
+    //// ADD to picker - add-WP button
+
+    function addWPButton(){
+        let aw=document.createElement("div");
+        aw.id="add-wp-button";
+        aw.innerHTML=`  <div style="text-decoration:underline;font-size:12px;">Add WP</div>
+                        <div id='elev-depth'></div>
+                        <div id='picker-elev'></div>`;
+        aw.style.textHeight="100%"; aw.style.fontSize="10px";
+        aw.addEventListener("click",()=>{
+            if (!fp.length||!checkPntsEq(pickerPos, fp[fp.length-1].coords)) fp.push({coords:pickerPos});
+            else console.error("Trying to add the same WP!!");
+            makeInterPoints();
+        });
+        if(!mobl){
+                pckEl=document.getElementsByClassName("picker-content noselect")[0].parentNode;
+                pckEl.appendChild(aw);
+                aw.className="addwp-dskpckr";
+
+        } else {
+                pckEl=document.getElementById("plugin-picker");
+                aw.className="addwp-mblpckr";
+                aw.style.top=pckEl.style.top;
+                pckEl.appendChild(aw);
+        }
+    }
+    function storePckPos(e){
+        pickerPos={lat:e.lat,lng:e.lon};
+        if (!$("#add-wp-button"))addWPButton();
+
+    }
+
+    picker.on('pickerOpened', e=>{
+        if($("#picker-elev"))$("#picker-elev").innerHTML="";
+        if(pckEl){
+            pckEl.style.visibility="visible";
+            //pckEl.on("drag", console.log);
+        };
+        storePckPos(e);
+        getElev(e);
+        infomrkr.setOpacity(0);
+        });
+    picker.on('pickerMoved', e=>{
+        if($("#picker-elev"))$("#picker-elev").innerHTML="";
+        storePckPos(e);
+        getElev(e);
+    });
+
+
+    //// Redraw finished and other listeners
+
+    bcast.on("redrawFinished", e=>{
+        currentpath=e.path;
+        //console.log(currentpath,reqpath);
+        if (wait4redraw){
+            if(currentpath==reqpath)  {wait4redraw=false}
+            else if (Number(reqpath.slice(-2))-Number(currentpath.slice(-2))==3) {hrsInt=6; wait4redraw=false}
+        }
+        else {
+            changeLabels(cityLayer._container,overlayLayer.options.opacity==1?'white':'black');
+        }
+    });
+    store.on('metric_wind',e=>{
+        adjSpdStr(e);
+        console.log($("#info-air-spd"));
+        if(typeof ghostmrkr.i!=='undefined' && $("#info-air-spd")){
+            console.log($("#info-air-spd"));
+            let pnt=fp[ghostmrkr.i].inter[ghostmrkr.j];
+            $('#info-air-spd').innerHTML=spdstr(spd,true);
+            $('#info-wind-spd').innerHTML=pnt.w?spdstr(pnt.w,true):"Not avail";
+            $('#info-ground-spd').innerHTML=pnt.gspd?spdstr(pnt.gspd):"Not avail";
+        }
+        setHeadings();
+        for (let i=0;i<fp.length;i++)fillFProw(i);
+    });
+    store.on("timestamp",()=>{
+        console.log(store.get("path"));
+        moveMrkr();
+    });
+
+    function moveMrkr(){
+        //console.log(store.get("path"));
+        let tt=store.get("timestamp");
+        //console.log(time2path(tt));
+        if (allowOnTimestamp&&fp.length>1){
+            let t=store.get("timestamp");
+            //console.log("newtime:",t);
+            let pdiff, tdiff=Infinity; let fnd=false;
+            let i=0,j=0; let lasti=fp.length-2; let lastj= fp[lasti].inter.length-1;
+            if (fp[lasti].inter[lastj].tcor<t) {i=lasti; j=lastj}
+            else if (fp[i].inter[j].tcor<t){
+                for (i=0; i<fp.length-1&&!fnd;i++){
+                    if (fp[i].inter[0].tcor<t && fp[i].inter[fp[i].inter.length-1].tcor>t)fnd=true;
+                }
+                i--;
+                if (fnd){
+                    j=Math.floor(((t-fp[i].inter[0].tcor)/(fp[i].inter[fp[i].inter.length-1].tcor-fp[i].inter[0].tcor))*fp[i].inter.length);
+                    //console.log("j",j);
+                }
+            }
+            fillPlaceMarker(i,j,false);
+            ghostmrkr.setLatLng(fp[i].inter[j].c);
+        }
+    }
+
+    ////markers divIcons
+
+    let infoicon=L.divIcon({html:
+        `<div id="mrkr" style="position:absolute;  font-family:arial; color:white;  text-shadow: 1px 1px 1px rgba(0,0,0,0.8); background-color:transparent; white-space:nowrap;">
+            <div style="display:block; position:absolute; left:-15px; top:0px; width:30px; height:140px; cursor:move;">
+                <div style="position:absolute;left:15px;top:3px;border-left:2px solid rgba(0,0,0,0.4); height:112px;"></div>
+                <div style="display:none; position:absolute; left:12px; top:calc(120.5px); background-color:white; width:8px; height:8px; border-radius:4px;"></div>
+            </div>
+            <div id="posname" style="position:absolute; top:-20px; left:0px; transform:translateX(-50%); font-weight:bold; font-size:14px;"></div>
+            <div style="pointer-events: none; position:absolute; font-size:11px; line-height:110%;  left:-70px; top:0px; ">
+                <span id="mrkr tm"      ></span>
+                <span id="mrkr dt"      ></span>
+                <span id="mrkr lvl"     ></span>
+                <span id="elev"         ></span>
+                <span id="pressure alt" ></span>
+                <span id="density alt"  ></span>
+            </div>
+            <div id="showWP"  style="z-Index:999; padding:0px 3px; font-size:14px; position:absolute; top:0px;left:110px; display:inline-block; border:1px solid transparent; text-shadow: 2px 2px 3px rgba(165,30,37, 1)">X</div>
+            <div id="refresh mrkr" onclick="this.style.borderColor=\'white\'" style="display:none; opacity:0; padding:0px 3px; font-size:14px; position:absolute; top:-20px;left:90px; display:inline-block; border:1px solid transparent; text-shadow: 2px -2px 3px rgba(165,30,37, 1); transform:rotate(90deg);">&#8635;</div>
+            <span id="mrkrspan" style="pointer-events: none; line-height:110%; font-size:11px; position:absolute; padding:3px;  border-radius:5px;  left:0px; opacity:1; background-color:rgba(0,0,0,0.4);">  </span><br>
+        </div>`
+    ,iconAnchor:[0,125]});
+    let infomrkr = L.marker([0,0],{icon:infoicon, clickable:true});
+    infomrkr.addTo(map);
+    L.DomEvent.addListener( $('#showWP'), 'click', e=>{
+        //use Leaflet addListener and not usual addEventListener to allow stop propagtion of the click, which when then open the picker
+        L.DomEvent.stopPropagation(e);
+        let p=activemrkr.getLatLng();
+        //bcast.fire('rqstOpen','picker',{lat:p.lat,lon:p.lng});
+        $('#mrkr').style.visibility="hidden";
+    });
+
+    var delm=L.divIcon({html:
+        `<div id="delete-wp" style="display:none; position:absolute; border-radius:3px; left:-10px; top:-30px; background-color:rgba(0,0,0,0.4);">Delete?</div>`
+    ,iconAnchor:[0,0]});
+
+    let delmrkr=L.marker([0,0],{icon:delm, clickable:true}).addTo(map);
+    delmrkr.on("click",e=>{
+        console.log(e.latlng);
+        for (var i=0;i<fp.length&&!checkPntsEq(e.latlng,fp[i].coords);i++);
+        if (i<fp.length)console.log("found:",i);
+    });
+
+    var  activem=L.divIcon({html:
+        '<div  style=" opacity:1; position:absolute; left:-10px; top:-10px; width:20px; height:20px; background-color:transparent; ">'
+        +'<svg id="plane-svg" height="20" width="20" style="position:absolute; transform:rotate(20deg)">'
+        +'<path fill-opacity="0" stroke-width="1" stroke="white" d= "M9, 3 10,3 11,3 12,5 12,9 13,10 18,10 19,11 19,13 11,13 11,17 12,18 13,18 14,19 14,20 6, 20 6, 19 7, 18 8, 18 9, 17 9, 13 1, 13 1, 12 1, 11 2, 10 7, 10 8, 9 8, 5 9, 3 10,3 z" />'
+        +'</svg>'
+        +'</div>'
+    ,iconAnchor:[0,0]});
+
+    var ghostm=L.divIcon({html:
+        '<div  style="position:absolute; opacity:0; left:-18px; top:-18px; width:34px; height:34px; background-color:transparent; color:green; ">'
+        +'<div style="display:block; position:absolute; left:10px; top:10px; border:1px solid white; border-radius:6px; width:16px; height:16px; background-color:transparent; opacity:1;"></div>'
+        +'</div>'
+    ,iconAnchor:[0,0]});
+
+    var wpm=L.divIcon({html:
+        '<div  style="position:absolute; opacity:0.8; left:-9px; top:-10.5px; width:22px; height:22px; background-color:transparent; ">'
+        +'<div style="display:block; position:absolute; left:5px; top:5px; border:1px solid white; border-radius:6px; width:10px; height:10px; background-color:transparent; opacity:1;"></div>'
+        +'</div>'
+    ,iconAnchor:[0,0]});
+
+    let ghostmrkr=  L.marker([1,1],{icon:ghostm,draggable:true,zIndexOffset:999}).addTo(map);
+    let activemrkr= L.marker([1,1],{icon:activem,draggable:false}).addTo(map);
+    //let wpmrkr=     L.marker([1,1],{icon:wpm,draggable:false}).addTo(map);
+
+    //// find point on fp track
+
+    function findPoint(p, dragged){
+
+        const rad=ii=>{
+            console.log(ii);
+            let ps=fp[ii].inter[0].c; let pe=fp[ii].inter[fp[ii].inter.length-1].c;
+            let ATD=p.alongTrackDistanceTo(ps,pe);
+            let CTD=Math.abs(p.crossTrackDistanceTo(ps,pe));
+            if (ATD>=0&&ATD<=fp[ii].dist) return {rad:CTD, atd:ATD/fp[ii].dist};
+            else if (ATD<0) return {rad:Math.sqrt(ATD*ATD+CTD*CTD), atd:0};
+            else if (ATD>fp[ii].dist) return {rad:Math.sqrt(((ATD-fp[ii].dist)*(ATD-fp[ii].dist))+CTD*CTD), atd:1};
+        }
+
+        if (!LatLon.prototype.isPrototypeOf(p))p=LatLon(p.lat,p.lng||p.lon);
+        let i=ghostmrkr.i;    let r;
+
+        if (dragged){   //if dragged  use ghostmrkr.i  (thus value provided to ghostmrkr by wp marker or lineGhost
+            r=rad(i);
+            if (r.atd>0.1 && r.atd<0.9 && r.rad/fp[i].dist<0.2) return {i:i, j:Math.round(r.atd*(fp[i].inter.length-1))};
+        }
+        let minr={rad:Infinity, atd:0}; let fnd=0;
+        for (let k=0; k<fp.length-1;k++){
+            r=rad(k);
+            if (r.rad<minr.rad){minr.rad=r.rad; minr.atd=r.atd; fnd=k;}
+        }
+        return {i:fnd, j:Math.round(minr.atd*(fp[fnd].inter.length-1))}
+    }
+
+    //// fill and place the info marker
+
+    function fillPlaceMarker(i,j,setTimestamp,err,WPmrkr){
+
+        $('#mrkr').style.visibility="visible";
+        infomrkr.setOpacity(1);
+        let pnt={};
+        if (!fp[i].inter||!fp[i].inter.length)pnt={c:fp[i].coords,t:fp[i].t,hd:0};//inter array is not available.
+        else if(i<fp.length-1)pnt=fp[i].inter[j];
+        else pnt=fp[i-1].inter[fp[i-1].inter.length-1];  //if last point,  then use last element of previous leg.
+
+        activemrkr.setLatLng(pnt.c);
+        infomrkr.setLatLng(pnt.c);
+        ghostmrkr.setLatLng(pnt.c);
+        $("#plane-svg").style.transform=`rotate(${pnt.hd?pnt.hd:pnt.b}deg)`;
+        if (setTimestamp){
+            let t=pnt.tcor||pnt.t;
+            store.set("timestamp",t);
+        }
+        let tm=new Date(pnt.tcor?pnt.tcor:pnt.t);
+        let tmstr=("00"+tm.getUTCHours()).slice(-2)+":"+("00"+tm.getUTCMinutes()).slice(-2)+":"+("00"+tm.getUTCSeconds()).slice(-2);
+        let dtstr=("00"+tm.getUTCDate()).slice(-2)+":"+["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"][tm.getUTCMonth()];
+
+        if (err){
+            $("#mrkrspan").innerHTML=err;
+        } else {
+            $("#mrkrspan").innerHTML=`
+                Time: ${tmstr}<br>
+                Date: ${dtstr}<br>
+                ETE: ${hms(fp[i].ETE)}<br>
+                ETE corrected:  ${fp[i].ETEcor?hms(fp[i].ETEcor):"Not avail"}<br>
+                Air speed: <span id='info-air-spd'>      ${spdstr(spd,true)}                            </span><br>
+                Wind speed: <span id='info-wind-spd'>    ${pnt.w?spdstr(pnt.w.wind,true) :"Not avail"}  </span><br>
+                Ground speed: <span id='info-ground-spd'>${pnt.gspd?spdstr(pnt.gspd,true):"Not avail"}  </span><br>
+                Elev:   <span id='info-elev'>${pnt.elev?Math.round(pnt.elev*3.28084):"Not avail"}  </span>
+            `;
+        }
+        if (WPmrkr){
+            $("#mrkrspan").innerHTML+=`<br><span id="deletespan" style="text-shadow:2px 2px 2px red; z-index:1999; cursor:pointer; pointer-events: auto;">Delete?</span>`;
+            L.DomEvent.addListener(  $("#deletespan"),'click', e=>{
+                L.DomEvent.stopPropagation(e);
+                deleteWP(i,true); //makepoints after delete
+            });
+        }
+        //console.log(ghostmrkr,activemrkr);
+    }
+
+    ////ghost marker listeners
+
+    ghostmrkr.on("drag",e=>{
+        allowOnTimestamp=false;
+        let r=findPoint(e.target._latlng, true); //dragged is true
+        if (r){
+            ghostmrkr.i=r.i; ghostmrkr.j=r.j;
+            fillPlaceMarker(r.i,r.j,true);
+        }
+    });
+    ghostmrkr.on("dragstart",e=>{
+        bcast.fire('rqstClose','picker')
+        $('#mrkr').style.visibility="visible";
+    });
+    ghostmrkr.on("dragend",e=>{
+        allowOnTimestamp=true,e.target.setLatLng(activemrkr.getLatLng());
+        getElev(activemrkr.getLatLng());
+    });
+    ghostmrkr.on("click",e=>{
+        //if(pckEl)pckEl.style.visibility="hidden";
+        bcast.fire('rqstClose','picker');
+        $('#mrkr').style.visibility="visible";
+    })
+
+    //// Get elev data
+
+    function getElev(c,i){
+
+        if (Array.isArray(c)){
+            let data="elevcoords="+JSON.stringify({a:c});
+            console.log(data);
+            fetch(`https://www.openaipgeojson.com/srtm30/test.php`,
+                {method: "POST",  headers: { "Content-Type": "application/x-www-form-urlencoded"}, body: data}
+            )   .then(function(r) { return r.json();})
+                .then(function(ar){console.log(ar.length); ar.forEach((e,j)=>fp[i].inter[j].elev=e)})
+                .catch(er=>console.log(er));
+        } else{
+            fetch(`https://www.openaipgeojson.com/srtm30/test.php?lat=${c.lat}&lng=${c.lng||c.lon}`,{method:"GET"})
+                .then(function(r) { return r.json();})
+                .then(function(ar){
+                    if (ar[0]<0){
+                        $("#elev-depth").innerHTML="Depth(m):";
+                        $("#picker-elev").innerHTML=Math.round(ar[0]);
+                    }else{
+                        $("#elev-depth").innerHTML="Elev(f):";
+                        $("#picker-elev").innerHTML=Math.round(ar[0]*3.28084);
+                    }
+                })
+                .catch(er=>console.log(er));
+        }
+    }
+
+    function getElevAr(){
+    }
+
+    //// Flight plan table funtions: Add a row or fill a row
+
+    function makeWPname(i){
+            if(!fp[i].Waypoint)fp[i].Waypoint=(fp[i].coords.lat<0?"S":"N")+Math.abs(fp[i].coords.lat).toFixed(3)+(fp[i].coords.lng<0?"W":"E")+Math.abs(fp[i].coords.lng).toFixed(3);
+            return fp[i].Waypoint;
+    }
+    function fillFProw(i){
+        console.log("Fill",i,fp[i].dist);
+        let row=fp[i].rowdiv.children;
+        for (let j=1;j<row.length;j++){
+            let s="";
+            if (row[j].classList[1]=='wpno'){s=i}
+            else if (row[j].classList[1]=='wp' && fp[i].Waypoint){s=fp[i].Waypoint}
+            else if (row[j].classList[1]=='spd' && i<fp.length-1){s=spdstr(spd);}
+            else if (row[j].classList[1]=='dist'&& i<fp.length-1){s=diststr(fp[i].dist);}
+            else if (row[j].classList[1]=='ete' && i<fp.length-1){s=hms(fp[i].ETE);}
+            else if (row[j].classList[1]=='etecor' && fp[i].ETEcor){s=hms(fp[i].ETEcor);}
+            row[j].innerHTML=s;
+        }
+    }
+    function addFProw(i){
+            if (!fp[i].rowdiv){
+                let last=i==fp.length-1?true:false;
+                fp[i].rowdiv=document.createElement("div");
+                fp[i].rowdiv.innerHTML=`
+                <span  class="checkbox" data-i=${i}></span>
+                <span  class="fp-cell wpno" style="width:10px; font-size:8px;">${i}</span>
+                <span  class="fp-cell wp"   style="width:80px; font-size:10px;">${fp[i].Waypoint?fp[i].Waypoint:""}</span>
+                <span  class="fp-cell spd"   >${!last? spdstr(spd):""}</span>
+                <span  class="fp-cell dist"  >${!last? diststr(fp[i].dist):""}</span>
+                <span  class="fp-cell ete"   >${!last? hms(fp[i].ETE):""}</span>
+                <span  class="fp-cell etecor">${!last? (fp[i].ETEcor?hms(fp[i].ETEcor):""):""}</span>
+                `;
+                let fpi=fp[i];
+                fp[i].rowdiv.firstElementChild.addEventListener("click",e=>{
+                    console.log(i);
+                    console.log(fp[i].edit);
+                    console.log(fpi);
+                    e.target.classList.toggle('off');
+                    if (e.target.classList.contains('off')){fp[i].edit=false}
+                    else {fp[i].edit=true}
+                    console.log(e.target.dataset.i,fp[e.target.dataset.i].edit);
+                })
+                if(last)$('#fp-table').appendChild(fp[i].rowdiv);
+                else    $('#fp-table').insertBefore(fp[i].rowdiv, fp[i+1].rowdiv);
+            }   else  fillFProw(i);
+    }
+
+    //// MakeInterPoints calculate distance, ETE and make the inter points of FP.
+
+    function makeInterPoints(){
+        const addWPmarker=i=>{
+            let fpi=fp[i];
+            if (fp[i].marker){fp[i].marker.setLatLng(fp[i].coords)}
+            else {
+                fp[i].marker=L.marker(fp[i].coords,{icon:wpm, clickable:true, draggable:false}).addTo(map);
+                fp[i].marker.i=i;
+                fp[i].marker.on("click",e=>{
+                    console.log(e.latlng);
+                    console.log("CLICKED", "event listener i",i,"fpi",fpi.i, "target i", e.target.i);
+                    //console.log(fp[i]);
+                    ghostmrkr.i=e.target.i;
+                    ghostmrkr.j=0;
+                    allowOnTimestamp=false;setTimeout(()=>allowOnTimestamp=true,500);
+
+                    fillPlaceMarker(fp[i].i,0,true,false,true);
+                });
+            }
+        }
+        for (var i=0;i<fp.length;i++){
+            let fpo=fp[i];
+            //if (fp[i].inter)   console.log(!(checkPntsEq(ll,fp[i].inter[0].c) && checkPntsEq(ll2,fp[i].inter[fp[i].inter.length-1].c))  );
+            if  (!fp[i].inter || !fp[i].inter.length)
+               //  !(checkPntsEq(ll,fp[i].inter[0].c) && checkPntsEq(ll2,fp[i].inter[fp[i].inter.length-1].c)))
+            {
+                console.log("update point",i, !fp[i].inter);
+
+                if(!fp[i].hasOwnProperty("edit")){  // create new fp element object.
+                    console.log("new point",i);
+                    fp[i].i=i;
+                    fp[i].edit=true;
+                    fp[i].tset=false;
+
+                    //Lines
+                    fp[i].lineGhost=L.polyline([],{color:'white',opacity:0,weight:16}).addTo(map);
+                    fp[i].lineGhost.i=i;
+                    fp[i].line=L.polyline([],{color:'white',opacity:1,weight:2,smoothFactor:2,clickable:false}).addTo(map);
+                    fp[i].line.i=i;
+
+                    //fp[i].inter=[];
+
+                    fp[i].lineGhost.on("click",e=>{
+                        console.log("LINE CLICKED",e.target.i);
+                        ghostmrkr.i=e.target.i;
+                        let r=findPoint(e.latlng,true);// use dragged=true,  thus ghostmrkr.i
+                        allowOnTimestamp=false; setTimeout(()=>allowOnTimestamp=true,500);
+                        fillPlaceMarker(r.i,r.j,true);
+                        ghostmrkr.setLatLng(fp[r.i].inter[r.j].c);
+                        ghostmrkr.j=r.j;
+                        bcast.fire('rqstClose','picker');
+                    });
+                    makeWPname(i);
+                    addWPmarker(i);
+                    addFProw(i);
+                }
+
+                if (i<fp.length-1){
+                    let ll=LatLon(fp[i].coords.lat,fp[i].coords.lng);
+                    let ll2=LatLon(fp[i+1].coords.lat,fp[i+1].coords.lng);
+
+                    //distance and ETE
+                    fp[i].dist=ll.distanceTo(ll2);      console.log("NEW D:",fp[i].dist);
+                    fp[i].ETE=1000*fp[i].dist/spd;
+
+                    //intermediate points
+                    fp[i].inter=[];
+                    let n=Math.floor(fp[i].dist/interdist);
+                    let f=1/n;
+                    let d=fp[i].dist/n;
+                    fp[i].d=d;
+
+                    //time
+                    if(!fp[i].tset){
+                        if(i==0) {fp[i].t=Math.round(Date.now());}
+                        else fp[i].t = fp[i-1].t+1000*fp[i-1].dist/spd;
+                    }
+
+                    //intermediate coords, times and bearings
+                    for(let j=0;j<n+1;j++){
+                        let tt=1000*(d*j)/spd;
+                        fp[i].inter[j]={c:ll.intermediatePointTo(ll2,(f*j)),
+                                        d:((j>0&&j<n)?d:d/2),
+                                        t:fp[i].t+tt // -((j>0&&j<n)?d/2:0)
+                        };
+
+                        if (j>0)    fp[i].inter[j-1].b=fp[i].inter[j-1].c.bearingTo(fp[i].inter[j].c);
+                        if (j==n)   fp[i].inter[j].b=fp[i].inter[j-1].b;
+                    }
+
+                    //fill lines
+                    console.log("LINES");
+                    fp[i].line.setLatLngs([]);
+                    fp[i].lineGhost.setLatLngs([]);
+                    for (var j=0,jl=fp[i].inter.length;j<jl;j++){
+                        fp[i].lineGhost.addLatLng(fp[i].inter[j].c);
+                        fp[i].line.addLatLng(fp[i].inter[j].c);
+                    }
+                    fillFProw(i);
+                    //try to get elevs
+                    let elevar=[];
+                    fp[i].inter.forEach(e=>elevar.push(Math.round(e.c.lat*100000)/100000,Math.round(e.c.lon*100000)/100000));
+                    getElev(elevar,i);
+
+                    //update fp row
+
+                }
+            }
+            console.log(fp[i]);
+        }
+
+        //if(fp.length){makeWPname(i); addWPmarker(i); addFProw(i);}
+        //activemrkr.setLatLng(fp[0].coords);
+        //ghostmrkr.setLatLng(fp[0].coords);
+
+        //console.log(fp);
+    }
+
+    function findBoundsj(i,j,n){   //start i, start j, number of elements,  use 0,0,Infinity to check entire fp
+        let mxlt=-Infinity,mxln=-Infinity; let mnlt=Infinity,mnln=Infinity;
+        for (var k=0, il=fp.length-1; i<il && k<n ;i++){
+            for (var jl=fp[i].inter.length; j<jl && k<n ;j+=1,k+=1){
+                let p=fp[i].inter[j].c;
+                if (p.lat>mxlt)mxlt=p.lat;
+                if (p.lat<mnlt) mnlt=p.lat;
+                if (p.lon>mxln)mxln=p.lon;
+                if (p.lon<mnln) mnln=p.lon;
+            }
+            j=j-jl;
+        }
+        //console.log(mnlt,mnln,mxlt,mxln);
+        let ltdif=mxlt-mnlt; let lndif=mxln-mnln;
+        bnds=[[mnlt-ltdif/10,mnln-lndif/10],[mxlt+ltdif/10,mxln+lndif/10]];
+        return bnds;
+
+    }
+
+    //// Use the interpolator
+
+    function interpolatePoints(){
+        //console.log("start interpolation");
+        origbnds=map.getBounds();
+        allowOnTimestamp=false;
+        let i=0;  let l=fp.length-1;
+        let j=0;
+        let ETEcor=0;
+        let tAntic;
+        let redrawtries=0;
+        fp[0].inter[0].t=store.get("timestamp");
+        let maxt=time2maxt(fp[0].inter[0].t);
+        let err;
+        hrsInt=3;
+
+        store.set("particlesAnim","off");
+
+        //let maxt=path2maxt(currentpath);
+        //map.fitBounds(findBoundsj(i,j,(j+50)<fp[i].inter.length?(j+50):fp[i].inter.length-1));
+        reqbnds=findBoundsj(i,j, Math.round( 2*(hrsInt*3600)/ (fp[i].d/spd)) );
+        map.fitBounds(reqbnds);
+        wait4fit=true;
+
+        let calc_store_interpval=interp=>{
+            for (;i<l&&!wait4redraw;i++){
+                let lj=fp[i].inter.length-1;
+                if (j==0)fp[i].ETEcor=0;
+                for (;j<fp[i].inter.length&&!wait4redraw;j++){
+                    if (OLi==0){
+                        let val=interp(fp[i].inter[j].c);
+                        //console.log(val);
+                        let wd=Math.round(Math.atan(val[0]/val[1])*180/Math.PI);
+                        if (val[1]>0)wd+=180;
+                        if(wd<0)wd+=360; if(wd>360)wd-=360;
+                        let windspd=Math.round(Math.sqrt(val[0]*val[0]+val[1]*val[1])*100)/100;
+                        fp[i].inter[j].w={wind:windspd, dir:wd};
+
+                        //bereken grond spoed en heading
+                        let td=fp[i].inter[j].b;  //track direction
+                        let hspd=spd;  //air speed
+                        wd=(wd+180)%360;  //reverse wind direction - direction of wind movement not direction of origin
+                        let deltad=(td-wd) *Math.PI/180;
+                        let trackspd1=Math.cos(deltad)*windspd;
+                        let vert=Math.sin(deltad)*windspd;
+                        let rt=vert/hspd;  if (rt>1){rt=1}else if (rt<-1)rt=-1;
+                        let deltahdr=Math.asin(rt);
+                        let deltahd=deltahdr *180/Math.PI;
+                        //trackspd2=Math.sqrt(hspd*hspd-vert*vert);
+                        let trackspd2=Math.cos(deltahdr)*hspd;
+                        let trackspd=trackspd1+trackspd2;
+                        let hd=td+deltahd;
+                        hd=hd%360;
+                        fp[i].inter[j].hd=hd;
+                        fp[i].inter[j].gspd=trackspd;
+
+                        if (trackspd<=0){
+                            err="Wind too strong!!";
+                            fillPlaceMarker(i,j,false,err);
+                            i=l;
+                            j=fp[i].inter[j].length;
+                        }   else  {
+
+                            //bereken gekor tyd
+                            let ETEinter=1000*(fp[i].inter[j].d/fp[i].inter[j].gspd);
+                            fp[i].ETEcor+=ETEinter;
+                            if (j==0){
+                                if (i==0) {fp[i].inter[j].tcor=fp[i].inter[j].t;}
+                                else  {fp[i].inter[j].tcor=fp[i-1].inter[fp[i-1].inter.length-1].tcor}
+                                fp[i].inter[j+1].tcor=fp[i].inter[j].tcor+ETEinter;
+                            } else if (j<fp[i].inter.length-1) {
+                                fp[i].inter[j].tcor+=ETEinter/2;
+                                fp[i].inter[j+1].tcor=fp[i].inter[j].tcor+ETEinter/2;
+                            } else { //last el of inter
+                                fp[i].inter[j].tcor+=ETEinter;
+                            }
+                        }
+                    }
+
+                    tAntic=Math.round(fp[i].inter[j].tcor?fp[i].inter[j].tcor:fp[i].inter[j].t);// anticipated time at next point
+
+                    if (tAntic>maxt){
+                        reqbnds=findBoundsj(i,j,Math.round( 2*(hrsInt*3600)/ (fp[i].d/spd)));
+                        map.fitBounds(reqbnds);
+                        reqpath=time2path(tAntic);
+                        maxt=time2maxt(tAntic);
+                        wait4redraw=true;
+                        store.set('timestamp',tAntic);
+                        callIPafterRedraw();
+                    }
+                    if(!err)fillPlaceMarker(i,j,false);
+                    //console.log(currentpath,"required:",i,j,fp[i].inter[j].tcor,time2path(fp[i].inter[j].tcor));
+                }
+                if (!(wait4redraw)){j=0;} else j--;
+            }
+            i--;
+            if (!wait4redraw){
+                allowOnTimestamp=true;
+                setTimeout(()=>{
+                    map.fitBounds(origbnds);
+                    store.set("particlesAnim","on");
+                    ghostmrkr.setLatLng(fp[0].coords);
+                    fillPlaceMarker(0,0,true);
+                    console.log(fp);
+                },200);
+            }
+        }
+        let callIPafterRedraw=()=>{
+            if (wait4redraw){
+                console.log("waiting for redraw");
+                redrawtries++;
+                if (redrawtries>60) {
+                    store.set('timestamp',tAntic);
+                    redrawtries=0;
+                    callIPafterRedraw();
+                }   else setTimeout(callIPafterRedraw,200);
+            }   else{
+                redrawtries=0;
+                try {interpolator(calc_store_interpval);}  catch(error) {console.log("Interpolator error:",error)};
+            }
+        }
+        if(!wait4redraw)callIPafterRedraw();
+    }
+
+
+
+
+</script>
+</plugin>

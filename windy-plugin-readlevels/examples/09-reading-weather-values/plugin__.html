@@ -1,0 +1,167 @@
+<plugin>
+	<!-- this Plugin does not have any HTML content -->
+	<script>
+
+	// Windy API modules are imported via '@windy/nameOfModule'
+	import map from '@windy/map'
+	import interpolator from '@windy/interpolator'
+	import _ from '@windy/utils'
+	import store from '@windy/store'
+	import bcast from '@windy/broadcast'
+    import picker from '@windy/picker'
+
+    console.log(store);
+
+	// List of wayponts to be interpolated
+	const points = [
+		[ "Tours", "city-2", 0.689, 47.39 ],
+		[ "Le Mans", "city-2", 0.2, 48.008 ],
+		[ "Amilly", "city-3", 2.767, 47.978 ],
+		[ "Bourges", "city-3", 2.399, 47.081 ],
+		[ "Paris", "city-1", 2.351, 48.857 ],
+		[ "Chartres", "city-2", 1.487, 48.447 ],
+	]
+
+	// List of current markers
+	let markers = null
+
+	const icon = L.divIcon({
+		className: 'weather-at-city',
+		iconSize: [80, 40],
+		iconAnchor: [40, 20],
+		})
+
+	// Creates marker with content
+	const createPopup = (lat,lon,name) => {
+		const marker = L.marker([lat, lon],{ icon }).addTo( map )
+		marker._icon.innerHTML = name
+		return marker
+	}
+
+	// Major interpolation function
+	const interpolateValues = () => {
+
+		/**
+		 * This example can interpolate only wind overlay, but
+		 * you can interpolate almost any raster layer of Windy
+		 */
+		if( store.get('overlay') !== 'wind' ) {
+			console.warn('I can iterpolate only Wind sorry')
+			return
+		}
+
+		/**
+		 * Interpolator returns interpolation function
+		 */
+		interpolator( interpolate => {
+
+			markers.forEach((m, i) => {
+				const [name, cls, lon, lat] = points[i]
+
+				/**
+				 * Interpolate finaly gets you the values
+				 * @param {Object} { lat, lon }
+				 * @return {Array} array of raw meterological values or null, NaN, -1
+				 */
+				const values = interpolate.call(interpolator, { lat, lon })
+
+				/**
+				 * Remeber that we are able to interpolate values only for
+				 * points that are visible on map
+				 */
+				if( Array.isArray(values) ) {
+					const { wind, dir } = _.wind2obj(values)
+					m._icon.innerHTML = `${name}<br />${Math.round(wind)}m/s&nbsp;${dir}`
+				} else {
+					console.warn(`Unable to interpolate value for ${lat}, ${lon}.`)
+				}
+			})
+		})
+	}
+
+    //let mrkr=L.marker([47.3,2],{draggable:true}).addTo(map);
+    //let ifx= interp=>console.log(interp({lat:e.target._latlng.lat,lon:e.target._latlng.lng}));
+
+
+   //mrkr.on("drag",
+
+    let coords=[];
+    let mxlt=-Infinity,mxln=-Infinity; let mnlt=Infinity,mnln=Infinity;
+
+    for (let i=0;i<40;i++){
+        coords[i]={lat: -30+Math.random()*3, lng:30+Math.random()*3};
+        if (coords[i].lat>mxlt)mxlt=coords[i].lat;
+        if (coords[i].lng>mxln)mxln=coords[i].lng;
+        if (coords[i].lat<mnlt)mnlt=coords[i].lat;
+        if (coords[i].lng<mnln)mnln=coords[i].lng;
+    }
+    console.log(mnlt,mnln,mxlt,mxln);
+
+    let boundschanged=false;
+    map.fitBounds([[mnlt,mnln],[mxlt,mxln]]);
+    boundschanged=true;
+    //map.fitBounds([[mnlt,mnln],[mxlt,mxln]]);
+
+    bcast.on('redrawFinished', params => {
+        console.log(params);
+        if (boundschanged){
+            boundschanged=false;
+            setTimeout(()=>{
+                interpolator(interp=>{
+                    console.log(interpolator);
+                    for (let i=0; i<coords.length;i++){
+                        console.log(i,interp({lat:coords[i].lat,lon:coords[i].lng}))
+                    }
+                });
+            },500);
+        }
+    })
+
+    let pickerpos;
+    picker.on("pickerOpened",e=>pickerpos=e);
+
+    let lvls=store.get("availLevels");
+    let ols=["pressure","temperature"]
+    console.log(lvls);
+
+    let l=0,o=0;
+
+    document.onkeypress=k=>{
+        console.log(k)
+    }
+
+
+
+    //interpolator - ontvang fx wat waarde hanteer,  maak dan fx met selfde naam wat waarde return na fx wat ek verskaf.
+
+	this.onopen = () => {
+
+		map.setView({ lat: 47.3, lng: 2 },7)
+
+		// Lets change layer to Wind
+		store.set('overlay','wind')
+
+		if( !markers ) {
+			markers = points.map( p => createPopup( p[3], p[2], p[0] ))
+
+			// Values are interpolated from the data set, used
+			// for rendering weather layers, therefore remember to call
+			// interpolation anytime something happens on a map
+			bcast.on('redrawFinished', interpolateValues )
+		}
+
+		interpolateValues()
+
+
+	}
+
+	this.onclose = () => {
+		if( markers ) {
+			markers.forEach( m => map.removeLayer( m ) )
+			bcast.off('redrawFinished', interpolateValues)
+			markers = null
+		}
+	}
+
+	</script>
+</plugin>
