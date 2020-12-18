@@ -1,6 +1,6 @@
-<plugin>
-	<!-- this Plugin does not have any HTML content -->
-	<script>
+
+// All the Plugin information here is provided by Wind.com/dooc/ // 
+
 
 	// Windy API modules are imported via '@windy/nameOfModule'
 	import map from '@windy/map'
@@ -107,5 +107,5 @@
                 } else store.set("level",lvls[l]);
         } else store.set("overlay",ols[o]);
     }
-	</script>
-</plugin>
+
+

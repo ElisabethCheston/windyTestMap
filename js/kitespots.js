@@ -1,3 +1,4 @@
+/*
 var markers = [
         //Kalix//
             ["spot", 65.8108770,23.6116663, "id1", "name", "BREVIKEN","windDirection","S/SW"],
@@ -128,3 +129,10 @@ var markers = [
             ["spot", 57.7966607,18.7912915, "id110", "name", "ÖRUDDEN","windDirection","S/SW"],
             ["spot", 57.7988784,18.8109458, "id111", "name", "ÖRUDDEN","windDirection","S/S"]
     ];
+        // Loop for the markers. //
+    for (var i = 0; i < markers.length; i++) {
+        spots = new L.marker([markers[i][1],markers[i][2]])
+            .bindPopup(markers[i][5])
+            .addTo(map);
+    }
+    */

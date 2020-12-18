@@ -1,3 +1,4 @@
+/*
 import {DivOverlay} from './DivOverlay';
 import * as DomEvent from '../dom/DomEvent';
 import * as DomUtil from '../dom/DomUtil';
@@ -7,7 +8,7 @@ import {Layer} from './Layer';
 import * as Util from '../core/Util';
 import {Path} from './vector/Path';
 
-/*
+
  * @class Popup
  * @inherits DivOverlay
  * @aka L.Popup
@@ -18,19 +19,18 @@ import {Path} from './vector/Path';
  * @example
  *
  * If you want to just bind a popup to marker click and then open it, it's really easy:
- *
- * ```js
+
  * marker.bindPopup(popupContent).openPopup();
- * ```
+ 
  * Path overlays like polylines also have a `bindPopup` method.
  * Here's a more complicated way to open a popup on a map:
- *
- * ```js
- * var popup = L.popup()
- * 	.setLatLng(latlng)
- * 	.setContent('<p>Hello world!<br />This is a nice popup.</p>')
- * 	.openOn(map);
- * ```
+ 
+ 
+ var popup = L.popup()
+  	.setLatLng(latlng)
+  	.setContent('<p>Hello world!<br />This is a nice popup.</p>')
+  	.openOn(map);
+ 
  */
 
 
