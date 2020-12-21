@@ -13,7 +13,7 @@ const options = {
     // Optional: Initial state of the map
     lat: 62.45,
     lon: 17.52,
-    zoom: 6
+    zoom: 5
 };
 
 // Initialize Windy API
@@ -130,7 +130,7 @@ windyInit(options, windyAPI => {
             ["SpotLevel", 57.1316122, 18.2168770, "id87", "NISSEVIKEN",", Wind Direction ","S/SW"],
             ["SpotLevel", 56.9286604, 18.2373114, "id88", "VALAR",", Wind Direction ","S/SW"],
             ["SpotLevel", 57.7988784, 18.2784944, "id89", "HOLMHÄLLAR",", Wind Direction ","S/SW"],
-            ["SpotLevel", 56.0151331, 18.3442752, "id90", "FALUDDEN S",", Wind Direction ","S/SE"],
+            ["SpotLevel", 56.9961371, 18.3442752, "id90", "FALUDDEN S",", Wind Direction ","S/SE"],
             ["SpotLevel", 57.7988784, 18.8109458, "id91", "FALUDDEN N",", Wind Direction ","E/NE"],
             ["SpotLevel", 57.1241931, 18.43118507, "id92", "GANSVIK",", Wind Direction ","E/NE"],
         // Gotland WESTCOST //
@@ -164,9 +164,15 @@ windyInit(options, windyAPI => {
        // Loop for the kitespots. //
         for (var i = 0; i < kitespots.length; i++) {
             spots = new L.marker([kitespots[i][1],kitespots[i][2]])
-                .bindPopup(kitespots[i][0],kitespots[i][4],kitespots[i][5],kitespots[i][6])
+                .bindPopup(kitespots[i][4],kitespots[i][4],kitespots[i][5],kitespots[i][6])
                 .addTo(map);
         }
+
+        var markers = L.markerClusterGroup({
+	iconCreateFunction: function(cluster) {
+		return L.divIcon({ html: '<b>' + cluster.getChildCount() + '</b>' });
+	}
+});
     });
   
 
