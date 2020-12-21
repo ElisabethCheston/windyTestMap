@@ -1,3 +1,4 @@
+
 <plugin>
 	<!-- this Plugin does not have any HTML content -->
 	<script>
@@ -500,7 +501,7 @@ if (typeof module!='undefined' && module.exports) var Dms = require('./dms.js');
 
 
 /**
- * Returns the distance from ‘this’ point to destination point (using haversine formula).
+ * Returns the distance from ï¿½thisï¿½ point to destination point (using haversine formula).
  *
  * @param   {LatLon} point - Latitude/longitude of destination point.
  * @param   {number} [radius=6371e3] - (Mean) radius of earth (defaults to radius in metres).
@@ -515,7 +516,7 @@ LatLon.prototype.distanceTo = function(point, radius) {
     if (!(point instanceof LatLon)) throw new TypeError('point is not LatLon object');
     radius = (radius === undefined) ? 6371e3 : Number(radius);
 
-    // a = sin²(?LAT/2) + cos(LAT1)·cos(LAT2)·sin²(??/2)
+    // a = sinï¿½(?LAT/2) + cos(LAT1)ï¿½cos(LAT2)ï¿½sinï¿½(??/2)
     // tand = v(a) / v(1-a)
     // see mathforum.org/library/drmath/view/51879.html for derivation
 
@@ -536,7 +537,7 @@ LatLon.prototype.distanceTo = function(point, radius) {
 
 
 /**
- * Returns the (initial) bearing from ‘this’ point to destination point.
+ * Returns the (initial) bearing from ï¿½thisï¿½ point to destination point.
  *
  * @param   {LatLon} point - Latitude/longitude of destination point.
  * @returns {number} Initial bearing in degrees from north.
@@ -544,12 +545,12 @@ LatLon.prototype.distanceTo = function(point, radius) {
  * @example
  *     var p1 = new LatLon(52.205, 0.119);
  *     var p2 = new LatLon(48.857, 2.351);
- *     var b1 = p1.bearingTo(p2); // 156.2°
+ *     var b1 = p1.bearingTo(p2); // 156.2ï¿½
  */
 LatLon.prototype.bearingTo = function(point) {
     if (!(point instanceof LatLon)) throw new TypeError('point is not LatLon object');
 
-    // tantheta = sindeltaLON·cosLAT2 / cosLAT1·sinLAT2 - sinLAT1·cosLAT2·cosdeltaLON
+    // tantheta = sindeltaLONï¿½cosLAT2 / cosLAT1ï¿½sinLAT2 - sinLAT1ï¿½cosLAT2ï¿½cosdeltaLON
     // see mathforum.org/library/drmath/view/55417.html for derivation
 
     var LAT1 = this.lat.toRadians(), LAT2 = point.lat.toRadians();
@@ -564,7 +565,7 @@ LatLon.prototype.bearingTo = function(point) {
 
 
 /**
- * Returns final bearing arriving at destination destination point from ‘this’ point; the final bearing
+ * Returns final bearing arriving at destination destination point from ï¿½thisï¿½ point; the final bearing
  * will differ from the initial bearing by varying degrees according to distance and latitude.
  *
  * @param   {LatLon} point - Latitude/longitude of destination point.
@@ -573,18 +574,18 @@ LatLon.prototype.bearingTo = function(point) {
  * @example
  *     var p1 = new LatLon(52.205, 0.119);
  *     var p2 = new LatLon(48.857, 2.351);
- *     var b2 = p1.finalBearingTo(p2); // 157.9°
+ *     var b2 = p1.finalBearingTo(p2); // 157.9ï¿½
  */
 LatLon.prototype.finalBearingTo = function(point) {
     if (!(point instanceof LatLon)) throw new TypeError('point is not LatLon object');
 
-    // get initial bearing from destination point to this point & reverse it by adding 180°
+    // get initial bearing from destination point to this point & reverse it by adding 180ï¿½
     return ( point.bearingTo(this)+180 ) % 360;
 };
 
 
 /**
- * Returns the midpoint between ‘this’ point and the supplied point.
+ * Returns the midpoint between ï¿½thisï¿½ point and the supplied point.
  *
  * @param   {LatLon} point - Latitude/longitude of destination point.
  * @returns {LatLon} Midpoint between this point and the supplied point.
@@ -592,13 +593,13 @@ LatLon.prototype.finalBearingTo = function(point) {
  * @example
  *     var p1 = new LatLon(52.205, 0.119);
  *     var p2 = new LatLon(48.857, 2.351);
- *     var pMid = p1.midpointTo(p2); // 50.5363°N, 001.2746°E
+ *     var pMid = p1.midpointTo(p2); // 50.5363ï¿½N, 001.2746ï¿½E
  */
 LatLon.prototype.midpointTo = function(point) {
     if (!(point instanceof LatLon)) throw new TypeError('point is not LatLon object');
 
-    // LATm = atan2( sinLAT1 + sinLAT2, v( (cosLAT1 + cosLAT2·cosdeltaLON) · (cosLAT1 + cosLAT2·cosdeltaLON) ) + cos²LAT2·sin²deltaLON )
-    // LONm = LON1 + atan2(cosLAT2·sindeltaLON, cosLAT1 + cosLAT2·cosdeltaLON)
+    // LATm = atan2( sinLAT1 + sinLAT2, v( (cosLAT1 + cosLAT2ï¿½cosdeltaLON) ï¿½ (cosLAT1 + cosLAT2ï¿½cosdeltaLON) ) + cosï¿½LAT2ï¿½sinï¿½deltaLON )
+    // LONm = LON1 + atan2(cosLAT2ï¿½sindeltaLON, cosLAT1 + cosLAT2ï¿½cosdeltaLON)
     // see mathforum.org/library/drmath/view/51822.html for derivation
 
     var LAT1 = this.lat.toRadians(), LON1 = this.lon.toRadians();
@@ -614,12 +615,12 @@ LatLon.prototype.midpointTo = function(point) {
 
     var LON3 = LON1 + Math.atan2(By, Math.cos(LAT1) + Bx);
 
-    return new LatLon(LAT3.toDegrees(), (LON3.toDegrees()+540)%360-180); // normalise to -180..+180°
+    return new LatLon(LAT3.toDegrees(), (LON3.toDegrees()+540)%360-180); // normalise to -180..+180ï¿½
 };
 
 
 /**
- * Returns the point at given fraction between ‘this’ point and specified point.
+ * Returns the point at given fraction between ï¿½thisï¿½ point and specified point.
  *
  * @param   {LatLon} point - Latitude/longitude of destination point.
  * @param   {number} fraction - Fraction between the two points (0 = this point, 1 = specified point).
@@ -628,7 +629,7 @@ LatLon.prototype.midpointTo = function(point) {
  * @example
  *   let p1 = new LatLon(52.205, 0.119);
  *   let p2 = new LatLon(48.857, 2.351);
- *   let pMid = p1.intermediatePointTo(p2, 0.25); // 51.3721°N, 000.7073°E
+ *   let pMid = p1.intermediatePointTo(p2, 0.25); // 51.3721ï¿½N, 000.7073ï¿½E
  */
 LatLon.prototype.intermediatePointTo = function(point, fraction) {
     if (!(point instanceof LatLon)) throw new TypeError('point is not LatLon object');
@@ -655,12 +656,12 @@ LatLon.prototype.intermediatePointTo = function(point, fraction) {
     var LAT3 = Math.atan2(z, Math.sqrt(x*x + y*y));
     var LON3 = Math.atan2(y, x);
 
-    return new LatLon(LAT3.toDegrees(), (LON3.toDegrees()+540)%360-180); // normalise lon to -180..+180°
+    return new LatLon(LAT3.toDegrees(), (LON3.toDegrees()+540)%360-180); // normalise lon to -180..+180ï¿½
 };
 
 
 /**
- * Returns the destination point from ‘this’ point having travelled the given distance on the
+ * Returns the destination point from ï¿½thisï¿½ point having travelled the given distance on the
  * given initial bearing (bearing normally varies around path followed).
  *
  * @param   {number} distance - Distance travelled, in same units as earth radius (default: metres).
@@ -670,13 +671,13 @@ LatLon.prototype.intermediatePointTo = function(point, fraction) {
  *
  * @example
  *     var p1 = new LatLon(51.4778, -0.0015);
- *     var p2 = p1.destinationPoint(7794, 300.7); // 51.5135°N, 000.0983°W
+ *     var p2 = p1.destinationPoint(7794, 300.7); // 51.5135ï¿½N, 000.0983ï¿½W
  */
 LatLon.prototype.destinationPoint = function(distance, bearing, radius) {
     radius = (radius === undefined) ? 6371e3 : Number(radius);
 
-    // sinLAT2 = sinLAT1·cosdelta + cosLAT1·sindelta·costheta
-    // tandeltaLON = sintheta·sindelta·cosLAT1 / cosdelta-sinLAT1·sinLAT2
+    // sinLAT2 = sinLAT1ï¿½cosdelta + cosLAT1ï¿½sindeltaï¿½costheta
+    // tandeltaLON = sinthetaï¿½sindeltaï¿½cosLAT1 / cosdelta-sinLAT1ï¿½sinLAT2
     // see mathforum.org/library/drmath/view/52049.html for derivation
 
     var delta = Number(distance) / radius; // angular distance in radians
@@ -695,7 +696,7 @@ LatLon.prototype.destinationPoint = function(distance, bearing, radius) {
     var x = cosdelta - sinLAT1 * sinLAT2;
     var LON2 = LON1 + Math.atan2(y, x);
 
-    return new LatLon(LAT2.toDegrees(), (LON2.toDegrees()+540)%360-180); // normalise to -180..+180°
+    return new LatLon(LAT2.toDegrees(), (LON2.toDegrees()+540)%360-180); // normalise to -180..+180ï¿½
 };
 
 
@@ -711,7 +712,7 @@ LatLon.prototype.destinationPoint = function(distance, bearing, radius) {
  * @example
  *     var p1 = LatLon(51.8853, 0.2545), brng1 = 108.547;
  *     var p2 = LatLon(49.0034, 2.5735), brng2 =  32.435;
- *     var pInt = LatLon.intersection(p1, brng1, p2, brng2); // 50.9078°N, 004.5084°E
+ *     var pInt = LatLon.intersection(p1, brng1, p2, brng2); // 50.9078ï¿½N, 004.5084ï¿½E
  */
 LatLon.intersection = function(p1, brng1, p2, brng2) {
     if (!(p1 instanceof LatLon)) throw new TypeError('p1 is not LatLon object');
@@ -750,12 +751,12 @@ LatLon.intersection = function(p1, brng1, p2, brng2) {
     var deltaLON13 = Math.atan2( Math.sin(theta13)*Math.sin(delta13)*Math.cos(LAT1), Math.cos(delta13)-Math.sin(LAT1)*Math.sin(LAT3) );
     var LON3 = LON1 + deltaLON13;
 
-    return new LatLon(LAT3.toDegrees(), (LON3.toDegrees()+540)%360-180); // normalise to -180..+180°
+    return new LatLon(LAT3.toDegrees(), (LON3.toDegrees()+540)%360-180); // normalise to -180..+180ï¿½
 };
 
 
 /**
- * Returns (signed) distance from ‘this’ point to great circle defined by start-point and end-point.
+ * Returns (signed) distance from ï¿½thisï¿½ point to great circle defined by start-point and end-point.
  *
  * @param   {LatLon} pathStart - Start point of great circle path.
  * @param   {LatLon} pathEnd - End point of great circle path.
@@ -784,14 +785,14 @@ LatLon.prototype.crossTrackDistanceTo = function(pathStart, pathEnd, radius) {
 
 
 /**
- * Returns how far ‘this’ point is along a path from from start-point, heading towards end-point.
- * That is, if a perpendicular is drawn from ‘this’ point to the (great circle) path, the along-track
+ * Returns how far ï¿½thisï¿½ point is along a path from from start-point, heading towards end-point.
+ * That is, if a perpendicular is drawn from ï¿½thisï¿½ point to the (great circle) path, the along-track
  * distance is the distance from the start point to where the perpendicular crosses the path.
  *
  * @param   {LatLon} pathStart - Start point of great circle path.
  * @param   {LatLon} pathEnd - End point of great circle path.
  * @param   {number} [radius=6371e3] - (Mean) radius of earth (defaults to radius in metres).
- * @returns {number} Distance along great circle to point nearest ‘this’ point.
+ * @returns {number} Distance along great circle to point nearest ï¿½thisï¿½ point.
  *
  * @example
  *   var pCurrent = new LatLon(53.2611, -0.7972);
@@ -869,14 +870,14 @@ LatLon.crossingParallels = function(point1, point2, latitude) {
     var LONi1 = LON1 + LONm - deltaLONi;
     var LONi2 = LON1 + LONm + deltaLONi;
 
-    return { lon1: (LONi1.toDegrees()+540)%360-180, lon2: (LONi2.toDegrees()+540)%360-180 }; // normalise to -180..+180°
+    return { lon1: (LONi1.toDegrees()+540)%360-180, lon2: (LONi2.toDegrees()+540)%360-180 }; // normalise to -180..+180ï¿½
 };
 
 
 /* Rhumb - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  */
 
 /**
- * Returns the distance travelling from ‘this’ point to destination point along a rhumb line.
+ * Returns the distance travelling from ï¿½thisï¿½ point to destination point along a rhumb line.
  *
  * @param   {LatLon} point - Latitude/longitude of destination point.
  * @param   {number} [radius=6371e3] - (Mean) radius of earth (defaults to radius in metres).
@@ -897,7 +898,7 @@ LatLon.prototype.rhumbDistanceTo = function(point, radius) {
     var LAT1 = this.lat.toRadians(), LAT2 = point.lat.toRadians();
     var deltaLAT = LAT2 - LAT1;
     var deltaLON = Math.abs(point.lon-this.lon).toRadians();
-    // if dLon over 180° take shorter rhumb line across the anti-meridian:
+    // if dLon over 180ï¿½ take shorter rhumb line across the anti-meridian:
     if (deltaLON > Math.PI) deltaLON -= 2*Math.PI;
 
     // on Mercator projection, longitude distances shrink by latitude; q is the 'stretch factor'
@@ -914,7 +915,7 @@ LatLon.prototype.rhumbDistanceTo = function(point, radius) {
 
 
 /**
- * Returns the bearing from ‘this’ point to destination point along a rhumb line.
+ * Returns the bearing from ï¿½thisï¿½ point to destination point along a rhumb line.
  *
  * @param   {LatLon} point - Latitude/longitude of destination point.
  * @returns {number} Bearing in degrees from north.
@@ -929,7 +930,7 @@ LatLon.prototype.rhumbBearingTo = function(point) {
 
     var LAT1 = this.lat.toRadians(), LAT2 = point.lat.toRadians();
     var deltaLON = (point.lon-this.lon).toRadians();
-    // if dLon over 180° take shorter rhumb line across the anti-meridian:
+    // if dLon over 180ï¿½ take shorter rhumb line across the anti-meridian:
     if (deltaLON >  Math.PI) deltaLON -= 2*Math.PI;
     if (deltaLON < -Math.PI) deltaLON += 2*Math.PI;
 
@@ -942,7 +943,7 @@ LatLon.prototype.rhumbBearingTo = function(point) {
 
 
 /**
- * Returns the destination point having travelled along a rhumb line from ‘this’ point the given
+ * Returns the destination point having travelled along a rhumb line from ï¿½thisï¿½ point the given
  * distance on the  given bearing.
  *
  * @param   {number} distance - Distance travelled, in same units as earth radius (default: metres).
@@ -952,7 +953,7 @@ LatLon.prototype.rhumbBearingTo = function(point) {
  *
  * @example
  *     var p1 = new LatLon(51.127, 1.338);
- *     var p2 = p1.rhumbDestinationPoint(40300, 116.7); // 50.9642°N, 001.8530°E
+ *     var p2 = p1.rhumbDestinationPoint(40300, 116.7); // 50.9642ï¿½N, 001.8530ï¿½E
  */
 LatLon.prototype.rhumbDestinationPoint = function(distance, bearing, radius) {
     radius = (radius === undefined) ? 6371e3 : Number(radius);
@@ -973,12 +974,12 @@ LatLon.prototype.rhumbDestinationPoint = function(distance, bearing, radius) {
     var deltaLON = delta*Math.sin(theta)/q;
     var LON2 = LON1 + deltaLON;
 
-    return new LatLon(LAT2.toDegrees(), (LON2.toDegrees()+540) % 360 - 180); // normalise to -180..+180°
+    return new LatLon(LAT2.toDegrees(), (LON2.toDegrees()+540) % 360 - 180); // normalise to -180..+180ï¿½
 };
 
 
 /**
- * Returns the loxodromic midpoint (along a rhumb line) between ‘this’ point and second point.
+ * Returns the loxodromic midpoint (along a rhumb line) between ï¿½thisï¿½ point and second point.
  *
  * @param   {LatLon} point - Latitude/longitude of second point.
  * @returns {LatLon} Midpoint between this point and second point.
@@ -986,7 +987,7 @@ LatLon.prototype.rhumbDestinationPoint = function(distance, bearing, radius) {
  * @example
  *     var p1 = new LatLon(51.127, 1.338);
  *     var p2 = new LatLon(50.964, 1.853);
- *     var pMid = p1.rhumbMidpointTo(p2); // 51.0455°N, 001.5957°E
+ *     var pMid = p1.rhumbMidpointTo(p2); // 51.0455ï¿½N, 001.5957ï¿½E
  */
 LatLon.prototype.rhumbMidpointTo = function(point) {
     if (!(point instanceof LatLon)) throw new TypeError('point is not LatLon object');
@@ -1006,7 +1007,7 @@ LatLon.prototype.rhumbMidpointTo = function(point) {
 
     if (!isFinite(LON3)) LON3 = (LON1+LON2)/2; // parallel of latitude
 
-    var p = LatLon(LAT3.toDegrees(), (LON3.toDegrees()+540)%360-180); // normalise to -180..+180°
+    var p = LatLon(LAT3.toDegrees(), (LON3.toDegrees()+540)%360-180); // normalise to -180..+180ï¿½
 
     return p;
 };
@@ -1025,11 +1026,11 @@ LatLon.prototype.rhumbMidpointTo = function(point) {
  *
  * @example
  *   var polygon = [new LatLon(0,0), new LatLon(1,0), new LatLon(0,1)];
- *   var area = LatLon.areaOf(polygon); // 6.18e9 m²
+ *   var area = LatLon.areaOf(polygon); // 6.18e9 mï¿½
  */
 LatLon.areaOf = function(polygon, radius) {
     // uses method due to Karney: osgeo-org.1560.x6.nabble.com/Area-of-a-spherical-polygon-td3841625.html;
-    // for each edge of the polygon, tan(E/2) = tan(deltaLON/2)·(tan(LAT1/2) + tan(LAT2/2)) / (1 + tan(LAT1/2)·tan(LAT2/2))
+    // for each edge of the polygon, tan(E/2) = tan(deltaLON/2)ï¿½(tan(LAT1/2) + tan(LAT2/2)) / (1 + tan(LAT1/2)ï¿½tan(LAT2/2))
     // where E is the spherical excess of the trapezium obtained by extending the edge to the equator
 
     var R = (radius === undefined) ? 6371e3 : Number(radius);
@@ -1057,8 +1058,8 @@ LatLon.areaOf = function(polygon, radius) {
 
     return A;
 
-    // returns whether polygon encloses pole: sum of course deltas around pole is 0° rather than
-    // normal ±360°: blog.element84.com/determining-if-a-spherical-polygon-contains-a-pole.html
+    // returns whether polygon encloses pole: sum of course deltas around pole is 0ï¿½ rather than
+    // normal ï¿½360ï¿½: blog.element84.com/determining-if-a-spherical-polygon-contains-a-pole.html
     function isPoleEnclosedBy(polygon) {
         // TODO: any better test than this?
         var Sdelta = 0;
@@ -1073,7 +1074,7 @@ LatLon.areaOf = function(polygon, radius) {
         var initBrng = polygon[0].bearingTo(polygon[1]);
         sigmadelta += (initBrng - prevBrng + 540) % 360 - 180;
         // TODO: fix (intermittant) edge crossing pole - eg (85,90), (85,0), (85,-90)
-        var enclosed = Math.abs(sigmadelta) < 90; // 0°-ish
+        var enclosed = Math.abs(sigmadelta) < 90; // 0ï¿½-ish
         return enclosed;
     }
 };
@@ -1083,7 +1084,7 @@ LatLon.areaOf = function(polygon, radius) {
 
 
 /**
- * Checks if another point is equal to ‘this’ point.
+ * Checks if another point is equal to ï¿½thisï¿½ point.
  *
  * @param   {LatLon} point - Point to be compared against this point.
  * @returns {bool}   True if points are identical.
@@ -1104,7 +1105,7 @@ LatLon.prototype.equals = function(point) {
 
 
 /**
- * Returns a string representation of ‘this’ point, formatted as degrees, degrees+minutes, or
+ * Returns a string representation of ï¿½thisï¿½ point, formatted as degrees, degrees+minutes, or
  * degrees+minutes+seconds.
  *
  * @param   {string} [format=dms] - Format point as 'd', 'dm', 'dms'.

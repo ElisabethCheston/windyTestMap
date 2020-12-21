@@ -63,15 +63,7 @@ export var Layers = Control.extend({
 		// in which they were added to the control.
 		sortLayers: false,
 
-		// @option sortFunction: Function = *
-		// A [compare function](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array/sort)
-		// that will be used for sorting the layers, when `sortLayers` is `true`.
-		// The function receives both the `L.Layer` instances and their names, as in
-		// `sortFunction(layerA, layerB, nameA, nameB)`.
-		// By default, it sorts layers alphabetically by their name.
-		sortFunction: function (layerA, layerB, nameA, nameB) {
-			return nameA < nameB ? -1 : (nameB < nameA ? 1 : 0);
-		}
+		
 	},
 
 	initialize: function (baseLayers, overlays, options) {
